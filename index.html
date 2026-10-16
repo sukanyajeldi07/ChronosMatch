@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChronosMatch Trading Dashboard</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 24px; background: #080d16;
+  color: #e7edf7; font-family: Arial, sans-serif;
+}
+header {
+  display: flex; justify-content: space-between;
+  align-items: center; flex-wrap: wrap; gap: 12px;
+  margin-bottom: 25px;
+}
+h1 { margin: 0; font-size: 28px; }
+h2 { font-size: 17px; }
+.muted { color: #8fa0b8; font-size: 12px; }
+.status { color: #27d7a1; border: 1px solid #276b57;
+  padding: 8px 12px; border-radius: 20px; }
+.metrics {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 15px; margin-bottom: 18px;
+}
+.card, .panel {
+  background: #101827; border: 1px solid #243247;
+  border-radius: 12px; padding: 18px;
+}
+.value { font-size: 26px; font-weight: bold; margin: 12px 0 5px; }
+.green, .bid { color: #27d7a1; }
+.red, .price { color: #ff6378; }
+.blue { color: #62a8ff; }
+.content {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 18px;
+}
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { padding: 11px 5px; text-align: right;
+  border-bottom: 1px solid #243247; }
+th:first-child, td:first-child { text-align: left; }
+th { color: #8fa0b8; font-weight: normal; }
+.mid-price {
+  text-align: center; padding: 14px; margin: 10px 0;
+  border-radius: 8px; background: #080d16;
+  font-size: 20px; color: #62a8ff;
+}
+.bars {
+  height: 130px; display: flex; align-items: end; gap: 7px;
+  margin-top: 20px; border-bottom: 1px solid #243247;
+}
+.bar {
+  flex: 1; min-width: 3px;
+  background: linear-gradient(#62a8ff, #285bc6);
+  border-radius: 4px 4px 0 0;
+}
+footer { margin-top: 20px; color: #8fa0b8; font-size: 12px; line-height: 1.6; }
+@media(max-width:800px) {
+  body { padding: 14px; }
+  .metrics { grid-template-columns: repeat(2,1fr); }
+  .content { grid-template-columns: 1fr; }
+  .value { font-size: 21px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>⚡ ChronosMatch</h1>
+    <div class="muted">LOW-LATENCY ORDER FLOW · WEEK 1</div>
+  </div>
+  <div class="status">● Demo Dashboard</div>
+</header>
+
+<section class="metrics">
+  <div class="card">
+    <div class="muted">Consumer Throughput</div>
+    <div class="value blue">97,512</div>
+    <div class="green">orders / second</div>
+  </div>
+  <div class="card">
+    <div class="muted">Orders Processed</div>
+    <div class="value">300,000</div>
+    <div class="green">Benchmark completed</div>
+  </div>
+  <div class="card">
+    <div class="muted">Mean Latency</div>
+    <div class="value">1.358 ms</div>
+    <div class="muted">1,357.94 microseconds</div>
+  </div>
+  <div class="card">
+    <div class="muted">P99 Latency</div>
+    <div class="value">2.786 ms</div>
+    <div class="muted">2,786.40 microseconds</div>
+  </div>
+</section>
+
+<section class="content">
+  <div class="panel">
+    <h2>Order Book <span class="muted">XYZ / USD</span></h2>
+    <table>
+      <thead><tr><th>Price (USD)</th><th>Size</th><th>Total</th></tr></thead>
+      <tbody id="asks"></tbody>
+    </table>
+    <div class="mid-price">$102.50<div class="muted">DEMO MARKET MID PRICE</div></div>
+    <table><tbody id="bids"></tbody></table>
+  </div>
+
+  <div class="panel">
+    <h2>Recent Trade Tape</h2>
+    <table>
+      <thead><tr><th>Time</th><th>Side</th><th>Price</th><th>Size</th></tr></thead>
+      <tbody id="trades"></tbody>
+    </table>
+  </div>
+
+  <div class="panel">
+    <h2>Order Processing Activity</h2>
+    <div class="muted">Illustrative activity visualization</div>
+    <div class="bars" id="bars"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Latency Summary</h2>
+    <p>Minimum latency: <span class="green">445.30 µs</span></p>
+    <p>Mean latency: <span class="blue">1,357.94 µs</span></p>
+    <p>P99 latency: <span class="blue">2,786.40 µs</span></p>
+    <p>Maximum latency: <span class="red">7,596.50 µs</span></p>
+    <div class="muted">Metrics from your latest benchmark run.</div>
+  </div>
+</section>
+
+<footer>
+  <strong>ChronosMatch · Week 1</strong><br>
+  Python producer-consumer benchmark dashboard.<br>
+  Order book, trade tape, and activity bars use simulated
+  demonstration data; they are not connected to a live exchange.
+</footer>
+
+<script>
+function updateOrderBook() {
+  const asks = document.getElementById("asks");
+  const bids = document.getElementById("bids");
+  asks.innerHTML = "";
+  bids.innerHTML = "";
+
+  for (let i = 5; i >= 1; i--) {
+    const price = (102.50 + i * 0.01).toFixed(2);
+    const size = Math.floor(Math.random() * 80) + 10;
+    asks.innerHTML += `<tr><td class="price">$${price}</td><td>${size}</td><td>${size*i}</td></tr>`;
+  }
+  for (let i = 1; i <= 5; i++) {
+    const price = (102.50 - i * 0.01).toFixed(2);
+    const size = Math.floor(Math.random() * 80) + 10;
+    bids.innerHTML += `<tr><td class="bid">$${price}</td><td>${size}</td><td>${size*i}</td></tr>`;
+  }
+}
+
+function updateTrades() {
+  const trades = document.getElementById("trades");
+  trades.innerHTML = "";
+  for (let i = 0; i < 8; i++) {
+    const buy = Math.random() > 0.5;
+    const price = (102.50 + (Math.random() - 0.5) * 0.08).toFixed(2);
+    const size = Math.floor(Math.random() * 30) + 1;
+    const time = new Date(Date.now() - i * 1500)
+      .toLocaleTimeString("en-US", {hour12:false});
+    trades.innerHTML += `<tr><td>${time}</td><td class="${buy?'green':'red'}">${buy?'BUY':'SELL'}</td><td>$${price}</td><td>${size}</td></tr>`;
+  }
+}
+
+function updateBars() {
+  const bars = document.getElementById("bars");
+  bars.innerHTML = "";
+  for (let i = 0; i < 24; i++) {
+    const height = Math.floor(Math.random() * 75) + 20;
+    bars.innerHTML += `<div class="bar" style="height:${height}%"></div>`;
+  }
+}
+
+function refreshDashboard() {
+  updateOrderBook();
+  updateTrades();
+  updateBars();
+}
+refreshDashboard();
+setInterval(refreshDashboard, 3000);
+</script>
+</body>
+</html>
