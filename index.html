@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ChronosMatch | Neon Trading Dashboard</title>
+<title>ChronosMatch | Trading Terminal</title>
 
 <style>
 * {
@@ -14,155 +14,263 @@
     box-sizing: border-box;
 }
 
+:root {
+    --bg: #080c14;
+    --panel: #101722;
+    --panel2: #141e2c;
+    --border: #263244;
+    --text: #e8edf5;
+    --muted: #8593a8;
+    --green: #00d69a;
+    --red: #ff647c;
+    --blue: #5ca8ff;
+}
+
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: #080d16;
-    color: #e5e7eb;
-    padding: 25px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Arial, sans-serif;
 }
 
-/* MAIN CONTAINER */
-
-.container {
-    max-width: 1400px;
-    margin: auto;
+.app {
+    display: flex;
+    min-height: 100vh;
 }
 
-/* HEADER */
+/* SIDEBAR */
 
-.header {
+.sidebar {
+    width: 230px;
+    background: #0d131e;
+    border-right: 1px solid var(--border);
+    padding: 28px 18px;
+    flex-shrink: 0;
+}
+
+.brand {
+    font-size: 23px;
+    font-weight: bold;
+    color: var(--green);
+    margin-bottom: 8px;
+}
+
+.brand-sub {
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    margin-bottom: 40px;
+}
+
+.nav-title {
+    color: var(--muted);
+    font-size: 10px;
+    margin: 25px 12px 12px;
+    letter-spacing: 1.5px;
+}
+
+.nav-item {
+    display: block;
+    padding: 13px;
+    border-radius: 8px;
+    color: #a6b2c4;
+    margin-bottom: 5px;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.nav-item.active {
+    background: #16332e;
+    color: var(--green);
+    border: 1px solid #205447;
+}
+
+.nav-item:hover {
+    background: var(--panel2);
+}
+
+.demo-box {
+    margin-top: 35px;
+    padding: 15px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.demo-box strong {
+    color: var(--green);
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* MAIN */
+
+.main {
+    flex: 1;
+    min-width: 0;
+    padding: 30px;
+}
+
+.topbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
     gap: 20px;
-    margin-bottom: 35px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
 }
 
-.logo h1 {
-    color: #00ff9c;
-    font-size: 32px;
-    text-shadow: 0 0 12px #00ff9c70;
+.page-title {
+    font-size: 25px;
+    margin-bottom: 7px;
 }
 
-.logo p {
-    color: #94a3b8;
-    margin-top: 8px;
+.subtitle {
+    color: var(--muted);
     font-size: 12px;
-    letter-spacing: 2px;
 }
 
-.status {
-    color: #00ff9c;
-    border: 1px solid #00ff9c;
-    padding: 10px 18px;
-    border-radius: 25px;
+.top-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.demo-badge {
+    padding: 9px 13px;
+    border: 1px solid #245443;
+    border-radius: 20px;
+    color: var(--green);
+    font-size: 11px;
+    background: #10231f;
+}
+
+.date {
+    color: var(--muted);
     font-size: 12px;
-    box-shadow: 0 0 12px #00ff9c30;
 }
 
-/* SECTION HEADINGS */
+/* SECTION */
 
-h2 {
-    color: #00d4ff;
-    font-size: 22px;
-    margin-bottom: 20px;
-    text-shadow: 0 0 10px #00d4ff50;
-}
-
-h3 {
-    color: #ff4dff;
+.section-title {
     font-size: 15px;
+    margin-bottom: 18px;
+}
+
+.section-subtitle {
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 6px;
 }
 
 /* PORTFOLIO */
 
 .portfolio {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 18px;
-    margin-bottom: 35px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 30px;
 }
 
 .card {
-    background: #101827;
-    border: 1px solid #1e293b;
-    padding: 22px;
-    border-radius: 14px;
-    transition: 0.3s;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    transition: 0.2s;
 }
 
 .card:hover {
-    border-color: #00d4ff;
-    transform: translateY(-4px);
-    box-shadow: 0 0 18px #00d4ff20;
+    border-color: #40516a;
+    transform: translateY(-2px);
 }
 
-.card p {
-    color: #94a3b8;
-    font-size: 13px;
+.card-label {
+    color: var(--muted);
+    font-size: 11px;
+    margin-bottom: 16px;
+}
+
+.card-value {
+    font-size: 25px;
+    font-weight: bold;
     margin-bottom: 12px;
+    overflow-wrap: anywhere;
 }
 
-.card h3 {
-    font-size: 26px;
-    color: #ffffff;
-    margin-bottom: 10px;
+.card-footer {
+    font-size: 11px;
+    color: var(--muted);
 }
 
 .positive {
-    color: #00ff9c;
-    font-size: 13px;
+    color: var(--green);
 }
 
 .negative {
-    color: #ff4d6d;
-    font-size: 13px;
+    color: var(--red);
 }
 
 /* MAIN GRID */
 
-.main-grid {
+.content-grid {
     display: grid;
-    grid-template-columns: 1.6fr 1fr;
-    gap: 22px;
-    margin-bottom: 30px;
+    grid-template-columns: minmax(0, 1.5fr) minmax(300px, 1fr);
+    gap: 20px;
 }
 
-/* PANELS */
-
 .panel {
-    background: #101827;
-    border: 1px solid #1e293b;
-    border-radius: 14px;
-    padding: 24px;
-    margin-bottom: 25px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 20px;
+    min-width: 0;
 }
 
 .panel-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
     gap: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 }
 
-.panel-header h2 {
-    margin-bottom: 0;
+.panel-title {
+    font-size: 15px;
+}
+
+.panel-note {
+    color: var(--muted);
+    font-size: 10px;
 }
 
 /* CHART */
 
-.chart-info {
-    color: #00ff9c;
-    font-size: 13px;
+.chart-controls {
+    display: flex;
+    gap: 7px;
+}
+
+.chart-btn {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 7px 10px;
+    border-radius: 6px;
+    font-size: 10px;
+    cursor: pointer;
+}
+
+.chart-btn.active {
+    color: var(--green);
+    border-color: #28604d;
+    background: #142c26;
 }
 
 .chart-container {
+    height: 270px;
     width: 100%;
-    height: 300px;
-    position: relative;
 }
 
 canvas {
@@ -170,159 +278,215 @@ canvas {
     height: 100%;
 }
 
-/* MARKET WATCH */
+/* PERFORMANCE */
 
-.search-box {
-    width: 100%;
-    padding: 12px;
-    background: #080d16;
-    border: 1px solid #263247;
-    border-radius: 8px;
-    color: white;
-    outline: none;
-    margin-bottom: 15px;
+.performance-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
 }
 
-.search-box:focus {
-    border-color: #00d4ff;
-    box-shadow: 0 0 10px #00d4ff20;
+.performance-card {
+    background: #0b111b;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 16px;
+}
+
+.performance-label {
+    color: var(--muted);
+    font-size: 10px;
+    margin-bottom: 12px;
+}
+
+.performance-value {
+    font-size: 21px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    overflow-wrap: anywhere;
+}
+
+.performance-note {
+    color: var(--muted);
+    font-size: 10px;
+}
+
+/* MARKET WATCH */
+
+.search {
+    width: 100%;
+    background: #0b111b;
+    border: 1px solid var(--border);
+    padding: 12px;
+    border-radius: 7px;
+    color: white;
+    outline: none;
+    margin-bottom: 14px;
+}
+
+.search:focus {
+    border-color: var(--blue);
 }
 
 .filters {
     display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 18px;
+    gap: 7px;
+    margin-bottom: 15px;
 }
 
-.filter-btn {
-    background: #172033;
-    border: 1px solid #263247;
-    color: #94a3b8;
-    padding: 8px 14px;
-    border-radius: 7px;
+.filter {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 10px;
     cursor: pointer;
-    font-size: 12px;
 }
 
-.filter-btn:hover,
-.filter-btn.active {
-    background: #00d4ff15;
-    color: #00d4ff;
-    border-color: #00d4ff;
+.filter.active {
+    color: var(--blue);
+    border-color: var(--blue);
 }
-
-/* STOCK LIST */
 
 .stock-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
 }
 
 .stock {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #080d16;
-    padding: 14px;
-    border-radius: 9px;
-    border: 1px solid #1e293b;
-    cursor: pointer;
-    transition: 0.2s;
+    gap: 10px;
+    padding: 14px 0;
+    border-bottom: 1px solid #202b3a;
 }
 
-.stock:hover {
-    border-color: #00ff9c;
-    background: #0d1921;
+.stock:last-child {
+    border-bottom: none;
 }
 
-.stock-name {
-    color: #00e5a8;
+.stock-symbol {
+    font-size: 12px;
     font-weight: bold;
-    font-size: 14px;
+    margin-bottom: 5px;
 }
 
 .stock-company {
-    color: #64748b;
-    font-size: 11px;
-    margin-top: 5px;
+    font-size: 10px;
+    color: var(--muted);
+}
+
+.stock-right {
+    text-align: right;
 }
 
 .stock-price {
-    text-align: right;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bold;
+    margin-bottom: 5px;
 }
 
 .stock-change {
+    font-size: 10px;
+}
+
+/* MARKET SUMMARY */
+
+.market-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #202b3a;
+}
+
+.market-row:last-child {
+    border-bottom: none;
+}
+
+.market-name {
     font-size: 12px;
+    font-weight: bold;
+}
+
+.market-description {
+    font-size: 10px;
+    color: var(--muted);
     margin-top: 5px;
 }
 
-/* PERFORMANCE */
-
-.performance-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
+.market-right {
+    text-align: right;
 }
 
-.performance-card {
-    background: #080d16;
-    border: 1px solid #1e293b;
-    padding: 20px;
-    border-radius: 10px;
-}
-
-.performance-card p {
-    color: #94a3b8;
-    font-size: 12px;
-    margin-bottom: 12px;
-}
-
-.performance-card h3 {
-    font-size: 24px;
-    color: #ff4dff;
+.market-value {
+    font-size: 13px;
+    margin-bottom: 5px;
 }
 
 /* FOOTER */
 
 .footer {
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+    margin-top: 20px;
+    color: var(--muted);
+    font-size: 10px;
     text-align: center;
-    color: #64748b;
-    font-size: 12px;
-    margin-top: 35px;
-    padding: 20px;
-    border-top: 1px solid #1e293b;
+    line-height: 2;
 }
 
-.footer span {
-    color: #00ff9c;
+.footer strong {
+    color: var(--green);
 }
 
 /* RESPONSIVE */
 
-@media (max-width: 1000px) {
+@media (max-width: 1100px) {
+    .sidebar {
+        width: 190px;
+    }
 
     .portfolio {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .main-grid {
+    .content-grid {
         grid-template-columns: 1fr;
     }
-
 }
 
-@media (max-width: 600px) {
-
-    body {
-        padding: 15px;
+@media (max-width: 650px) {
+    .app {
+        display: block;
     }
 
-    .logo h1 {
-        font-size: 25px;
+    .sidebar {
+        width: 100%;
+        padding: 18px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .brand-sub {
+        margin-bottom: 15px;
+    }
+
+    .nav-title,
+    .demo-box {
+        display: none;
+    }
+
+    .nav-item {
+        display: inline-block;
+        padding: 9px;
+        font-size: 11px;
+    }
+
+    .main {
+        padding: 18px;
     }
 
     .portfolio {
@@ -330,507 +494,586 @@ canvas {
     }
 
     .performance-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .panel {
-        padding: 16px;
+    .page-title {
+        font-size: 21px;
     }
 
     .chart-container {
-        height: 230px;
+        height: 220px;
     }
 
+    .card-value {
+        font-size: 23px;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="app">
 
-    <!-- HEADER -->
+    <aside class="sidebar">
 
-    <header class="header">
+        <div class="brand">ChronosMatch</div>
 
-        <div class="logo">
-
-            <h1>ChronosMatch</h1>
-
-            <p>
-                LOW-LATENCY ORDER FLOW · NEON TRADING ENGINE
-            </p>
-
+        <div class="brand-sub">
+            LOW-LATENCY TRADING ENGINE
         </div>
 
-        <div class="status">
-            ● DEMO DASHBOARD
+        <div class="nav-title">WORKSPACE</div>
+
+        <a href="#dashboard" class="nav-item active">
+            ◈ Dashboard
+        </a>
+
+        <a href="#portfolio" class="nav-item">
+            ▣ Portfolio
+        </a>
+
+        <a href="#market" class="nav-item">
+            ◉ Market Watch
+        </a>
+
+        <a href="#performance" class="nav-item">
+            ◫ Engine Performance
+        </a>
+
+        <div class="demo-box">
+            <strong>● DEMO ENVIRONMENT</strong>
+            Simulated market data
+            <br><br>
+            No real orders are placed.
         </div>
 
-    </header>
+    </aside>
 
+    <main class="main" id="dashboard">
 
-    <!-- PORTFOLIO -->
+        <header class="topbar">
 
-    <section>
+            <div>
+                <h1 class="page-title">
+                    Trading Dashboard
+                </h1>
 
-        <h2>Portfolio Overview</h2>
+                <p class="subtitle">
+                    Portfolio overview and engine analytics
+                </p>
+            </div>
 
-        <div class="portfolio">
+            <div class="top-actions">
 
-            <div class="card">
+                <span class="date">
+                    DEMO MODE
+                </span>
 
-                <p>Total Portfolio Value</p>
-
-                <h3 id="portfolioValue">
-                    ₹12,45,680
-                </h3>
-
-                <span class="positive">
-                    +8.42% this month
+                <span class="demo-badge">
+                    ● SYSTEM ONLINE
                 </span>
 
             </div>
 
-            <div class="card">
+        </header>
 
-                <p>Today's Profit</p>
+        <!-- PORTFOLIO -->
 
-                <h3 class="positive">
-                    +₹12,450
-                </h3>
+        <section id="portfolio">
 
-                <span class="positive">
-                    +2.18%
-                </span>
+            <div class="section-title">
+                Portfolio Overview
+
+                <div class="section-subtitle">
+                    Simulated account summary
+                </div>
+            </div>
+
+            <div class="portfolio">
+
+                <div class="card">
+
+                    <div class="card-label">
+                        Total Portfolio Value
+                    </div>
+
+                    <div class="card-value">
+                        ₹12,45,680
+                    </div>
+
+                    <div class="card-footer positive">
+                        +8.42% this month
+                    </div>
+
+                </div>
+
+                <div class="card">
+
+                    <div class="card-label">
+                        Today's Profit
+                    </div>
+
+                    <div class="card-value positive">
+                        +₹12,450
+                    </div>
+
+                    <div class="card-footer positive">
+                        +2.18%
+                    </div>
+
+                </div>
+
+                <div class="card">
+
+                    <div class="card-label">
+                        Total Investments
+                    </div>
+
+                    <div class="card-value">
+                        ₹10,50,000
+                    </div>
+
+                    <div class="card-footer">
+                        Active portfolio
+                    </div>
+
+                </div>
+
+                <div class="card">
+
+                    <div class="card-label">
+                        Available Balance
+                    </div>
+
+                    <div class="card-value">
+                        ₹1,95,680
+                    </div>
+
+                    <div class="card-footer">
+                        Simulated cash balance
+                    </div>
+
+                </div>
 
             </div>
 
-            <div class="card">
+        </section>
 
-                <p>Total Investments</p>
+        <div class="content-grid">
 
-                <h3>
-                    ₹10,50,000
-                </h3>
+            <!-- LEFT COLUMN -->
 
-                <span class="positive">
-                    Active portfolio
-                </span>
+            <div>
+
+                <!-- MARKET CHART -->
+
+                <section class="panel">
+
+                    <div class="panel-header">
+
+                        <div>
+                            <h2 class="panel-title">
+                                Market Performance
+                            </h2>
+
+                            <div class="panel-note">
+                                Illustrative chart · Not live
+                            </div>
+                        </div>
+
+                        <div class="chart-controls">
+
+                            <button class="chart-btn active"
+                                data-range="1D">
+                                1D
+                            </button>
+
+                            <button class="chart-btn"
+                                data-range="1W">
+                                1W
+                            </button>
+
+                            <button class="chart-btn"
+                                data-range="1M">
+                                1M
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="chart-container">
+
+                        <canvas id="marketChart"></canvas>
+
+                    </div>
+
+                </section>
+
+                <!-- ENGINE PERFORMANCE -->
+
+                <section class="panel" id="performance">
+
+                    <div class="panel-header">
+
+                        <div>
+                            <h2 class="panel-title">
+                                ChronosMatch Performance
+                            </h2>
+
+                            <div class="panel-note">
+                                Benchmark results
+                            </div>
+                        </div>
+
+                        <span class="demo-badge">
+                            BENCHMARK
+                        </span>
+
+                    </div>
+
+                    <div class="performance-grid">
+
+                        <div class="performance-card">
+
+                            <div class="performance-label">
+                                Consumer Throughput
+                            </div>
+
+                            <div class="performance-value">
+                                97,512
+                            </div>
+
+                            <div class="performance-note">
+                                orders/sec
+                            </div>
+
+                        </div>
+
+                        <div class="performance-card">
+
+                            <div class="performance-label">
+                                Orders Processed
+                            </div>
+
+                            <div class="performance-value">
+                                300,000
+                            </div>
+
+                            <div class="performance-note">
+                                Total orders
+                            </div>
+
+                        </div>
+
+                        <div class="performance-card">
+
+                            <div class="performance-label">
+                                Mean Latency
+                            </div>
+
+                            <div class="performance-value">
+                                1.358 ms
+                            </div>
+
+                            <div class="performance-note positive">
+                                Average
+                            </div>
+
+                        </div>
+
+                        <div class="performance-card">
+
+                            <div class="performance-label">
+                                P99 Latency
+                            </div>
+
+                            <div class="performance-value">
+                                2.786 ms
+                            </div>
+
+                            <div class="performance-note">
+                                99th percentile
+                            </div>
+
+                        </div>
+
+                        <div class="performance-card">
+
+                            <div class="performance-label">
+                                Minimum Latency
+                            </div>
+
+                            <div class="performance-value">
+                                445.30 µs
+                            </div>
+
+                            <div class="performance-note positive">
+                                Fastest recorded
+                            </div>
+
+                        </div>
+
+                        <div class="performance-card">
+
+                            <div class="performance-label">
+                                Maximum Latency
+                            </div>
+
+                            <div class="performance-value">
+                                7.597 ms
+                            </div>
+
+                            <div class="performance-note">
+                                Benchmark result
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
 
             </div>
 
-            <div class="card">
+            <!-- RIGHT COLUMN -->
 
-                <p>Available Balance</p>
+            <div>
 
-                <h3>
-                    ₹1,95,680
-                </h3>
+                <!-- MARKET WATCH -->
 
-                <span>
-                    Cash balance
-                </span>
+                <section class="panel" id="market">
 
-            </div>
+                    <div class="panel-header">
 
-        </div>
+                        <div>
+                            <h2 class="panel-title">
+                                Market Watch
+                            </h2>
 
-    </section>
+                            <div class="panel-note">
+                                Sample stock prices
+                            </div>
+                        </div>
 
-
-    <!-- MAIN GRID -->
-
-    <div class="main-grid">
-
-
-        <!-- LEFT SIDE -->
-
-        <div>
-
-
-            <!-- CHART -->
-
-            <section class="panel">
-
-                <div class="panel-header">
-
-                    <h2>Market Performance</h2>
-
-                    <span class="chart-info">
-                        ● LIVE DEMO
-                    </span>
-
-                </div>
-
-                <div class="chart-container">
-
-                    <canvas id="marketChart"></canvas>
-
-                </div>
-
-            </section>
-
-
-            <!-- PERFORMANCE -->
-
-            <section class="panel">
-
-                <div class="panel-header">
-
-                    <h2>ChronosMatch Performance</h2>
-
-                </div>
-
-                <div class="performance-grid">
-
-                    <div class="performance-card">
-
-                        <p>Consumer Throughput</p>
-
-                        <h3>
-                            97,512
-                        </h3>
-
-                        <span class="positive">
-                            orders/sec
+                        <span class="demo-badge">
+                            DEMO
                         </span>
 
                     </div>
 
-                    <div class="performance-card">
-
-                        <p>Orders Processed</p>
-
-                        <h3>
-                            300,000
-                        </h3>
-
-                        <span>
-                            Total orders
-                        </span>
-
-                    </div>
-
-                    <div class="performance-card">
-
-                        <p>Mean Latency</p>
-
-                        <h3>
-                            1.358 ms
-                        </h3>
-
-                        <span class="positive">
-                            Low latency
-                        </span>
-
-                    </div>
-
-                    <div class="performance-card">
-
-                        <p>P99 Latency</p>
-
-                        <h3>
-                            2.786 ms
-                        </h3>
-
-                        <span>
-                            99th percentile
-                        </span>
-
-                    </div>
-
-                    <div class="performance-card">
-
-                        <p>Minimum Latency</p>
-
-                        <h3>
-                            445.30 µs
-                        </h3>
-
-                        <span class="positive">
-                            Fastest order
-                        </span>
-
-                    </div>
-
-                    <div class="performance-card">
-
-                        <p>Maximum Latency</p>
-
-                        <h3>
-                            7.597 ms
-        </h3>
-
-                        <span>
-                            Benchmark result
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-        </div>
-
-
-        <!-- RIGHT SIDE -->
-
-        <div>
-
-
-            <!-- MARKET WATCH -->
-
-            <section class="panel">
-
-                <div class="panel-header">
-
-                    <h2>Market Watch</h2>
-
-                    <span class="chart-info">
-                        LIVE MARKET
-                    </span>
-
-                </div>
-
-
-                <!-- SEARCH -->
-
-                <input
-                    type="text"
-                    id="searchInput"
-                    class="search-box"
-                    placeholder="Search stocks..."
-                >
-
-
-                <!-- FILTERS -->
-
-                <div class="filters">
-
-                    <button
-                        class="filter-btn active"
-                        data-filter="all"
+                    <input
+                        type="text"
+                        id="searchInput"
+                        class="search"
+                        placeholder="Search stocks..."
                     >
-                        All
-                    </button>
 
-                    <button
-                        class="filter-btn"
-                        data-filter="positive"
-                    >
-                        Gainers
-                    </button>
+                    <div class="filters">
 
-                    <button
-                        class="filter-btn"
-                        data-filter="negative"
-                    >
-                        Losers
-                    </button>
+                        <button class="filter active"
+                            data-filter="all">
+                            All
+                        </button>
 
-                </div>
+                        <button class="filter"
+                            data-filter="positive">
+                            Gainers
+                        </button>
 
+                        <button class="filter"
+                            data-filter="negative">
+                            Losers
+                        </button>
 
-                <!-- STOCK LIST -->
+                    </div>
 
-                <div
-                    class="stock-list"
-                    id="stockList"
-                >
+                    <div
+                        class="stock-list"
+                        id="stockList">
+                    </div>
 
-                </div>
+                </section>
 
-            </section>
+                <!-- MARKET SUMMARY -->
 
+                <section class="panel">
 
-            <!-- MARKET SUMMARY -->
+                    <div class="panel-header">
 
-            <section class="panel">
+                        <div>
+                            <h2 class="panel-title">
+                                Market Summary
+                            </h2>
 
-                <div class="panel-header">
-
-                    <h2>Market Summary</h2>
-
-                </div>
-
-                <div class="stock">
-
-                    <div>
-
-                        <div class="stock-name">
-                            NIFTY 50
-                        </div>
-
-                        <div class="stock-company">
-                            Indian Market Index
+                            <div class="panel-note">
+                                Illustrative index values
+                            </div>
                         </div>
 
                     </div>
 
-                    <div class="stock-price">
+                    <div class="market-row">
 
-                        24,850.50
+                        <div>
+                            <div class="market-name">
+                                NIFTY 50
+                            </div>
 
-                        <div class="positive">
-                            +1.24%
+                            <div class="market-description">
+                                Indian Market Index
+                            </div>
+                        </div>
+
+                        <div class="market-right">
+
+                            <div class="market-value">
+                                24,850.50
+                            </div>
+
+                            <div class="positive">
+                                +1.24%
+                            </div>
+
                         </div>
 
                     </div>
 
-                </div>
+                    <div class="market-row">
 
+                        <div>
+                            <div class="market-name">
+                                SENSEX
+                            </div>
 
-                <div class="stock">
-
-                    <div>
-
-                        <div class="stock-name">
-                            SENSEX
+                            <div class="market-description">
+                                BSE Market Index
+                            </div>
                         </div>
 
-                        <div class="stock-company">
-                            BSE Market Index
-                        </div>
+                        <div class="market-right">
 
-                    </div>
+                            <div class="market-value">
+                                81,450.25
+                            </div>
 
-                    <div class="stock-price">
+                            <div class="positive">
+                                +0.86%
+                            </div>
 
-                        81,450.25
-
-                        <div class="positive">
-                            +0.86%
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="stock">
-
-                    <div>
-
-                        <div class="stock-name">
-                            BANK NIFTY
-                        </div>
-
-                        <div class="stock-company">
-                            Banking Index
                         </div>
 
                     </div>
 
-                    <div class="stock-price">
+                    <div class="market-row">
 
-                        52,320.75
+                        <div>
+                            <div class="market-name">
+                                BANK NIFTY
+                            </div>
 
-                        <div class="negative">
-                            -0.32%
+                            <div class="market-description">
+                                Banking Index
+                            </div>
+                        </div>
+
+                        <div class="market-right">
+
+                            <div class="market-value">
+                                52,320.75
+                            </div>
+
+                            <div class="negative">
+                                -0.32%
+                            </div>
+
                         </div>
 
                     </div>
 
-                </div>
+                </section>
 
-            </section>
-
+            </div>
 
         </div>
 
-    </div>
+        <footer class="footer">
 
+            ChronosMatch Trading Dashboard
 
-    <!-- FOOTER -->
+            <br>
 
-    <footer class="footer">
+            Built with
+            <strong>HTML · CSS · JavaScript</strong>
 
-        ChronosMatch Trading Dashboard
+            <br>
 
-        <br><br>
+            Demo data only · Not real-time financial data
 
-        Built with
-        <span>HTML · CSS · JavaScript</span>
+        </footer>
 
-        <br><br>
-
-        Demo data only · Not real-time financial data
-
-    </footer>
-
+    </main>
 
 </div>
 
-
 <script>
 
-/* STOCK DATA */
+/* SAMPLE STOCK DATA */
 
 const stocks = [
-
     {
         symbol: "RELIANCE",
         company: "Reliance Industries",
-        price: 1450.25,
+        price: 1448.07,
         change: 2.45
     },
-
     {
         symbol: "TCS",
         company: "Tata Consultancy Services",
-        price: 3820.50,
+        price: 3822.01,
         change: 1.85
     },
-
     {
         symbol: "INFY",
         company: "Infosys Limited",
-        price: 1685.75,
+        price: 1686.21,
         change: 1.20
     },
-
     {
         symbol: "HDFCBANK",
         company: "HDFC Bank",
-        price: 1725.30,
+        price: 1725.81,
         change: -0.65
     },
-
     {
         symbol: "ICICIBANK",
         company: "ICICI Bank",
-        price: 1240.80,
+        price: 1237.48,
         change: 0.95
     },
-
     {
         symbol: "WIPRO",
         company: "Wipro Limited",
-        price: 485.60,
+        price: 485.83,
         change: -1.25
     },
-
     {
         symbol: "BHARTIARTL",
         company: "Bharti Airtel",
-        price: 1580.40,
+        price: 1581.07,
         change: 2.10
     },
-
     {
         symbol: "ITC",
         company: "ITC Limited",
-        price: 445.20,
+        price: 443.38,
         change: -0.45
     }
-
 ];
 
-
-/* STOCK LIST */
+/* MARKET WATCH */
 
 const stockList =
     document.getElementById("stockList");
@@ -839,13 +1082,9 @@ const searchInput =
     document.getElementById("searchInput");
 
 const filterButtons =
-    document.querySelectorAll(".filter-btn");
-
+    document.querySelectorAll(".filter");
 
 let currentFilter = "all";
-
-
-/* DISPLAY STOCKS */
 
 function displayStocks() {
 
@@ -869,19 +1108,14 @@ function displayStocks() {
 
     });
 
-
     if (filteredStocks.length === 0) {
 
-        stockList.innerHTML = `
-            <p style="color:#94a3b8;padding:15px;">
-                No stocks found.
-            </p>
-        `;
+        stockList.innerHTML =
+            '<p class="panel-note">No stocks found.</p>';
 
         return;
 
     }
-
 
     filteredStocks.forEach(stock => {
 
@@ -890,60 +1124,44 @@ function displayStocks() {
 
         stockElement.className = "stock";
 
-
         const changeClass =
-            stock.change >= 0
-            ? "positive"
-            : "negative";
-
+            stock.change >= 0 ? "positive" : "negative";
 
         const changeSymbol =
-            stock.change >= 0
-            ? "+"
-            : "";
-
+            stock.change >= 0 ? "+" : "";
 
         stockElement.innerHTML = `
 
             <div>
-
-                <div class="stock-name">
+                <div class="stock-symbol">
                     ${stock.symbol}
                 </div>
 
                 <div class="stock-company">
                     ${stock.company}
                 </div>
-
             </div>
 
-            <div class="stock-price">
+            <div class="stock-right">
 
-                ₹${stock.price.toLocaleString("en-IN", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                })}
+                <div class="stock-price">
+                    ₹${stock.price.toLocaleString("en-IN", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    })}
+                </div>
 
-                <div class="${changeClass} stock-change">
-
+                <div class="stock-change ${changeClass}">
                     ${changeSymbol}${stock.change}%
-
                 </div>
 
             </div>
 
         `;
 
-
-        stockElement.addEventListener(
-            "click",
-            function() {
-
-                drawChart(stock);
-
-            }
-        );
-
+        stockElement.addEventListener("click", function() {
+            drawChart(stock);
+        });
 
         stockList.appendChild(stockElement);
 
@@ -951,44 +1169,29 @@ function displayStocks() {
 
 }
 
-
 /* SEARCH */
 
-searchInput.addEventListener(
-    "input",
-    displayStocks
-);
+searchInput.addEventListener("input", displayStocks);
 
-
-/* FILTER BUTTONS */
+/* FILTERS */
 
 filterButtons.forEach(button => {
 
-    button.addEventListener(
-        "click",
-        function() {
+    button.addEventListener("click", function() {
 
-            filterButtons.forEach(btn => {
+        filterButtons.forEach(btn => {
+            btn.classList.remove("active");
+        });
 
-                btn.classList.remove("active");
+        button.classList.add("active");
 
-            });
+        currentFilter = button.dataset.filter;
 
+        displayStocks();
 
-            button.classList.add("active");
-
-
-            currentFilter =
-                button.dataset.filter;
-
-
-            displayStocks();
-
-        }
-    );
+    });
 
 });
-
 
 /* CHART */
 
@@ -998,13 +1201,9 @@ const canvas =
 const ctx =
     canvas.getContext("2d");
 
-
 let chartData = [];
 
-let chartLabel = "Market Performance";
-
-
-/* GENERATE CHART DATA */
+let selectedRange = "1D";
 
 function generateChartData() {
 
@@ -1014,8 +1213,7 @@ function generateChartData() {
 
     for (let i = 0; i < 40; i++) {
 
-        value +=
-            (Math.random() - 0.45) * 5;
+        value += (Math.random() - 0.45) * 5;
 
         chartData.push(value);
 
@@ -1023,305 +1221,147 @@ function generateChartData() {
 
 }
 
-
-/* DRAW CHART */
-
 function drawChart(stock = null) {
 
-    const width =
-        canvas.clientWidth;
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
 
-    const height =
-        canvas.clientHeight;
+    const ratio = window.devicePixelRatio || 1;
 
+    canvas.width = width * ratio;
+    canvas.height = height * ratio;
 
-    const pixelRatio =
-        window.devicePixelRatio || 1;
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
 
-
-    canvas.width =
-        width * pixelRatio;
-
-    canvas.height =
-        height * pixelRatio;
-
-
-    ctx.scale(pixelRatio, pixelRatio);
-
-
-    ctx.clearRect(
-        0,
-        0,
-        width,
-        height
-    );
-
-
-    if (stock) {
-
-        chartLabel =
-            stock.symbol;
-
-    } else {
-
-        chartLabel =
-            "Market Performance";
-
-    }
-
+    ctx.clearRect(0, 0, width, height);
 
     generateChartData();
 
+    const padding = 15;
 
-    const padding = 20;
+    const chartWidth = width - padding * 2;
+    const chartHeight = height - padding * 2;
 
-    const chartWidth =
-        width - padding * 2;
+    const minValue = Math.min(...chartData) - 5;
+    const maxValue = Math.max(...chartData) + 5;
 
-    const chartHeight =
-        height - padding * 2;
+    const range = maxValue - minValue || 1;
 
+    const points = chartData.map((value, index) => {
 
-    const minValue =
-        Math.min(...chartData) - 5;
+        return {
+            x: padding +
+                (index / (chartData.length - 1)) * chartWidth,
 
-    const maxValue =
-        Math.max(...chartData) + 5;
+            y: padding + chartHeight -
+                ((value - minValue) / range) * chartHeight
+        };
 
-
-    const range =
-        maxValue - minValue;
-
-
-    const points =
-        chartData.map((value, index) => {
-
-            const x =
-                padding +
-                (index / (chartData.length - 1)) *
-                chartWidth;
-
-
-            const y =
-                padding +
-                chartHeight -
-                ((value - minValue) / range) *
-                chartHeight;
-
-
-            return {
-                x,
-                y
-            };
-
-        });
-
+    });
 
     /* GRID */
 
-    ctx.strokeStyle =
-        "#1e293b";
-
+    ctx.strokeStyle = "#253143";
     ctx.lineWidth = 1;
-
 
     for (let i = 0; i < 5; i++) {
 
-        const y =
-            padding +
-            (chartHeight / 4) * i;
-
+        const y = padding + (chartHeight / 4) * i;
 
         ctx.beginPath();
-
-        ctx.moveTo(
-            padding,
-            y
-        );
-
-        ctx.lineTo(
-            width - padding,
-            y
-        );
-
+        ctx.moveTo(padding, y);
+        ctx.lineTo(width - padding, y);
         ctx.stroke();
 
     }
 
-
-    /* GRADIENT */
-
-    const gradient =
-        ctx.createLinearGradient(
-            0,
-            padding,
-            0,
-            height
-        );
-
-
-    gradient.addColorStop(
-        0,
-        "rgba(0,255,156,0.35)"
-    );
-
-
-    gradient.addColorStop(
-        1,
-        "rgba(0,255,156,0)"
-    );
-
-
     /* AREA */
+
+    const gradient = ctx.createLinearGradient(
+        0, padding, 0, height
+    );
+
+    gradient.addColorStop(0, "rgba(0,214,154,0.22)");
+    gradient.addColorStop(1, "rgba(0,214,154,0)");
 
     ctx.beginPath();
 
-    ctx.moveTo(
-        points[0].x,
-        height - padding
-    );
-
+    ctx.moveTo(points[0].x, height - padding);
 
     points.forEach(point => {
-
-        ctx.lineTo(
-            point.x,
-            point.y
-        );
-
+        ctx.lineTo(point.x, point.y);
     });
-
 
     ctx.lineTo(
         points[points.length - 1].x,
         height - padding
     );
 
-
     ctx.closePath();
 
-
-    ctx.fillStyle =
-        gradient;
-
+    ctx.fillStyle = gradient;
     ctx.fill();
-
 
     /* LINE */
 
     ctx.beginPath();
 
-
     points.forEach((point, index) => {
 
         if (index === 0) {
-
-            ctx.moveTo(
-                point.x,
-                point.y
-            );
-
+            ctx.moveTo(point.x, point.y);
         } else {
-
-            ctx.lineTo(
-                point.x,
-                point.y
-            );
-
+            ctx.lineTo(point.x, point.y);
         }
 
     });
 
-
-    ctx.strokeStyle =
-        "#00ff9c";
-
-    ctx.lineWidth = 2.5;
-
-
-    ctx.shadowColor =
-        "#00ff9c";
-
-    ctx.shadowBlur = 10;
-
+    ctx.strokeStyle = "#00d69a";
+    ctx.lineWidth = 2;
 
     ctx.stroke();
 
-
-    ctx.shadowBlur = 0;
-
-
     /* LAST POINT */
 
-    const lastPoint =
-        points[points.length - 1];
-
+    const last = points[points.length - 1];
 
     ctx.beginPath();
 
-    ctx.arc(
-        lastPoint.x,
-        lastPoint.y,
-        4,
-        0,
-        Math.PI * 2
-    );
+    ctx.arc(last.x, last.y, 3.5, 0, Math.PI * 2);
 
-
-    ctx.fillStyle =
-        "#00ff9c";
-
+    ctx.fillStyle = "#00d69a";
     ctx.fill();
-
 
 }
 
+/* CHART RANGE */
+
+document.querySelectorAll(".chart-btn").forEach(button => {
+
+    button.addEventListener("click", function() {
+
+        document.querySelectorAll(".chart-btn").forEach(btn => {
+            btn.classList.remove("active");
+        });
+
+        button.classList.add("active");
+
+        selectedRange = button.dataset.range;
+
+        drawChart();
+
+    });
+
+});
 
 /* INITIALIZE */
 
 displayStocks();
-
 drawChart();
 
+/* RESPONSIVE CHART */
 
-/* RESIZE */
-
-window.addEventListener(
-    "resize",
-    function() {
-
-        drawChart();
-
-    }
-);
-
-
-/* DEMO PRICE UPDATES */
-
-setInterval(function() {
-
-    stocks.forEach(stock => {
-
-        const movement =
-            (Math.random() - 0.5) * 2;
-
-
-        stock.price += movement;
-
-
-        stock.price =
-            Math.max(
-                1,
-                stock.price
-            );
-
-    });
-
-
-    displayStocks();
-
-}, 5000);
-
+window.addEventListener("resize", drawChart);
 
 </script>
 
