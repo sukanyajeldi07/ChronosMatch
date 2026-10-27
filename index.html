@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChronosMatch Dashboard</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080d16;color:#e8eef8;font-family:Arial,sans-serif}
+header{padding:20px 5%;background:#101827;border-bottom:1px solid #263349;display:flex;justify-content:space-between;align-items:center}
+h1{margin:0;font-size:25px}
+header span{color:#28d7a0;font-size:12px}
+main{max-width:1400px;margin:auto;padding:30px 5%}
+.intro{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:25px;flex-wrap:wrap}
+.intro p{color:#91a2ba}
+.demo{color:#f5c66a;background:#241d12;border:1px solid #5d4c2d;padding:9px 12px;border-radius:7px;font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.card{background:#101827;border:1px solid #263349;border-radius:12px;padding:20px;margin-bottom:16px}
+.label{color:#91a2ba;font-size:13px}
+.value{font-size:28px;font-weight:bold;margin:15px 0 5px}
+.green{color:#28d7a0}
+.muted{color:#91a2ba;font-size:12px}
+.columns{display:grid;grid-template-columns:2fr 1fr;gap:16px}
+h2{font-size:17px;margin-top:0}
+table{width:100%;border-collapse:collapse;margin-top:12px}
+th,td{text-align:left;padding:12px 6px;border-bottom:1px solid #263349;font-size:13px}
+th{color:#91a2ba;font-weight:normal}
+.right{text-align:right}
+canvas{width:100%;height:240px}
+.status{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #263349;font-size:13px}
+footer{text-align:center;padding:25px;color:#91a2ba;font-size:12px}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.columns{grid-template-columns:1fr}}
+@media(max-width:480px){header{padding:16px}h1{font-size:20px}main{padding:20px 14px}.grid{gap:9px}.card{padding:14px}.value{font-size:22px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>◈ ChronosMatch</h1>
+  <span>● SYSTEM OVERVIEW</span>
+</header>
+
+<main>
+  <div class="intro">
+    <div>
+      <h2>Trading Systems Dashboard</h2>
+      <p>Zero-Copy High-Frequency Trading Engine · Week 1</p>
+    </div>
+    <div class="demo">DEMO DATA — NOT LIVE MARKET DATA</div>
+  </div>
+
+  <section class="grid">
+    <div class="card">
+      <div class="label">Consumer Throughput</div>
+      <div class="value">98,234</div>
+      <div class="muted">Orders per second</div>
+    </div>
+    <div class="card">
+      <div class="label">Orders Processed</div>
+      <div class="value">300,000</div>
+      <div class="muted">Benchmark total</div>
+    </div>
+    <div class="card">
+      <div class="label">Mean Latency</div>
+      <div class="value">1.075 ms</div>
+      <div class="muted">1,074.56 microseconds</div>
+    </div>
+    <div class="card">
+      <div class="label">P99 Latency</div>
+      <div class="value">2.119 ms</div>
+      <div class="muted">2,118.90 microseconds</div>
+    </div>
+  </section>
+
+  <section class="columns">
+    <div class="card">
+      <h2>Market Price Chart</h2>
+      <p class="muted">Illustrative prices generated in the browser</p>
+      <canvas id="chart"></canvas>
+      <div class="status">
+        <span>Demo Symbol</span><strong>CHRM / USD</strong>
+      </div>
+      <div class="status">
+        <span>Demo Price</span><strong class="green" id="price">$142.68</strong>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Market Watch</h2>
+      <p class="muted">Simulated example prices</p>
+      <table>
+        <thead><tr><th>Symbol</th><th class="right">Price</th><th class="right">Change</th></tr></thead>
+        <tbody>
+          <tr><td>CHRM</td><td class="right">$142.68</td><td class="right green">+1.24%</td></tr>
+          <tr><td>NVDA</td><td class="right">$136.42</td><td class="right green">+0.82%</td></tr>
+          <tr><td>AAPL</td><td class="right">$227.19</td><td class="right" style="color:#ff657a">-0.31%</td></tr>
+          <tr><td>MSFT</td><td class="right">$511.07</td><td class="right green">+0.46%</td></tr>
+          <tr><td>TSLA</td><td class="right">$318.55</td><td class="right" style="color:#ff657a">-1.08%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="columns">
+    <div class="card">
+      <h2>Order Book Preview</h2>
+      <p class="muted">Sample order book — not connected to the engine</p>
+      <table>
+        <thead><tr><th>Side</th><th class="right">Price</th><th class="right">Quantity</th></tr></thead>
+        <tbody>
+          <tr><td style="color:#ff657a">SELL</td><td class="right">142.74</td><td class="right">420</td></tr>
+          <tr><td style="color:#ff657a">SELL</td><td class="right">142.72</td><td class="right">295</td></tr>
+          <tr><td style="color:#ff657a">SELL</td><td class="right">142.70</td><td class="right">180</td></tr>
+          <tr><td class="green">BUY</td><td class="right">142.66</td><td class="right">310</td></tr>
+          <tr><td class="green">BUY</td><td class="right">142.64</td><td class="right">440</td></tr>
+          <tr><td class="green">BUY</td><td class="right">142.62</td><td class="right">210</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>System Status</h2>
+      <div class="status"><span>Zero-Copy Ring Buffer</span><span class="green">Implemented</span></div>
+      <div class="status"><span>Binary Protocol</span><span class="green">32 Bytes</span></div>
+      <div class="status"><span>Producer Rate</span><strong>100,149/sec</strong></div>
+      <div class="status"><span>Benchmark Orders Dropped</span><span class="green">0 reported</span></div>
+      <div class="status"><span>Live Market Connection</span><span style="color:#f5c66a">Not connected</span></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  ChronosMatch · Week 1 benchmark dashboard · Market data is simulated
+</footer>
+
+<script>
+const canvas = document.getElementById("chart");
+const ctx = canvas.getContext("2d");
+let values = Array.from({length:45},(_,i)=>
+  142 + Math.sin(i*0.35)*0.35 + Math.sin(i*0.8)*0.12 + i*0.009
+);
+
+function drawChart(){
+  const rect = canvas.getBoundingClientRect();
+  const ratio = window.devicePixelRatio || 1;
+  canvas.width = rect.width * ratio;
+  canvas.height = rect.height * ratio;
+  ctx.setTransform(ratio,0,0,ratio,0,0);
+
+  const w=rect.width, h=rect.height;
+  const min=Math.min(...values)-0.15;
+  const max=Math.max(...values)+0.15;
+  const x=i=>i*w/(values.length-1);
+  const y=v=>h-12-(v-min)/(max-min)*(h-24);
+
+  ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle="#263349";
+  ctx.lineWidth=1;
+
+  for(let i=0;i<5;i++){
+    const yy=12+i*(h-24)/4;
+    ctx.beginPath();ctx.moveTo(0,yy);ctx.lineTo(w,yy);ctx.stroke();
+  }
+
+  ctx.beginPath();
+  values.forEach((v,i)=>i===0?ctx.moveTo(x(i),y(v)):ctx.lineTo(x(i),y(v)));
+  ctx.lineTo(w,h);ctx.lineTo(0,h);ctx.closePath();
+  ctx.fillStyle="rgba(40,215,160,0.09)";
+  ctx.fill();
+
+  ctx.beginPath();
+  values.forEach((v,i)=>i===0?ctx.moveTo(x(i),y(v)):ctx.lineTo(x(i),y(v)));
+  ctx.strokeStyle="#28d7a0";
+  ctx.lineWidth=2;
+  ctx.stroke();
+
+  document.getElementById("price").textContent=
+    "$"+values[values.length-1].toFixed(2);
+}
+
+window.addEventListener("resize",drawChart);
+drawChart();
+
+setInterval(()=>{
+  values.push(values[values.length-1]+(Math.random()-0.48)*0.12);
+  if(values.length>45) values.shift();
+  drawChart();
+},2500);
+</script>
+</body>
+</html>
