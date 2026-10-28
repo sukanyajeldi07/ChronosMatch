@@ -1,506 +1,450 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ChronosMatch | Trading Terminal</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChronosMatch | Trading Engine</title>
+  <meta name="description" content="ChronosMatch high-frequency trading engine performance dashboard.">
+  <style>
+    :root {
+      --bg: #080d16;
+      --panel: #101827;
+      --panel2: #131f31;
+      --border: #243247;
+      --text: #e8eef8;
+      --muted: #8b9bb2;
+      --cyan: #45d6e8;
+      --green: #36d399;
+      --red: #fb7185;
+      --purple: #a78bfa;
+    }
 
-<style>
-:root {
-  --bg: #080d16;
-  --sidebar: #0d1421;
-  --panel: #111b2b;
-  --border: #243249;
-  --text: #edf4ff;
-  --muted: #91a2bd;
-  --green: #22d3a6;
-  --blue: #60a5fa;
-  --red: #fb7185;
-}
+    * { box-sizing: border-box; }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      font-size: 14px;
+    }
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: "Segoe UI", Arial, sans-serif;
-  font-size: 14px;
-}
+    button { font: inherit; }
 
-.app { display: flex; min-height: 100vh; }
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 225px minmax(0, 1fr);
+    }
 
-.sidebar {
-  width: 235px;
-  flex-shrink: 0;
-  background: var(--sidebar);
-  border-right: 1px solid var(--border);
-  padding: 25px 16px;
-  display: flex;
-  flex-direction: column;
-}
+    aside {
+      background: #0b1220;
+      border-right: 1px solid var(--border);
+      padding: 26px 16px;
+    }
 
-.logo {
-  font-size: 22px;
-  font-weight: 800;
-  padding: 0 10px 34px;
-  letter-spacing: -0.7px;
-}
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 0 8px 30px;
+    }
 
-.logo span { color: var(--green); }
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 11px;
+      background: #153747;
+      color: var(--cyan);
+      font-size: 22px;
+      font-weight: 800;
+    }
 
-.nav-label {
-  color: #647793;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.6px;
-  padding: 10px;
-  margin-top: 8px;
-}
+    .brand-name { font-size: 17px; font-weight: 750; }
+    .brand-sub { color: var(--muted); font-size: 11px; margin-top: 4px; }
 
-.nav a {
-  display: block;
-  color: var(--muted);
-  text-decoration: none;
-  padding: 12px;
-  border-radius: 8px;
-  margin: 3px 0;
-  transition: .2s;
-}
+    .nav-label {
+      color: #64748b;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      padding: 12px 10px;
+    }
 
-.nav a:hover, .nav a.active {
-  color: var(--green);
-  background: #142b30;
-}
+    .nav-item {
+      display: flex;
+      gap: 12px;
+      padding: 12px;
+      margin: 4px 0;
+      border-radius: 8px;
+      color: var(--muted);
+    }
 
-.sidebar-bottom {
-  margin-top: auto;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 14px;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.8;
-}
+    .nav-item.active {
+      color: var(--cyan);
+      background: #142b3b;
+    }
 
-.green { color: var(--green); }
-.red { color: var(--red); }
-.blue { color: var(--blue); }
+    .sidebar-note {
+      margin-top: 35px;
+      padding: 13px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      border-radius: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
 
-.main { min-width: 0; flex: 1; }
+    main { min-width: 0; padding: 28px; }
 
-.topbar {
-  min-height: 72px;
-  padding: 15px 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
-  border-bottom: 1px solid var(--border);
-  background: #0c1320;
-}
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
 
-.search {
-  background: #111b2b;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 11px 14px;
-  color: var(--muted);
-  width: min(300px, 100%);
-}
+    h1 { font-size: 25px; margin: 0 0 8px; letter-spacing: -.6px; }
+    .subtitle { color: var(--muted); }
 
-.top-status { color: var(--green); font-size: 12px; }
+    .top-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
-.content { padding: 30px; max-width: 1700px; margin: auto; }
+    .pill {
+      border: 1px solid var(--border);
+      padding: 9px 12px;
+      border-radius: 8px;
+      color: var(--muted);
+      background: var(--panel);
+      font-size: 12px;
+    }
 
-.page-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 18px;
-  margin-bottom: 25px;
-}
+    .demo-pill {
+      color: #fbbf24;
+      border-color: #6b4b1d;
+      background: #2a2114;
+    }
 
-.eyebrow {
-  color: var(--green);
-  text-transform: uppercase;
-  letter-spacing: 1.8px;
-  font-size: 10px;
-  font-weight: 700;
-}
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 25px 0 15px;
+    }
 
-h1 { font-size: 29px; margin: 7px 0; letter-spacing: -.8px; }
-h2 { font-size: 15px; font-weight: 650; }
-h3 { font-size: 13px; font-weight: 600; }
+    h2 { margin: 0; font-size: 16px; }
+    .muted { color: var(--muted); font-size: 12px; }
 
-.subtitle { color: var(--muted); font-size: 13px; }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 15px;
+    }
 
-.demo {
-  color: #fbbf24;
-  background: #292112;
-  border: 1px solid #59451e;
-  padding: 10px 13px;
-  border-radius: 7px;
-  font-size: 10px;
-  font-weight: 700;
-}
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 19px;
+      min-width: 0;
+    }
 
-.section-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  margin: 26px 0 13px;
-}
+    .metric-label { color: var(--muted); font-size: 12px; }
+    .metric-value { font-size: clamp(20px, 2.2vw, 29px); font-weight: 750; margin: 15px 0 9px; letter-spacing: -.7px; }
+    .metric-foot { color: var(--muted); font-size: 11px; line-height: 1.5; }
+    .cyan { color: var(--cyan); }
+    .green { color: var(--green); }
+    .purple { color: var(--purple); }
 
-.section-title small { color: var(--muted); font-size: 11px; }
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(260px, 1fr);
+      gap: 15px;
+      margin-top: 17px;
+    }
 
-.kpis {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14px;
-}
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
 
-.card, .panel {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 11px;
-}
+    .card-title { font-weight: 700; font-size: 14px; }
+    .card-caption { color: var(--muted); font-size: 11px; margin-top: 6px; }
 
-.card { padding: 19px; }
+    .chart-wrap { height: 245px; width: 100%; }
+    canvas { width: 100%; height: 100%; display: block; }
 
-.kpi-top {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  color: var(--muted);
-  font-size: 12px;
-}
+    .legend { display: flex; gap: 15px; flex-wrap: wrap; color: var(--muted); font-size: 11px; }
+    .legend span { display: flex; align-items: center; gap: 6px; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
 
-.kpi-icon { color: var(--green); font-size: 18px; }
-.kpi-value { font-size: clamp(22px, 2vw, 29px); font-weight: 750; margin: 17px 0 7px; }
-.kpi-bottom { font-size: 11px; color: var(--muted); }
-.kpi-line { height: 3px; background: var(--green); width: 32px; margin-top: 16px; border-radius: 4px; }
+    .market-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--border);
+    }
 
-.grid-main {
-  display: grid;
-  grid-template-columns: minmax(0, 1.7fr) minmax(260px, .9fr);
-  gap: 16px;
-  margin-top: 16px;
-}
+    .market-row:last-child { border-bottom: 0; }
+    .symbol { font-weight: 700; }
+    .symbol-sub { color: var(--muted); font-size: 11px; margin-top: 5px; }
+    .price { text-align: right; font-weight: 700; }
+    .change { text-align: right; font-size: 11px; margin-top: 5px; }
 
-.panel { padding: 20px; min-width: 0; }
+    .table-wrap { overflow-x: auto; }
+    table { border-collapse: collapse; width: 100%; white-space: nowrap; }
+    th, td { padding: 14px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+    th { color: var(--muted); font-size: 10px; letter-spacing: .8px; font-weight: 700; }
+    td { font-size: 12px; }
+    tbody tr:last-child td { border-bottom: 0; }
 
-.panel-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 8px;
-}
+    .status {
+      display: inline-block;
+      padding: 5px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      color: var(--green);
+      background: #10332d;
+    }
 
-.muted { color: var(--muted); font-size: 11px; margin-top: 6px; }
+    .status.wait { color: #fbbf24; background: #342a16; }
 
-.chart-area { height: 285px; margin-top: 20px; position: relative; }
+    .footer {
+      padding: 22px 0 5px;
+      color: #718198;
+      font-size: 11px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
 
-.pills { display: flex; gap: 5px; }
-.pills button {
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--muted);
-  padding: 6px 9px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 10px;
-}
-.pills button.active { background: #183c38; color: var(--green); border-color: #28665c; }
+    @media (max-width: 1100px) {
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .content-grid { grid-template-columns: 1fr; }
+    }
 
-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-th { color: var(--muted); font-size: 11px; font-weight: 500; text-align: left; padding: 12px 5px; }
-td { padding: 14px 5px; border-top: 1px solid var(--border); font-size: 12px; }
-td:last-child, th:last-child { text-align: right; }
-td:nth-child(2), th:nth-child(2) { text-align: right; }
-
-.asset { font-weight: 700; }
-.asset small { display: block; color: var(--muted); font-weight: 400; font-size: 10px; margin-top: 3px; }
-
-.lower-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 16px;
-  margin-top: 16px;
-}
-
-.book-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-.book-label { margin: 15px 0 8px; font-size: 11px; font-weight: 700; }
-.book-row { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
-.spread { text-align: center; padding: 12px; margin-top: 12px; background: #0c1421; border-radius: 7px; color: var(--muted); font-size: 11px; }
-
-.system-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border); gap: 10px; }
-.system-row:last-child { border-bottom: 0; }
-.system-row span { color: var(--muted); font-size: 12px; }
-.system-row strong { font-size: 11px; }
-
-footer {
-  border-top: 1px solid var(--border);
-  color: var(--muted);
-  text-align: center;
-  padding: 22px;
-  font-size: 11px;
-}
-
-@media(max-width: 1100px) {
-  .sidebar { width: 190px; }
-  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .grid-main { grid-template-columns: 1fr; }
-}
-
-@media(max-width: 700px) {
-  .app { display: block; }
-  .sidebar { width: 100%; padding: 15px; }
-  .logo { padding: 0 5px 15px; }
-  .nav-label, .sidebar-bottom { display: none; }
-  .nav { display: flex; overflow-x: auto; gap: 5px; }
-  .nav a { white-space: nowrap; padding: 9px; font-size: 12px; }
-  .topbar { padding: 12px 16px; }
-  .content { padding: 20px 14px; }
-  .page-title { flex-direction: column; }
-  h1 { font-size: 25px; }
-  .lower-grid { grid-template-columns: 1fr; }
-  .chart-area { height: 240px; }
-}
-
-@media(max-width: 400px) {
-  .kpis { grid-template-columns: 1fr; }
-  .search { width: 170px; }
-}
-</style>
+    @media (max-width: 700px) {
+      .app { grid-template-columns: 1fr; }
+      aside { padding: 15px; border-right: 0; border-bottom: 1px solid var(--border); }
+      .brand { padding-bottom: 10px; }
+      .nav-label, .sidebar-note { display: none; }
+      .nav-list { display: flex; overflow-x: auto; }
+      .nav-item { white-space: nowrap; padding: 10px; }
+      main { padding: 18px 13px; }
+      h1 { font-size: 22px; }
+      .metrics { gap: 10px; }
+      .card { padding: 14px; }
+      .metric-value { font-size: 22px; }
+      .chart-wrap { height: 210px; }
+    }
+  </style>
 </head>
-
 <body>
 <div class="app">
-
-<aside class="sidebar">
-  <div class="logo"><span>◈</span> ChronosMatch</div>
-
-  <nav class="nav">
-    <div class="nav-label">WORKSPACE</div>
-    <a class="active" href="#overview">▦ &nbsp; Overview</a>
-    <a href="#market">◉ &nbsp; Market Watch</a>
-    <a href="#orderbook">⇄ &nbsp; Order Book</a>
-
-    <div class="nav-label">ANALYTICS</div>
-    <a href="#benchmarks">▥ &nbsp; Benchmarks</a>
-    <a href="#system">⚙ &nbsp; System Status</a>
-  </nav>
-
-  <div class="sidebar-bottom">
-    <div class="green">● DEMO ENVIRONMENT</div>
-    ChronosMatch<br>
-    Zero-Copy Trading Engine<br>
-    Week 1 Project
-  </div>
-</aside>
-
-<div class="main">
-  <header class="topbar">
-    <input class="search" type="search" placeholder="Search dashboard..." aria-label="Search dashboard">
-    <div class="top-status">● SYSTEM OVERVIEW</div>
-  </header>
-
-  <main class="content" id="overview">
-    <section class="page-title">
+  <aside>
+    <div class="brand">
+      <div class="brand-icon">C</div>
       <div>
-        <div class="eyebrow">Trading Infrastructure / Overview</div>
-        <h1>Performance Terminal</h1>
-        <p class="subtitle">Zero-Copy High-Frequency Trading Engine · Week 1</p>
+        <div class="brand-name">ChronosMatch</div>
+        <div class="brand-sub">TRADING ENGINE</div>
       </div>
-      <div class="demo">DEMO DATA — NOT LIVE MARKET DATA</div>
-    </section>
-
-    <div class="section-title" id="benchmarks">
-      <h2>Benchmark Metrics</h2>
-      <small>Project performance figures</small>
     </div>
 
-    <section class="kpis">
+    <div class="nav-label">WORKSPACE</div>
+    <nav class="nav-list">
+      <div class="nav-item active">▦ Overview</div>
+      <div class="nav-item">⌁ Market Watch</div>
+      <div class="nav-item">⇄ Order Flow</div>
+      <div class="nav-item">◷ Performance</div>
+    </nav>
+
+    <div class="sidebar-note">
+      <div class="cyan">● DEMO ENVIRONMENT</div>
+      Market prices and chart values are illustrative demo data, not live exchange data.
+    </div>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <div>
+        <h1>Trading Engine Overview</h1>
+        <div class="subtitle">Monitor order flow, matching performance and engine metrics.</div>
+      </div>
+      <div class="top-actions">
+        <span class="pill demo-pill">● DEMO DATA</span>
+        <span class="pill">Python Engine</span>
+      </div>
+    </header>
+
+    <div class="section-heading">
+      <h2>Engine Performance</h2>
+      <span class="muted">Benchmark snapshot · Week 1</span>
+    </div>
+
+    <section class="metrics">
       <article class="card">
-        <div class="kpi-top"><span>Consumer Throughput</span><span class="kpi-icon">↗</span></div>
-        <div class="kpi-value">98,234</div>
-        <div class="kpi-bottom">Orders per second</div>
-        <div class="kpi-line"></div>
+        <div class="metric-label">Consumer Throughput</div>
+        <div class="metric-value cyan">97,512 <span style="font-size:13px">ops/s</span></div>
+        <div class="metric-foot">Measured benchmark result</div>
       </article>
       <article class="card">
-        <div class="kpi-top"><span>Orders Processed</span><span class="kpi-icon blue">▤</span></div>
-        <div class="kpi-value">300,000</div>
-        <div class="kpi-bottom">Benchmark total</div>
-        <div class="kpi-line blue" style="background:var(--blue)"></div>
+        <div class="metric-label">Orders Processed</div>
+        <div class="metric-value">300,000</div>
+        <div class="metric-foot">Orders in benchmark run</div>
       </article>
       <article class="card">
-        <div class="kpi-top"><span>Mean Latency</span><span class="kpi-icon">◷</span></div>
-        <div class="kpi-value">1.075 ms</div>
-        <div class="kpi-bottom">1,074.56 microseconds</div>
-        <div class="kpi-line" style="background:#a78bfa"></div>
+        <div class="metric-label">Mean Latency</div>
+        <div class="metric-value purple">1.358 <span style="font-size:13px">ms</span></div>
+        <div class="metric-foot">Average measured latency</div>
       </article>
       <article class="card">
-        <div class="kpi-top"><span>P99 Latency</span><span class="kpi-icon red">⌁</span></div>
-        <div class="kpi-value">2.119 ms</div>
-        <div class="kpi-bottom">2,118.90 microseconds</div>
-        <div class="kpi-line" style="background:var(--red)"></div>
+        <div class="metric-label">P99 Latency</div>
+        <div class="metric-value green">2.786 <span style="font-size:13px">ms</span></div>
+        <div class="metric-foot">99th percentile measured latency</div>
       </article>
     </section>
 
-    <section class="grid-main">
-      <article class="panel">
-        <div class="panel-head">
+    <section class="content-grid">
+      <article class="card">
+        <div class="card-header">
           <div>
-            <h2>Market Activity</h2>
-            <p class="muted">Illustrative prices generated in this browser</p>
+            <div class="card-title">Market Price Movement</div>
+            <div class="card-caption">Illustrative data · Not live market prices</div>
           </div>
-          <div class="pills">
-            <button class="active" data-count="12">1H</button>
-            <button data-count="20">4H</button>
-            <button data-count="30">1D</button>
-          </div>
+          <span class="pill">DEMO</span>
         </div>
-        <div class="chart-area"><canvas id="marketChart"></canvas></div>
+        <div class="chart-wrap">
+          <canvas id="priceChart" aria-label="Illustrative market price chart"></canvas>
+        </div>
+        <div class="legend">
+          <span><i class="dot" style="background:#45d6e8"></i> DEMO-XYZ</span>
+          <span><i class="dot" style="background:#a78bfa"></i> DEMO-ABC</span>
+        </div>
       </article>
 
-      <article class="panel" id="market">
-        <div class="panel-head">
+      <article class="card">
+        <div class="card-header">
           <div>
-            <h2>Market Watch</h2>
-            <p class="muted">Simulated example prices</p>
+            <div class="card-title">Market Watch</div>
+            <div class="card-caption">Sample instruments · Demo values</div>
           </div>
-          <span class="green">● DEMO</span>
+          <span class="muted">3 symbols</span>
         </div>
+        <div class="market-row">
+          <div><div class="symbol">DEMO-XYZ</div><div class="symbol-sub">Sample instrument</div></div>
+          <div><div class="price">104.28</div><div class="change green">+1.24%</div></div>
+        </div>
+        <div class="market-row">
+          <div><div class="symbol">DEMO-ABC</div><div class="symbol-sub">Sample instrument</div></div>
+          <div><div class="price">87.64</div><div class="change" style="color:var(--red)">-0.42%</div></div>
+        </div>
+        <div class="market-row">
+          <div><div class="symbol">DEMO-QRS</div><div class="symbol-sub">Sample instrument</div></div>
+          <div><div class="price">212.10</div><div class="change green">+0.86%</div></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="card" style="margin-top:17px">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Recent Order Activity</div>
+          <div class="card-caption">Illustrative order records for interface preview</div>
+        </div>
+        <span class="pill">DEMO RECORDS</span>
+      </div>
+      <div class="table-wrap">
         <table>
-          <thead><tr><th>Symbol</th><th>Price</th><th>Change</th></tr></thead>
+          <thead>
+            <tr><th>ORDER ID</th><th>INSTRUMENT</th><th>SIDE</th><th>PRICE</th><th>QUANTITY</th><th>STATUS</th></tr>
+          </thead>
           <tbody>
-            <tr><td class="asset">CHRM<small>ChronosMatch demo</small></td><td>$142.68</td><td class="green">+1.24%</td></tr>
-            <tr><td class="asset">NVDA<small>Example asset</small></td><td>$136.42</td><td class="green">+0.82%</td></tr>
-            <tr><td class="asset">AAPL<small>Example asset</small></td><td>$227.16</td><td class="red">−0.34%</td></tr>
-            <tr><td class="asset">MSFT<small>Example asset</small></td><td>$512.75</td><td class="green">+0.56%</td></tr>
+            <tr><td>ORD-1001</td><td>DEMO-XYZ</td><td class="green">BUY</td><td>104.20</td><td>50</td><td><span class="status">Matched · Demo</span></td></tr>
+            <tr><td>ORD-1002</td><td>DEMO-ABC</td><td style="color:var(--red)">SELL</td><td>87.70</td><td>25</td><td><span class="status">Matched · Demo</span></td></tr>
+            <tr><td>ORD-1003</td><td>DEMO-QRS</td><td class="green">BUY</td><td>212.00</td><td>40</td><td><span class="status wait">Pending · Demo</span></td></tr>
+            <tr><td>ORD-1004</td><td>DEMO-XYZ</td><td style="color:var(--red)">SELL</td><td>104.35</td><td>15</td><td><span class="status">Matched · Demo</span></td></tr>
           </tbody>
         </table>
-      </article>
+      </div>
     </section>
 
-    <section class="lower-grid">
-      <article class="panel" id="orderbook">
-        <h2>Order Book Snapshot</h2>
-        <p class="muted">Illustrative bid and ask orders · Not connected to an exchange</p>
-        <div class="spread">Example spread: <strong style="color:var(--text)">$0.02</strong></div>
-        <div class="book-grid">
-          <div>
-            <div class="book-label green">BIDS / BUY</div>
-            <div class="book-row"><span>142.66</span><span>850</span></div>
-            <div class="book-row"><span>142.64</span><span>1,200</span></div>
-            <div class="book-row"><span>142.62</span><span>640</span></div>
-            <div class="book-row"><span>142.60</span><span>1,450</span></div>
-          </div>
-          <div>
-            <div class="book-label red">ASKS / SELL</div>
-            <div class="book-row"><span>142.68</span><span>720</span></div>
-            <div class="book-row"><span>142.70</span><span>960</span></div>
-            <div class="book-row"><span>142.72</span><span>1,100</span></div>
-            <div class="book-row"><span>142.74</span><span>580</span></div>
-          </div>
-        </div>
-      </article>
-
-      <article class="panel" id="system">
-        <h2>Infrastructure Status</h2>
-        <p class="muted">Dashboard and data source status</p>
-        <div class="system-row"><span>Dashboard interface</span><strong class="green">● AVAILABLE</strong></div>
-        <div class="system-row"><span>Market data source</span><strong style="color:#fbbf24">● SIMULATED</strong></div>
-        <div class="system-row"><span>Python engine connection</span><strong style="color:var(--muted)">NOT CONNECTED</strong></div>
-        <div class="system-row"><span>Exchange connection</span><strong style="color:var(--muted)">NOT CONNECTED</strong></div>
-      </article>
-    </section>
+    <footer class="footer">
+      <span>ChronosMatch · High-Frequency Trading Engine</span>
+      <span>Benchmark metrics are measured; market and order examples are demo data.</span>
+    </footer>
   </main>
-
-  <footer>
-    <span class="green">ChronosMatch</span> · Zero-Copy High-Frequency Trading Engine
-    <br><br>
-    Project benchmark figures and illustrative market data. No live market feed or trading connection.
-  </footer>
-</div>
 </div>
 
 <script>
-const chartLabels = Array.from({length: 30}, (_, i) => `T-${29-i}`);
-let price = 142;
-const allPrices = chartLabels.map(() => {
-  price += (Math.random() - 0.48) * 1.6;
-  return Number(price.toFixed(2));
-});
+  const canvas = document.getElementById("priceChart");
+  const ctx = canvas.getContext("2d");
 
-const ctx = document.getElementById("marketChart").getContext("2d");
-const fill = ctx.createLinearGradient(0, 0, 0, 300);
-fill.addColorStop(0, "rgba(34,211,166,0.24)");
-fill.addColorStop(1, "rgba(34,211,166,0.00)");
+  const series = [
+    { color: "#45d6e8", values: [42, 48, 45, 57, 53, 62, 58, 69, 65, 74, 71, 82] },
+    { color: "#a78bfa", values: [65, 61, 68, 63, 72, 67, 75, 71, 78, 74, 81, 77] }
+  ];
 
-const chart = new Chart(ctx, {
-  type: "line",
-  data: {
-    labels: chartLabels,
-    datasets: [{
-      label: "Simulated price",
-      data: allPrices,
-      borderColor: "#22d3a6",
-      backgroundColor: fill,
-      borderWidth: 2,
-      fill: true,
-      tension: 0.35,
-      pointRadius: 0,
-      pointHoverRadius: 4
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    interaction: { intersect: false, mode: "index" },
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        backgroundColor: "#0d1421",
-        borderColor: "#243249",
-        borderWidth: 1,
-        callbacks: {
-          label: item => " Demo price: $" + item.parsed.y.toFixed(2)
-        }
-      }
-    },
-    scales: {
-      x: {
-        grid: { display: false },
-        ticks: { color: "#71839e", maxTicksLimit: 6, font: { size: 10 } },
-        border: { display: false }
-      },
-      y: {
-        grid: { color: "rgba(145,162,189,0.12)" },
-        ticks: {
-          color: "#91a2bd",
-          maxTicksLimit: 6,
-          callback: value => "$" + value
-        },
-        border: { display: false }
-      }
+  function drawChart() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.max(1, rect.width * dpr);
+    canvas.height = Math.max(1, rect.height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const w = rect.width;
+    const h = rect.height;
+    const left = 34, right = 10, top = 12, bottom = 25;
+    const chartW = w - left - right;
+    const chartH = h - top - bottom;
+
+    ctx.clearRect(0, 0, w, h);
+    ctx.font = "10px Segoe UI, Arial";
+    ctx.fillStyle = "#8b9bb2";
+    ctx.strokeStyle = "#243247";
+    ctx.lineWidth = 1;
+
+    for (let i = 0; i <= 4; i++) {
+      const y = top + chartH * i / 4;
+      ctx.beginPath();
+      ctx.moveTo(left, y);
+      ctx.lineTo(w - right, y);
+      ctx.stroke();
+      ctx.fillText(String(100 - i * 25), 2, y + 4);
     }
-  }
-});
 
-document.querySelectorAll("[data-count]").forEach(button => {
-  button.addEventListener("click", () => {
-    document.querySelectorAll("[data-count]").forEach(b => b.classList.remove("active"));
-    button.classList.add("active");
-    const count = Number(button.dataset.count);
-    chart.data.labels = chartLabels.slice(-count);
-    chart.data.datasets[0].data = allPrices.slice(-count);
-    chart.update();
-  });
-});
+    ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00"].forEach((label, i) => {
+      const x = left + chartW * i / 5;
+      ctx.fillText(label, x - 15, h - 5);
+    });
+
+    series.forEach(s => {
+      ctx.beginPath();
+      s.values.forEach((value, i) => {
+        const x = left + chartW * i / (s.values.length - 1);
+        const y = top + chartH * (100 - value) / 100;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.strokeStyle = s.color;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    });
+  }
+
+  drawChart();
+  window.addEventListener("resize", drawChart);
 </script>
 </body>
 </html>
