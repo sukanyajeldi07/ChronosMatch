@@ -116,6 +116,28 @@ def test_higher_buy_price_is_matched_first():
     engine.execute()
 
     assert len(engine.order_book.trades) == 1
+    assert engine.order_book.trades[0]["buy_order_id"] == 31
     assert engine.order_book.trades[0]["quantity"] == 5
     assert lower_buy.quantity == 5
     assert higher_buy.quantity == 0
+
+
+def test_lower_sell_price_is_matched_first():
+    engine = MatchingEngine()
+
+    buy_order = Order(40, "BUY", 120, 5)
+    higher_sell = Order(41, "SELL", 110, 5)
+    lower_sell = Order(42, "SELL", 100, 5)
+
+    engine.submit_order(buy_order)
+    engine.submit_order(higher_sell)
+    engine.submit_order(lower_sell)
+
+    engine.execute()
+
+    assert len(engine.order_book.trades) == 1
+    assert engine.order_book.trades[0]["sell_order_id"] == 42
+    assert engine.order_book.trades[0]["price"] == 100
+    assert engine.order_book.trades[0]["quantity"] == 5
+    assert higher_sell.quantity == 5
+    assert lower_sell.quantity == 0
