@@ -1,4 +1,6 @@
 
+import pytest
+
 from chronos.order_book import Order
 from chronos.matching_engine import MatchingEngine
 
@@ -40,6 +42,8 @@ def test_matching_engine_with_different_quantities():
     engine.execute()
 
     assert len(engine.order_book.trades) == 1
+
+
 def test_partial_fill_keeps_remaining_buy_quantity():
     engine = MatchingEngine()
 
@@ -58,7 +62,20 @@ def test_partial_fill_keeps_remaining_buy_quantity():
 
 
 def test_order_rejects_zero_quantity():
-    import pytest
-
     with pytest.raises(ValueError):
         Order(9, "BUY", 100, 0)
+
+
+@pytest.mark.parametrize(
+    "order_id, side, price, quantity",
+    [
+        (10, "BUY", 0, 5),
+        (11, "SELL", -1, 5),
+        (12, "INVALID", 100, 5),
+        (13, "BUY", 100, 0),
+        (14, "SELL", 100, -2),
+    ],
+)
+def test_invalid_orders_are_rejected(order_id, side, price, quantity):
+    with pytest.raises(ValueError):
+        Order(order_id, side, price, quantity)
