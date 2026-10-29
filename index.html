@@ -2,449 +2,943 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ChronosMatch | Trading Engine</title>
-  <meta name="description" content="ChronosMatch high-frequency trading engine performance dashboard.">
-  <style>
-    :root {
-      --bg: #080d16;
-      --panel: #101827;
-      --panel2: #131f31;
-      --border: #243247;
-      --text: #e8eef8;
-      --muted: #8b9bb2;
-      --cyan: #45d6e8;
-      --green: #36d399;
-      --red: #fb7185;
-      --purple: #a78bfa;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080d17">
+<title>ChronosMatch | Trading Engine Dashboard</title>
 
-    * { box-sizing: border-box; }
+<style>
+:root {
+  --bg: #080d17;
+  --sidebar: #0a1220;
+  --panel: #101a2a;
+  --line: #26364d;
+  --text: #edf4ff;
+  --muted: #91a5c2;
+  --cyan: #42d7ec;
+  --green: #3bd6a2;
+  --purple: #a894ff;
+  --amber: #ffbd59;
+  --red: #ff7185;
+}
 
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Inter, "Segoe UI", Arial, sans-serif;
-      font-size: 14px;
-    }
+* {
+  box-sizing: border-box;
+}
 
-    button { font: inherit; }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 20px;
+}
 
-    .app {
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 225px minmax(0, 1fr);
-    }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
 
-    aside {
-      background: #0b1220;
-      border-right: 1px solid var(--border);
-      padding: 26px 16px;
-    }
+.app {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  min-height: 100vh;
+}
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      padding: 0 8px 30px;
-    }
+/* SIDEBAR */
 
-    .brand-icon {
-      width: 38px;
-      height: 38px;
-      display: grid;
-      place-items: center;
-      border-radius: 11px;
-      background: #153747;
-      color: var(--cyan);
-      font-size: 22px;
-      font-weight: 800;
-    }
+.sidebar {
+  background: var(--sidebar);
+  border-right: 1px solid var(--line);
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
 
-    .brand-name { font-size: 17px; font-weight: 750; }
-    .brand-sub { color: var(--muted); font-size: 11px; margin-top: 4px; }
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 
-    .nav-label {
-      color: #64748b;
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      padding: 12px 10px;
-    }
+.logo {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #44e0ef, #1888aa);
+  color: #07111d;
+  font-size: 25px;
+  font-weight: 900;
+}
 
-    .nav-item {
-      display: flex;
-      gap: 12px;
-      padding: 12px;
-      margin: 4px 0;
-      border-radius: 8px;
-      color: var(--muted);
-    }
+.brand b {
+  font-size: 18px;
+}
 
-    .nav-item.active {
-      color: var(--cyan);
-      background: #142b3b;
-    }
+.brand small {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+}
 
-    .sidebar-note {
-      margin-top: 35px;
-      padding: 13px;
-      border: 1px solid var(--border);
-      background: var(--panel);
-      border-radius: 10px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.7;
-    }
+.nav-label {
+  color: #7287a6;
+  font-size: 10px;
+  letter-spacing: 1.8px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
 
-    main { min-width: 0; padding: 28px; }
+.nav {
+  display: grid;
+  gap: 7px;
+}
 
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      padding-bottom: 24px;
-      border-bottom: 1px solid var(--border);
-    }
+.nav a {
+  text-decoration: none;
+  color: #9bb0cd;
+  padding: 12px;
+  border-radius: 9px;
+  font-weight: 600;
+  transition: 0.2s;
+}
 
-    h1 { font-size: 25px; margin: 0 0 8px; letter-spacing: -.6px; }
-    .subtitle { color: var(--muted); }
+.nav a:hover,
+.nav a.active {
+  background: #143044;
+  color: var(--cyan);
+}
 
-    .top-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.nav a span {
+  display: inline-block;
+  width: 25px;
+}
 
-    .pill {
-      border: 1px solid var(--border);
-      padding: 9px 12px;
-      border-radius: 8px;
-      color: var(--muted);
-      background: var(--panel);
-      font-size: 12px;
-    }
+.sidebar-note {
+  margin-top: auto;
+  padding: 14px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 12px;
+  color: var(--muted);
+  font-size: 12px;
+}
 
-    .demo-pill {
-      color: #fbbf24;
-      border-color: #6b4b1d;
-      background: #2a2114;
-    }
+.sidebar-note strong {
+  display: block;
+  color: var(--amber);
+  margin-bottom: 7px;
+}
 
-    .section-heading {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin: 25px 0 15px;
-    }
+.sidebar-note p {
+  margin: 0;
+}
 
-    h2 { margin: 0; font-size: 16px; }
-    .muted { color: var(--muted); font-size: 12px; }
+/* MAIN CONTENT */
 
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 15px;
-    }
+.main {
+  padding: 28px;
+  min-width: 0;
+}
 
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 19px;
-      min-width: 0;
-    }
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 22px;
+}
 
-    .metric-label { color: var(--muted); font-size: 12px; }
-    .metric-value { font-size: clamp(20px, 2.2vw, 29px); font-weight: 750; margin: 15px 0 9px; letter-spacing: -.7px; }
-    .metric-foot { color: var(--muted); font-size: 11px; line-height: 1.5; }
-    .cyan { color: var(--cyan); }
-    .green { color: var(--green); }
-    .purple { color: var(--purple); }
+.eyebrow {
+  color: var(--cyan);
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 1.8px;
+}
 
-    .content-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.7fr) minmax(260px, 1fr);
-      gap: 15px;
-      margin-top: 17px;
-    }
+h1 {
+  font-size: clamp(25px, 3vw, 34px);
+  letter-spacing: -1px;
+  margin: 6px 0;
+}
 
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
+.subtitle {
+  color: var(--muted);
+  margin: 0;
+}
 
-    .card-title { font-weight: 700; font-size: 14px; }
-    .card-caption { color: var(--muted); font-size: 11px; margin-top: 6px; }
+.top-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px;
+}
 
-    .chart-wrap { height: 245px; width: 100%; }
-    canvas { width: 100%; height: 100%; display: block; }
+.pill,
+.tag {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 11px;
+  font-size: 11px;
+  color: #c4d2e6;
+  white-space: nowrap;
+}
 
-    .legend { display: flex; gap: 15px; flex-wrap: wrap; color: var(--muted); font-size: 11px; }
-    .legend span { display: flex; align-items: center; gap: 6px; }
-    .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+.pill.demo {
+  color: var(--amber);
+  border-color: #644b25;
+  background: #282013;
+}
 
-    .market-row {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
-      padding: 15px 0;
-      border-bottom: 1px solid var(--border);
-    }
+.dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: currentColor;
+  border-radius: 50%;
+  margin-right: 7px;
+}
 
-    .market-row:last-child { border-bottom: 0; }
-    .symbol { font-weight: 700; }
-    .symbol-sub { color: var(--muted); font-size: 11px; margin-top: 5px; }
-    .price { text-align: right; font-weight: 700; }
-    .change { text-align: right; font-size: 11px; margin-top: 5px; }
+/* SECTION HEADINGS */
 
-    .table-wrap { overflow-x: auto; }
-    table { border-collapse: collapse; width: 100%; white-space: nowrap; }
-    th, td { padding: 14px 12px; text-align: left; border-bottom: 1px solid var(--border); }
-    th { color: var(--muted); font-size: 10px; letter-spacing: .8px; font-weight: 700; }
-    td { font-size: 12px; }
-    tbody tr:last-child td { border-bottom: 0; }
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 12px;
+  margin: 25px 0 14px;
+}
 
-    .status {
-      display: inline-block;
-      padding: 5px 8px;
-      border-radius: 6px;
-      font-size: 10px;
-      color: var(--green);
-      background: #10332d;
-    }
+.section-heading h2 {
+  font-size: 17px;
+  margin: 0;
+}
 
-    .status.wait { color: #fbbf24; background: #342a16; }
+.section-heading p {
+  color: var(--muted);
+  font-size: 12px;
+  margin: 4px 0 0;
+}
 
-    .footer {
-      padding: 22px 0 5px;
-      color: #718198;
-      font-size: 11px;
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
+.small {
+  color: var(--muted);
+  font-size: 11px;
+}
 
-    @media (max-width: 1100px) {
-      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .content-grid { grid-template-columns: 1fr; }
-    }
+/* PERFORMANCE CARDS */
 
-    @media (max-width: 700px) {
-      .app { grid-template-columns: 1fr; }
-      aside { padding: 15px; border-right: 0; border-bottom: 1px solid var(--border); }
-      .brand { padding-bottom: 10px; }
-      .nav-label, .sidebar-note { display: none; }
-      .nav-list { display: flex; overflow-x: auto; }
-      .nav-item { white-space: nowrap; padding: 10px; }
-      main { padding: 18px 13px; }
-      h1 { font-size: 22px; }
-      .metrics { gap: 10px; }
-      .card { padding: 14px; }
-      .metric-value { font-size: 22px; }
-      .chart-wrap { height: 210px; }
-    }
-  </style>
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 13px;
+}
+
+.metric {
+  background: linear-gradient(145deg, #111d2e, #0e1726);
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  padding: 17px;
+  position: relative;
+  overflow: hidden;
+}
+
+.metric::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 15px;
+  right: 15px;
+  height: 2px;
+  background: var(--accent);
+}
+
+.metric-label {
+  color: #9eb2ce;
+  font-size: 11px;
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+}
+
+.metric-icon {
+  color: var(--accent);
+  font-size: 16px;
+}
+
+.metric-value {
+  font-size: clamp(22px, 2.4vw, 31px);
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin: 11px 0 4px;
+}
+
+.metric-value em {
+  font-size: 12px;
+  font-style: normal;
+  color: var(--accent);
+  letter-spacing: 0;
+}
+
+.metric-note {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+/* DASHBOARD PANELS */
+
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(270px, 1fr);
+  gap: 14px;
+  margin-top: 15px;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  padding: 19px;
+  min-width: 0;
+}
+
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.card h3 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.card-head p {
+  margin: 4px 0 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.tag {
+  color: var(--muted);
+  padding: 5px 8px;
+  font-size: 9px;
+}
+
+/* MARKET CHART */
+
+.chart {
+  display: block;
+  width: 100%;
+  height: 225px;
+}
+
+.gridline {
+  stroke: #26364c;
+  stroke-width: 1;
+}
+
+.axis {
+  fill: #758ba9;
+  font-size: 10px;
+}
+
+.chart-line-one,
+.chart-line-two {
+  fill: none;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.chart-line-one {
+  stroke: var(--cyan);
+}
+
+.chart-line-two {
+  stroke: var(--purple);
+  stroke-width: 2.5;
+}
+
+.legend {
+  display: flex;
+  gap: 18px;
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 5px;
+}
+
+.legend i {
+  display: inline-block;
+  width: 16px;
+  height: 2px;
+  background: var(--cyan);
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+.legend span + span i {
+  background: var(--purple);
+}
+
+/* MARKET WATCH */
+
+.symbol {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.symbol:last-child {
+  border-bottom: 0;
+}
+
+.ticker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.token {
+  background: #183044;
+  color: var(--cyan);
+  padding: 9px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.ticker b {
+  display: block;
+  font-size: 12px;
+}
+
+.ticker small {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  margin-top: 2px;
+}
+
+.price {
+  text-align: right;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.up {
+  color: var(--green);
+  font-size: 11px;
+}
+
+.down {
+  color: var(--red);
+  font-size: 11px;
+}
+
+/* ORDER TABLE AND ENGINE HEALTH */
+
+.lower {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(260px, 1fr);
+  gap: 14px;
+  margin-top: 15px;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  white-space: nowrap;
+  font-size: 11px;
+}
+
+th {
+  text-align: left;
+  color: #7287a5;
+  font-size: 9px;
+  letter-spacing: 1px;
+  padding: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+td {
+  padding: 13px 10px;
+  border-bottom: 1px solid #202e43;
+  color: #d4e0f1;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.side-buy {
+  color: var(--green);
+  font-weight: bold;
+}
+
+.side-sell {
+  color: var(--red);
+  font-weight: bold;
+}
+
+.badge {
+  background: #16332d;
+  color: var(--green);
+  border-radius: 6px;
+  padding: 4px 7px;
+  font-size: 9px;
+}
+
+.badge.pending {
+  background: #302819;
+  color: var(--amber);
+}
+
+.health-item {
+  margin-bottom: 17px;
+}
+
+.health-item:last-child {
+  margin-bottom: 0;
+}
+
+.health-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.health-row span {
+  color: #a8bad2;
+}
+
+.health-row strong {
+  color: var(--green);
+  font-size: 11px;
+}
+
+.health-row strong.warning {
+  color: var(--amber);
+}
+
+.progress {
+  height: 5px;
+  border-radius: 99px;
+  background: #25344a;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.progress span {
+  display: block;
+  height: 100%;
+  width: var(--width);
+  background: linear-gradient(90deg, #1599b7, var(--cyan));
+  border-radius: 99px;
+}
+
+/* FOOTER */
+
+footer {
+  border-top: 1px solid var(--line);
+  margin-top: 22px;
+  padding-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  color: #667d9d;
+  font-size: 10px;
+}
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 1120px) {
+  .metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .columns,
+  .lower {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .app {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    padding: 14px;
+    gap: 14px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav-label,
+  .sidebar-note {
+    display: none;
+  }
+
+  .nav {
+    display: flex;
+    overflow-x: auto;
+  }
+
+  .nav a {
+    white-space: nowrap;
+    font-size: 12px;
+    padding: 9px;
+  }
+
+  .main {
+    padding: 18px 12px;
+  }
+
+  .topbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .metric {
+    padding: 13px;
+  }
+
+  .metric-value {
+    font-size: 23px;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  .chart {
+    height: 205px;
+  }
+}
+
+@media (max-width: 390px) {
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
 </head>
+
 <body>
 <div class="app">
-  <aside>
+
+  <aside class="sidebar">
     <div class="brand">
-      <div class="brand-icon">C</div>
+      <div class="logo">C</div>
       <div>
-        <div class="brand-name">ChronosMatch</div>
-        <div class="brand-sub">TRADING ENGINE</div>
+        <b>ChronosMatch</b>
+        <small>TRADING ENGINE</small>
       </div>
     </div>
 
-    <div class="nav-label">WORKSPACE</div>
-    <nav class="nav-list">
-      <div class="nav-item active">▦ Overview</div>
-      <div class="nav-item">⌁ Market Watch</div>
-      <div class="nav-item">⇄ Order Flow</div>
-      <div class="nav-item">◷ Performance</div>
-    </nav>
+    <div>
+      <div class="nav-label">WORKSPACE</div>
+      <nav class="nav" aria-label="Dashboard navigation">
+        <a class="active" href="#overview"><span>▦</span>Overview</a>
+        <a href="#market"><span>⌁</span>Market Watch</a>
+        <a href="#orders"><span>⇄</span>Order Flow</a>
+        <a href="#performance"><span>◷</span>Performance</a>
+      </nav>
+    </div>
 
     <div class="sidebar-note">
-      <div class="cyan">● DEMO ENVIRONMENT</div>
-      Market prices and chart values are illustrative demo data, not live exchange data.
+      <strong><span class="dot">●</span>DEMO ENVIRONMENT</strong>
+      <p>Market prices and chart values are illustrative demo data, not live exchange data.</p>
     </div>
   </aside>
 
-  <main>
+  <main class="main" id="overview">
+
     <header class="topbar">
       <div>
+        <div class="eyebrow">SYSTEM MONITOR / OVERVIEW</div>
         <h1>Trading Engine Overview</h1>
-        <div class="subtitle">Monitor order flow, matching performance and engine metrics.</div>
+        <p class="subtitle">Monitor order flow, matching performance and engine metrics.</p>
       </div>
+
       <div class="top-actions">
-        <span class="pill demo-pill">● DEMO DATA</span>
-        <span class="pill">Python Engine</span>
+        <span class="pill demo"><span class="dot">●</span>DEMO DATA</span>
+        <span class="tag">Python Engine</span>
       </div>
     </header>
 
-    <div class="section-heading">
-      <h2>Engine Performance</h2>
-      <span class="muted">Benchmark snapshot · Week 1</span>
+    <div class="section-heading" id="performance">
+      <div>
+        <h2>Engine Performance</h2>
+        <p>Benchmark snapshot · Week 1</p>
+      </div>
+      <span class="small">Measured benchmark results</span>
     </div>
 
-    <section class="metrics">
-      <article class="card">
-        <div class="metric-label">Consumer Throughput</div>
-        <div class="metric-value cyan">97,512 <span style="font-size:13px">ops/s</span></div>
-        <div class="metric-foot">Measured benchmark result</div>
+    <section class="metrics" aria-label="Engine performance metrics">
+
+      <article class="metric" style="--accent:var(--cyan)">
+        <div class="metric-label">Consumer Throughput <span class="metric-icon">↗</span></div>
+        <div class="metric-value">97,512 <em>ops/s</em></div>
+        <div class="metric-note">Measured benchmark result</div>
       </article>
-      <article class="card">
-        <div class="metric-label">Orders Processed</div>
+
+      <article class="metric" style="--accent:#edf4ff">
+        <div class="metric-label">Orders Processed <span class="metric-icon">⇄</span></div>
         <div class="metric-value">300,000</div>
-        <div class="metric-foot">Orders in benchmark run</div>
+        <div class="metric-note">Orders in benchmark run</div>
       </article>
-      <article class="card">
-        <div class="metric-label">Mean Latency</div>
-        <div class="metric-value purple">1.358 <span style="font-size:13px">ms</span></div>
-        <div class="metric-foot">Average measured latency</div>
+
+      <article class="metric" style="--accent:var(--purple)">
+        <div class="metric-label">Mean Latency <span class="metric-icon">◷</span></div>
+        <div class="metric-value">1.358 <em>ms</em></div>
+        <div class="metric-note">Average measured latency</div>
       </article>
-      <article class="card">
-        <div class="metric-label">P99 Latency</div>
-        <div class="metric-value green">2.786 <span style="font-size:13px">ms</span></div>
-        <div class="metric-foot">99th percentile measured latency</div>
+
+      <article class="metric" style="--accent:var(--green)">
+        <div class="metric-label">P99 Latency <span class="metric-icon">⌁</span></div>
+        <div class="metric-value">2.786 <em>ms</em></div>
+        <div class="metric-note">99th percentile measured latency</div>
       </article>
+
     </section>
 
-    <section class="content-grid">
+    <section class="columns">
+
       <article class="card">
-        <div class="card-header">
+        <div class="card-head">
           <div>
-            <div class="card-title">Market Price Movement</div>
-            <div class="card-caption">Illustrative data · Not live market prices</div>
+            <h3>Market Price Movement</h3>
+            <p>Illustrative data · Not live market prices</p>
           </div>
-          <span class="pill">DEMO</span>
+          <span class="tag">DEMO CHART</span>
         </div>
-        <div class="chart-wrap">
-          <canvas id="priceChart" aria-label="Illustrative market price chart"></canvas>
-        </div>
+
+        <svg class="chart" viewBox="0 0 700 230" role="img"
+             aria-label="Illustrative demo price movement chart">
+
+          <g class="gridline">
+            <path d="M45 25H685M45 75H685M45 125H685M45 175H685M45 205H685"/>
+          </g>
+
+          <g class="axis">
+            <text x="5" y="29">100</text>
+            <text x="12" y="79">85</text>
+            <text x="12" y="129">70</text>
+            <text x="12" y="179">55</text>
+            <text x="45" y="225">09:00</text>
+            <text x="195" y="225">10:00</text>
+            <text x="350" y="225">11:00</text>
+            <text x="510" y="225">12:00</text>
+            <text x="645" y="225">13:00</text>
+          </g>
+
+          <polyline class="chart-line-one"
+            points="45,188 100,172 160,180 220,148 275,160 335,135 390,146 450,116 505,128 565,95 620,106 685,72"/>
+
+          <polyline class="chart-line-two"
+            points="45,102 105,115 160,91 220,107 275,78 335,95 390,69 450,83 505,61 565,75 620,52 685,64"/>
+
+        </svg>
+
         <div class="legend">
-          <span><i class="dot" style="background:#45d6e8"></i> DEMO-XYZ</span>
-          <span><i class="dot" style="background:#a78bfa"></i> DEMO-ABC</span>
+          <span><i></i>DEMO-XYZ</span>
+          <span><i></i>DEMO-ABC</span>
+        </div>
+      </article>
+
+      <article class="card" id="market">
+        <div class="card-head">
+          <div>
+            <h3>Market Watch</h3>
+            <p>Sample instruments · Demo values</p>
+          </div>
+          <span class="tag">3 SYMBOLS</span>
+        </div>
+
+        <div class="symbol">
+          <div class="ticker">
+            <span class="token">XYZ</span>
+            <div>
+              <b>DEMO-XYZ</b>
+              <small>Sample instrument</small>
+            </div>
+          </div>
+          <div class="price">104.28<div class="up">+1.24%</div></div>
+        </div>
+
+        <div class="symbol">
+          <div class="ticker">
+            <span class="token">ABC</span>
+            <div>
+              <b>DEMO-ABC</b>
+              <small>Sample instrument</small>
+            </div>
+          </div>
+          <div class="price">87.64<div class="down">−0.42%</div></div>
+        </div>
+
+        <div class="symbol">
+          <div class="ticker">
+            <span class="token">QRS</span>
+            <div>
+              <b>DEMO-QRS</b>
+              <small>Sample instrument</small>
+            </div>
+          </div>
+          <div class="price">212.10<div class="up">+0.86%</div></div>
+        </div>
+      </article>
+
+    </section>
+
+    <section class="lower" id="orders">
+
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h3>Recent Order Activity</h3>
+            <p>Illustrative order records for interface preview</p>
+          </div>
+          <span class="tag">DEMO RECORDS</span>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ORDER ID</th>
+                <th>INSTRUMENT</th>
+                <th>SIDE</th>
+                <th>PRICE</th>
+                <th>QTY</th>
+                <th>STATUS</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>ORD-1001</td>
+                <td>DEMO-XYZ</td>
+                <td class="side-buy">BUY</td>
+                <td>104.20</td>
+                <td>50</td>
+                <td><span class="badge">Matched · Demo</span></td>
+              </tr>
+
+              <tr>
+                <td>ORD-1002</td>
+                <td>DEMO-ABC</td>
+                <td class="side-sell">SELL</td>
+                <td>87.70</td>
+                <td>25</td>
+                <td><span class="badge">Matched · Demo</span></td>
+              </tr>
+
+              <tr>
+                <td>ORD-1003</td>
+                <td>DEMO-QRS</td>
+                <td class="side-buy">BUY</td>
+                <td>212.00</td>
+                <td>40</td>
+                <td><span class="badge pending">Pending · Demo</span></td>
+              </tr>
+
+              <tr>
+                <td>ORD-1004</td>
+                <td>DEMO-XYZ</td>
+                <td class="side-sell">SELL</td>
+                <td>104.35</td>
+                <td>15</td>
+                <td><span class="badge">Matched · Demo</span></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </article>
 
       <article class="card">
-        <div class="card-header">
+        <div class="card-head">
           <div>
-            <div class="card-title">Market Watch</div>
-            <div class="card-caption">Sample instruments · Demo values</div>
+            <h3>Engine Health</h3>
+            <p>Project indicators · Not a live health feed</p>
           </div>
-          <span class="muted">3 symbols</span>
+          <span class="tag">PROJECT STATUS</span>
         </div>
-        <div class="market-row">
-          <div><div class="symbol">DEMO-XYZ</div><div class="symbol-sub">Sample instrument</div></div>
-          <div><div class="price">104.28</div><div class="change green">+1.24%</div></div>
+
+        <div class="health-item">
+          <div class="health-row">
+            <span>Order validation</span>
+            <strong>Implemented</strong>
+          </div>
+          <div class="progress"><span style="--width:100%"></span></div>
         </div>
-        <div class="market-row">
-          <div><div class="symbol">DEMO-ABC</div><div class="symbol-sub">Sample instrument</div></div>
-          <div><div class="price">87.64</div><div class="change" style="color:var(--red)">-0.42%</div></div>
+
+        <div class="health-item">
+          <div class="health-row">
+            <span>Matching engine tests</span>
+            <strong>13 passed</strong>
+          </div>
+          <div class="progress"><span style="--width:100%"></span></div>
         </div>
-        <div class="market-row">
-          <div><div class="symbol">DEMO-QRS</div><div class="symbol-sub">Sample instrument</div></div>
-          <div><div class="price">212.10</div><div class="change green">+0.86%</div></div>
+
+        <div class="health-item">
+          <div class="health-row">
+            <span>Benchmark snapshot</span>
+            <strong>Week 1 data</strong>
+          </div>
+          <div class="progress"><span style="--width:72%"></span></div>
+        </div>
+
+        <div class="health-item">
+          <div class="health-row">
+            <span>Live market connection</span>
+            <strong class="warning">Not connected</strong>
+          </div>
+          <div class="progress"><span style="--width:0%"></span></div>
         </div>
       </article>
+
     </section>
 
-    <section class="card" style="margin-top:17px">
-      <div class="card-header">
-        <div>
-          <div class="card-title">Recent Order Activity</div>
-          <div class="card-caption">Illustrative order records for interface preview</div>
-        </div>
-        <span class="pill">DEMO RECORDS</span>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>ORDER ID</th><th>INSTRUMENT</th><th>SIDE</th><th>PRICE</th><th>QUANTITY</th><th>STATUS</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>ORD-1001</td><td>DEMO-XYZ</td><td class="green">BUY</td><td>104.20</td><td>50</td><td><span class="status">Matched · Demo</span></td></tr>
-            <tr><td>ORD-1002</td><td>DEMO-ABC</td><td style="color:var(--red)">SELL</td><td>87.70</td><td>25</td><td><span class="status">Matched · Demo</span></td></tr>
-            <tr><td>ORD-1003</td><td>DEMO-QRS</td><td class="green">BUY</td><td>212.00</td><td>40</td><td><span class="status wait">Pending · Demo</span></td></tr>
-            <tr><td>ORD-1004</td><td>DEMO-XYZ</td><td style="color:var(--red)">SELL</td><td>104.35</td><td>15</td><td><span class="status">Matched · Demo</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <footer class="footer">
+    <footer>
       <span>ChronosMatch · High-Frequency Trading Engine</span>
       <span>Benchmark metrics are measured; market and order examples are demo data.</span>
     </footer>
+
   </main>
 </div>
 
 <script>
-  const canvas = document.getElementById("priceChart");
-  const ctx = canvas.getContext("2d");
-
-  const series = [
-    { color: "#45d6e8", values: [42, 48, 45, 57, 53, 62, 58, 69, 65, 74, 71, 82] },
-    { color: "#a78bfa", values: [65, 61, 68, 63, 72, 67, 75, 71, 78, 74, 81, 77] }
-  ];
-
-  function drawChart() {
-    const rect = canvas.getBoundingClientRect();
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = Math.max(1, rect.width * dpr);
-    canvas.height = Math.max(1, rect.height * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    const w = rect.width;
-    const h = rect.height;
-    const left = 34, right = 10, top = 12, bottom = 25;
-    const chartW = w - left - right;
-    const chartH = h - top - bottom;
-
-    ctx.clearRect(0, 0, w, h);
-    ctx.font = "10px Segoe UI, Arial";
-    ctx.fillStyle = "#8b9bb2";
-    ctx.strokeStyle = "#243247";
-    ctx.lineWidth = 1;
-
-    for (let i = 0; i <= 4; i++) {
-      const y = top + chartH * i / 4;
-      ctx.beginPath();
-      ctx.moveTo(left, y);
-      ctx.lineTo(w - right, y);
-      ctx.stroke();
-      ctx.fillText(String(100 - i * 25), 2, y + 4);
-    }
-
-    ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00"].forEach((label, i) => {
-      const x = left + chartW * i / 5;
-      ctx.fillText(label, x - 15, h - 5);
+/* Highlight the selected dashboard section in the sidebar. */
+document.querySelectorAll(".nav a").forEach(function(link) {
+  link.addEventListener("click", function() {
+    document.querySelectorAll(".nav a").forEach(function(item) {
+      item.classList.remove("active");
     });
 
-    series.forEach(s => {
-      ctx.beginPath();
-      s.values.forEach((value, i) => {
-        const x = left + chartW * i / (s.values.length - 1);
-        const y = top + chartH * (100 - value) / 100;
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      });
-      ctx.strokeStyle = s.color;
-      ctx.lineWidth = 2;
-      ctx.stroke();
-    });
-  }
-
-  drawChart();
-  window.addEventListener("resize", drawChart);
+    link.classList.add("active");
+  });
+});
 </script>
+
 </body>
 </html>
