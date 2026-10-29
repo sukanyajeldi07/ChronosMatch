@@ -79,3 +79,24 @@ def test_order_rejects_zero_quantity():
 def test_invalid_orders_are_rejected(order_id, side, price, quantity):
     with pytest.raises(ValueError):
         Order(order_id, side, price, quantity)
+
+
+def test_multiple_orders_create_expected_trades():
+    engine = MatchingEngine()
+
+    buy_order_1 = Order(20, "BUY", 110, 5)
+    buy_order_2 = Order(21, "BUY", 105, 3)
+    sell_order_1 = Order(22, "SELL", 100, 4)
+    sell_order_2 = Order(23, "SELL", 105, 4)
+
+    engine.submit_order(buy_order_1)
+    engine.submit_order(buy_order_2)
+    engine.submit_order(sell_order_1)
+    engine.submit_order(sell_order_2)
+
+    engine.execute()
+
+    assert len(engine.order_book.trades) == 3
+    assert sum(
+        trade["quantity"] for trade in engine.order_book.trades
+    ) == 8
