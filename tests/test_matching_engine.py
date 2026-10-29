@@ -100,3 +100,22 @@ def test_multiple_orders_create_expected_trades():
     assert sum(
         trade["quantity"] for trade in engine.order_book.trades
     ) == 8
+
+
+def test_higher_buy_price_is_matched_first():
+    engine = MatchingEngine()
+
+    lower_buy = Order(30, "BUY", 100, 5)
+    higher_buy = Order(31, "BUY", 110, 5)
+    sell = Order(32, "SELL", 100, 5)
+
+    engine.submit_order(lower_buy)
+    engine.submit_order(higher_buy)
+    engine.submit_order(sell)
+
+    engine.execute()
+
+    assert len(engine.order_book.trades) == 1
+    assert engine.order_book.trades[0]["quantity"] == 5
+    assert lower_buy.quantity == 5
+    assert higher_buy.quantity == 0
