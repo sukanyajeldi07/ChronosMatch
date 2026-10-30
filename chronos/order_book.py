@@ -1,6 +1,5 @@
 
 class Order:
-
     def __init__(self, order_id, side, price, quantity):
         if side not in ("BUY", "SELL"):
             raise ValueError("Side must be BUY or SELL")
@@ -18,7 +17,6 @@ class Order:
 
 
 class OrderBook:
-
     def __init__(self):
         self.buy_orders = []
         self.sell_orders = []
@@ -33,6 +31,7 @@ class OrderBook:
 
         if order.side == "BUY":
             self.buy_orders.append(order)
+            # Highest buy price gets priority.
             self.buy_orders.sort(
                 key=lambda order: order.price,
                 reverse=True
@@ -40,6 +39,7 @@ class OrderBook:
 
         elif order.side == "SELL":
             self.sell_orders.append(order)
+            # Lowest sell price gets priority.
             self.sell_orders.sort(
                 key=lambda order: order.price
             )
@@ -49,6 +49,7 @@ class OrderBook:
             buy_order = self.buy_orders[0]
             sell_order = self.sell_orders[0]
 
+            # A trade can happen only when the prices cross.
             if buy_order.price < sell_order.price:
                 break
 
@@ -57,6 +58,7 @@ class OrderBook:
                 sell_order.quantity
             )
 
+            # Execute the trade at the sell order's price.
             trade_price = sell_order.price
 
             trade = {
@@ -74,9 +76,11 @@ class OrderBook:
             print("Price:", trade_price)
             print("Quantity:", trade_quantity)
 
+            # Reduce the remaining quantities.
             buy_order.quantity -= trade_quantity
             sell_order.quantity -= trade_quantity
 
+            # Remove completely filled orders.
             if buy_order.quantity == 0:
                 self.buy_orders.pop(0)
 
@@ -85,6 +89,9 @@ class OrderBook:
 
     def display(self):
         print("\nBUY ORDERS")
+
+        if not self.buy_orders:
+            print("No pending buy orders.")
 
         for order in self.buy_orders:
             print(
@@ -95,6 +102,9 @@ class OrderBook:
 
         print("\nSELL ORDERS")
 
+        if not self.sell_orders:
+            print("No pending sell orders.")
+
         for order in self.sell_orders:
             print(
                 "ID:", order.order_id,
@@ -104,6 +114,10 @@ class OrderBook:
 
     def display_trades(self):
         print("\nCOMPLETED TRADES")
+
+        if not self.trades:
+            print("No trades executed.")
+            return
 
         for trade in self.trades:
             print(
@@ -130,10 +144,43 @@ class OrderBook:
             ),
         }
 
+    def get_trade_summary(self):
+        """Return a summary of completed trades."""
+        if not self.trades:
+            return {
+                "total_trades": 0,
+                "total_traded_quantity": 0,
+                "average_trade_price": 0,
+                "highest_trade_price": 0,
+                "lowest_trade_price": 0,
+            }
+
+        prices = [trade["price"] for trade in self.trades]
+
+        total_quantity = sum(
+            trade["quantity"] for trade in self.trades
+        )
+
+        total_value = sum(
+            trade["price"] * trade["quantity"]
+            for trade in self.trades
+        )
+
+        return {
+            "total_trades": len(self.trades),
+            "total_traded_quantity": total_quantity,
+            "average_trade_price": round(
+                total_value / total_quantity, 2
+            ),
+            "highest_trade_price": max(prices),
+            "lowest_trade_price": min(prices),
+        }
+
 
 if __name__ == "__main__":
     book = OrderBook()
 
+    # Add sample buy and sell orders.
     book.add_order(Order(1, "BUY", 110, 10))
     book.add_order(Order(2, "BUY", 105, 5))
     book.add_order(Order(3, "SELL", 108, 8))
@@ -154,4 +201,10 @@ if __name__ == "__main__":
     statistics = book.get_statistics()
 
     for name, value in statistics.items():
+        print(f"{name}: {value}")
+
+    print("\nTRADE SUMMARY")
+    summary = book.get_trade_summary()
+
+    for name, value in summary.items():
         print(f"{name}: {value}")

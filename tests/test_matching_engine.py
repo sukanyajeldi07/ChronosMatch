@@ -1,7 +1,7 @@
 
 import pytest
 
-from chronos.order_book import Order
+from chronos.order_book import Order, OrderBook
 from chronos.matching_engine import MatchingEngine
 
 
@@ -42,6 +42,8 @@ def test_matching_engine_with_different_quantities():
     engine.execute()
 
     assert len(engine.order_book.trades) == 1
+    assert engine.order_book.trades[0]["quantity"] == 5
+    assert buy_order.quantity == 5
 
 
 def test_partial_fill_keeps_remaining_buy_quantity():
@@ -141,6 +143,8 @@ def test_lower_sell_price_is_matched_first():
     assert engine.order_book.trades[0]["quantity"] == 5
     assert higher_sell.quantity == 5
     assert lower_sell.quantity == 0
+
+
 def test_same_price_buy_orders_follow_fifo():
     engine = MatchingEngine()
 
@@ -158,13 +162,13 @@ def test_same_price_buy_orders_follow_fifo():
     assert engine.order_book.trades[0]["buy_order_id"] == 50
     assert first_buy.quantity == 0
     assert second_buy.quantity == 5
-    
-def test_order_book_statistics_with_pending_orders():
-    from chronos.order_book import OrderBook
 
+
+def test_order_book_statistics_with_pending_orders():
     book = OrderBook()
-    book.add_order(Order(1, "BUY", 110, 10))
-    book.add_order(Order(2, "SELL", 115, 4))
+
+    book.add_order(Order(60, "BUY", 110, 10))
+    book.add_order(Order(61, "SELL", 115, 4))
 
     stats = book.get_statistics()
 
@@ -177,11 +181,10 @@ def test_order_book_statistics_with_pending_orders():
 
 
 def test_order_book_statistics_after_trades():
-    from chronos.order_book import OrderBook
-
     book = OrderBook()
-    book.add_order(Order(1, "BUY", 110, 10))
-    book.add_order(Order(2, "SELL", 108, 6))
+
+    book.add_order(Order(70, "BUY", 110, 10))
+    book.add_order(Order(71, "SELL", 108, 6))
 
     book.match_orders()
     stats = book.get_statistics()
@@ -192,3 +195,33 @@ def test_order_book_statistics_after_trades():
     assert stats["pending_sell_quantity"] == 0
     assert stats["total_trades"] == 1
     assert stats["total_traded_quantity"] == 6
+
+
+def test_trade_summary_after_trades():
+    book = OrderBook()
+
+    book.add_order(Order(80, "BUY", 110, 10))
+    book.add_order(Order(81, "SELL", 108, 8))
+    book.add_order(Order(82, "SELL", 109, 6))
+
+    book.match_orders()
+
+    summary = book.get_trade_summary()
+
+    assert summary["total_trades"] == 2
+    assert summary["total_traded_quantity"] == 10
+    assert summary["average_trade_price"] == 108.2
+    assert summary["highest_trade_price"] == 109
+    assert summary["lowest_trade_price"] == 108
+
+
+def test_trade_summary_without_trades():
+    book = OrderBook()
+
+    summary = book.get_trade_summary()
+
+    assert summary["total_trades"] == 0
+    assert summary["total_traded_quantity"] == 0
+    assert summary["average_trade_price"] == 0
+    assert summary["highest_trade_price"] == 0
+    assert summary["lowest_trade_price"] == 0
