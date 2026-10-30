@@ -158,3 +158,37 @@ def test_same_price_buy_orders_follow_fifo():
     assert engine.order_book.trades[0]["buy_order_id"] == 50
     assert first_buy.quantity == 0
     assert second_buy.quantity == 5
+    
+def test_order_book_statistics_with_pending_orders():
+    from chronos.order_book import OrderBook
+
+    book = OrderBook()
+    book.add_order(Order(1, "BUY", 110, 10))
+    book.add_order(Order(2, "SELL", 115, 4))
+
+    stats = book.get_statistics()
+
+    assert stats["pending_buy_orders"] == 1
+    assert stats["pending_sell_orders"] == 1
+    assert stats["pending_buy_quantity"] == 10
+    assert stats["pending_sell_quantity"] == 4
+    assert stats["total_trades"] == 0
+    assert stats["total_traded_quantity"] == 0
+
+
+def test_order_book_statistics_after_trades():
+    from chronos.order_book import OrderBook
+
+    book = OrderBook()
+    book.add_order(Order(1, "BUY", 110, 10))
+    book.add_order(Order(2, "SELL", 108, 6))
+
+    book.match_orders()
+    stats = book.get_statistics()
+
+    assert stats["pending_buy_orders"] == 1
+    assert stats["pending_sell_orders"] == 0
+    assert stats["pending_buy_quantity"] == 4
+    assert stats["pending_sell_quantity"] == 0
+    assert stats["total_trades"] == 1
+    assert stats["total_traded_quantity"] == 6
