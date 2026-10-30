@@ -113,14 +113,31 @@ class OrderBook:
                 "QUANTITY:", trade["quantity"]
             )
 
+    def get_statistics(self):
+        """Return summary statistics for the order book."""
+        return {
+            "pending_buy_orders": len(self.buy_orders),
+            "pending_sell_orders": len(self.sell_orders),
+            "pending_buy_quantity": sum(
+                order.quantity for order in self.buy_orders
+            ),
+            "pending_sell_quantity": sum(
+                order.quantity for order in self.sell_orders
+            ),
+            "total_trades": len(self.trades),
+            "total_traded_quantity": sum(
+                trade["quantity"] for trade in self.trades
+            ),
+        }
+
 
 if __name__ == "__main__":
     book = OrderBook()
 
-    book.add_order(Order(1, "BUY", 100, 10))
+    book.add_order(Order(1, "BUY", 110, 10))
     book.add_order(Order(2, "BUY", 105, 5))
-    book.add_order(Order(3, "SELL", 110, 8))
-    book.add_order(Order(4, "SELL", 108, 6))
+    book.add_order(Order(3, "SELL", 108, 8))
+    book.add_order(Order(4, "SELL", 109, 6))
 
     print("\nORDER BOOK BEFORE MATCHING")
     book.display()
@@ -132,3 +149,9 @@ if __name__ == "__main__":
     book.display()
 
     book.display_trades()
+
+    print("\nORDER BOOK STATISTICS")
+    statistics = book.get_statistics()
+
+    for name, value in statistics.items():
+        print(f"{name}: {value}")
