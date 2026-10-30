@@ -141,3 +141,20 @@ def test_lower_sell_price_is_matched_first():
     assert engine.order_book.trades[0]["quantity"] == 5
     assert higher_sell.quantity == 5
     assert lower_sell.quantity == 0
+def test_same_price_buy_orders_follow_fifo():
+    engine = MatchingEngine()
+
+    first_buy = Order(50, "BUY", 100, 5)
+    second_buy = Order(51, "BUY", 100, 5)
+    sell = Order(52, "SELL", 100, 5)
+
+    engine.submit_order(first_buy)
+    engine.submit_order(second_buy)
+    engine.submit_order(sell)
+
+    engine.execute()
+
+    assert len(engine.order_book.trades) == 1
+    assert engine.order_book.trades[0]["buy_order_id"] == 50
+    assert first_buy.quantity == 0
+    assert second_buy.quantity == 5
