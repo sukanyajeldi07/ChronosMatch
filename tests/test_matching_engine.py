@@ -226,6 +226,7 @@ def test_trade_summary_without_trades():
     assert summary["highest_trade_price"] == 0
     assert summary["lowest_trade_price"] == 0
 
+
 def test_cancel_pending_buy_order():
     book = OrderBook()
     order = Order(90, "BUY", 100, 5)
@@ -243,6 +244,8 @@ def test_cancel_nonexistent_order():
     result = book.cancel_order(999)
 
     assert result is False
+
+
 def test_cancel_pending_sell_order():
     book = OrderBook()
     order = Order(91, "SELL", 110, 5)
@@ -266,6 +269,8 @@ def test_cancel_filled_order_returns_false():
     result = book.cancel_order(92)
 
     assert result is False
+
+
 def test_matching_engine_displays_statistics():
     engine = MatchingEngine()
 
@@ -294,3 +299,13 @@ def test_matching_engine_executes_multiple_trades():
     ) == 5
     assert len(engine.order_book.buy_orders) == 0
     assert len(engine.order_book.sell_orders) == 0
+
+
+def test_invalid_order_side_is_rejected():
+    book = OrderBook()
+    order = Order(100, "BUY", 100, 5)
+
+    order.side = "INVALID"
+
+    with pytest.raises(ValueError):
+        book.add_order(order)

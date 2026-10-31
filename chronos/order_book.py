@@ -26,6 +26,13 @@ class OrderBook:
         if not isinstance(order, Order):
             raise TypeError("Order must be an Order object")
 
+        # Validate the order side even if it changes after creation.
+        if order.side not in ("BUY", "SELL"):
+            raise ValueError("Order side must be BUY or SELL")
+
+        if order.price <= 0:
+            raise ValueError("Order price must be greater than zero")
+
         if order.quantity <= 0:
             raise ValueError("Order quantity must be greater than zero")
 
