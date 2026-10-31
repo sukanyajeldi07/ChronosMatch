@@ -266,3 +266,31 @@ def test_cancel_filled_order_returns_false():
     result = book.cancel_order(92)
 
     assert result is False
+def test_matching_engine_displays_statistics():
+    engine = MatchingEngine()
+
+    engine.submit_order(Order(101, "BUY", 110, 5))
+    engine.submit_order(Order(102, "SELL", 115, 3))
+
+    stats = engine.order_book.get_statistics()
+
+    assert stats["pending_buy_orders"] == 1
+    assert stats["pending_sell_orders"] == 1
+    assert stats["total_trades"] == 0
+
+
+def test_matching_engine_executes_multiple_trades():
+    engine = MatchingEngine()
+
+    engine.submit_order(Order(103, "BUY", 110, 5))
+    engine.submit_order(Order(104, "SELL", 105, 2))
+    engine.submit_order(Order(105, "SELL", 108, 3))
+
+    engine.execute()
+
+    assert len(engine.order_book.trades) == 2
+    assert sum(
+        trade["quantity"] for trade in engine.order_book.trades
+    ) == 5
+    assert len(engine.order_book.buy_orders) == 0
+    assert len(engine.order_book.sell_orders) == 0
