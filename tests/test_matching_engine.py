@@ -243,4 +243,26 @@ def test_cancel_nonexistent_order():
     result = book.cancel_order(999)
 
     assert result is False
+def test_cancel_pending_sell_order():
+    book = OrderBook()
+    order = Order(91, "SELL", 110, 5)
+    book.add_order(order)
 
+    result = book.cancel_order(91)
+
+    assert result is True
+    assert len(book.sell_orders) == 0
+
+
+def test_cancel_filled_order_returns_false():
+    book = OrderBook()
+    buy_order = Order(92, "BUY", 110, 5)
+    sell_order = Order(93, "SELL", 105, 5)
+
+    book.add_order(buy_order)
+    book.add_order(sell_order)
+    book.match_orders()
+
+    result = book.cancel_order(92)
+
+    assert result is False
