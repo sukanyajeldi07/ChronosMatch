@@ -44,6 +44,20 @@ class OrderBook:
                 key=lambda order: order.price
             )
 
+    def cancel_order(self, order_id):
+        """Cancel a pending order using its ID."""
+        for order in self.buy_orders:
+            if order.order_id == order_id:
+                self.buy_orders.remove(order)
+                return True
+
+        for order in self.sell_orders:
+            if order.order_id == order_id:
+                self.sell_orders.remove(order)
+                return True
+
+        return False
+
     def match_orders(self):
         while self.buy_orders and self.sell_orders:
             buy_order = self.buy_orders[0]
@@ -76,11 +90,9 @@ class OrderBook:
             print("Price:", trade_price)
             print("Quantity:", trade_quantity)
 
-            # Reduce the remaining quantities.
             buy_order.quantity -= trade_quantity
             sell_order.quantity -= trade_quantity
 
-            # Remove completely filled orders.
             if buy_order.quantity == 0:
                 self.buy_orders.pop(0)
 
@@ -180,7 +192,6 @@ class OrderBook:
 if __name__ == "__main__":
     book = OrderBook()
 
-    # Add sample buy and sell orders.
     book.add_order(Order(1, "BUY", 110, 10))
     book.add_order(Order(2, "BUY", 105, 5))
     book.add_order(Order(3, "SELL", 108, 8))
@@ -198,13 +209,9 @@ if __name__ == "__main__":
     book.display_trades()
 
     print("\nORDER BOOK STATISTICS")
-    statistics = book.get_statistics()
-
-    for name, value in statistics.items():
+    for name, value in book.get_statistics().items():
         print(f"{name}: {value}")
 
     print("\nTRADE SUMMARY")
-    summary = book.get_trade_summary()
-
-    for name, value in summary.items():
+    for name, value in book.get_trade_summary().items():
         print(f"{name}: {value}")

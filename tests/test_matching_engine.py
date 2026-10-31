@@ -225,3 +225,22 @@ def test_trade_summary_without_trades():
     assert summary["average_trade_price"] == 0
     assert summary["highest_trade_price"] == 0
     assert summary["lowest_trade_price"] == 0
+
+def test_cancel_pending_buy_order():
+    book = OrderBook()
+    order = Order(90, "BUY", 100, 5)
+    book.add_order(order)
+
+    result = book.cancel_order(90)
+
+    assert result is True
+    assert len(book.buy_orders) == 0
+
+
+def test_cancel_nonexistent_order():
+    book = OrderBook()
+
+    result = book.cancel_order(999)
+
+    assert result is False
+
