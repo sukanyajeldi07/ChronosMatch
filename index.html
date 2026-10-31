@@ -4,640 +4,468 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#080d17">
-<title>ChronosMatch | Trading Engine Dashboard</title>
+<meta name="theme-color" content="#080d16">
+<title>ChronosMatch | Trading Engine</title>
 
 <style>
 :root {
-  --bg: #080d17;
+  --bg: #080d16;
   --sidebar: #0a1220;
-  --panel: #101a2a;
-  --line: #26364d;
-  --text: #edf4ff;
-  --muted: #91a5c2;
-  --cyan: #42d7ec;
-  --green: #3bd6a2;
-  --purple: #a894ff;
-  --amber: #ffbd59;
-  --red: #ff7185;
+  --panel: #101b2b;
+  --border: #26374d;
+  --text: #eef4ff;
+  --muted: #8eadd6;
+  --cyan: #35d9ec;
+  --green: #26e6a5;
+  --purple: #a58bff;
+  --orange: #ffb547;
+  --red: #ff5e79;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 20px;
-}
+html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
   font-family: Inter, "Segoe UI", Arial, sans-serif;
-  font-size: 14px;
   line-height: 1.5;
 }
 
-.app {
-  display: grid;
-  grid-template-columns: 240px minmax(0, 1fr);
-  min-height: 100vh;
-}
+button, input, select { font: inherit; }
+button { cursor: pointer; }
 
-/* SIDEBAR */
+.app {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+}
 
 .sidebar {
   background: var(--sidebar);
-  border-right: 1px solid var(--line);
-  padding: 24px 16px;
+  border-right: 1px solid var(--border);
+  padding: 24px 20px;
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 28px;
+  min-height: 100vh;
+  position: sticky;
+  top: 0;
+  height: 100vh;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
-.logo {
-  width: 44px;
-  height: 44px;
+.brand-mark {
+  width: 58px;
+  height: 58px;
+  border-radius: 16px;
+  background: linear-gradient(140deg, #43deeb, #1689a8);
   display: grid;
   place-items: center;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #44e0ef, #1888aa);
-  color: #07111d;
-  font-size: 25px;
+  color: #06202b;
+  font-size: 34px;
   font-weight: 900;
 }
 
-.brand b {
-  font-size: 18px;
+.brand-name { font-size: 23px; font-weight: 800; }
+.brand-sub { font-size: 12px; color: var(--muted); letter-spacing: 2px; }
+
+.side-label {
+  font-size: 13px;
+  color: #7798c5;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: -18px;
 }
 
-.brand small {
-  display: block;
-  color: var(--muted);
-  font-size: 10px;
-  letter-spacing: 1.5px;
+.nav { display: grid; gap: 8px; }
+
+.nav button {
+  border: 0;
+  background: transparent;
+  color: #9bb9df;
+  text-align: left;
+  padding: 15px;
+  border-radius: 12px;
+  font-weight: 650;
+  display: flex;
+  gap: 14px;
+  align-items: center;
 }
 
-.nav-label {
-  color: #7287a6;
-  font-size: 10px;
-  letter-spacing: 1.8px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.nav {
-  display: grid;
-  gap: 7px;
-}
-
-.nav a {
-  text-decoration: none;
-  color: #9bb0cd;
-  padding: 12px;
-  border-radius: 9px;
-  font-weight: 600;
-  transition: 0.2s;
-}
-
-.nav a:hover,
-.nav a.active {
-  background: #143044;
+.nav button:hover,
+.nav button.active {
+  background: #153246;
   color: var(--cyan);
 }
 
-.nav a span {
-  display: inline-block;
-  width: 25px;
+.nav-icon { width: 20px; text-align: center; }
+
+.demo-note {
+  margin-top: auto;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  color: var(--muted);
+  background: #0c1726;
+  font-size: 13px;
 }
 
-.sidebar-note {
-  margin-top: auto;
-  padding: 14px;
-  border: 1px solid var(--line);
-  background: var(--panel);
-  border-radius: 12px;
-  color: var(--muted);
+.demo-note strong {
+  color: var(--orange);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.main { padding: 24px; min-width: 0; }
+
+.topline {
+  color: var(--cyan);
+  font-weight: 800;
+  letter-spacing: 3px;
+  font-size: 13px;
+}
+
+.page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 0 30px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 30px;
+}
+
+.page-head h1 {
+  font-size: clamp(30px, 3vw, 48px);
+  line-height: 1.1;
+  margin: 6px 0 14px;
+  letter-spacing: -1.5px;
+}
+
+.page-head p { font-size: 18px; color: var(--muted); margin: 0; }
+
+.head-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.pill, .engine-pill, .small-tag {
+  border-radius: 10px;
+  padding: 10px 13px;
+  white-space: nowrap;
   font-size: 12px;
 }
 
-.sidebar-note strong {
-  display: block;
-  color: var(--amber);
-  margin-bottom: 7px;
+.pill {
+  border: 1px solid #735224;
+  background: #2a2115;
+  color: var(--orange);
 }
 
-.sidebar-note p {
-  margin: 0;
+.engine-pill, .small-tag {
+  border: 1px solid var(--border);
+  color: #9bb9df;
 }
 
-/* MAIN CONTENT */
+.section { scroll-margin-top: 20px; margin-bottom: 24px; }
 
-.main {
-  padding: 28px;
-  min-width: 0;
-}
-
-.topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 22px;
-}
-
-.eyebrow {
-  color: var(--cyan);
-  font-size: 10px;
-  font-weight: bold;
-  letter-spacing: 1.8px;
-}
-
-h1 {
-  font-size: clamp(25px, 3vw, 34px);
-  letter-spacing: -1px;
-  margin: 6px 0;
-}
-
-.subtitle {
-  color: var(--muted);
-  margin: 0;
-}
-
-.top-actions {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 9px;
-}
-
-.pill,
-.tag {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 8px 11px;
-  font-size: 11px;
-  color: #c4d2e6;
-  white-space: nowrap;
-}
-
-.pill.demo {
-  color: var(--amber);
-  border-color: #644b25;
-  background: #282013;
-}
-
-.dot {
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  background: currentColor;
-  border-radius: 50%;
-  margin-right: 7px;
-}
-
-/* SECTION HEADINGS */
-
-.section-heading {
+.section-head {
   display: flex;
   justify-content: space-between;
   align-items: end;
   gap: 12px;
-  margin: 25px 0 14px;
+  margin-bottom: 18px;
 }
 
-.section-heading h2 {
-  font-size: 17px;
-  margin: 0;
-}
-
-.section-heading p {
-  color: var(--muted);
-  font-size: 12px;
-  margin: 4px 0 0;
-}
-
-.small {
-  color: var(--muted);
-  font-size: 11px;
-}
-
-/* PERFORMANCE CARDS */
+.section-head h2 { font-size: 23px; margin: 0 0 5px; }
+.section-head p { margin: 0; color: var(--muted); }
+.muted { color: var(--muted); }
 
 .metrics {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 13px;
+  gap: 16px;
 }
 
 .metric {
-  background: linear-gradient(145deg, #111d2e, #0e1726);
-  border: 1px solid var(--line);
-  border-radius: 13px;
-  padding: 17px;
   position: relative;
+  background: linear-gradient(145deg, #111d2e, #0e1725);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 22px;
   overflow: hidden;
+  min-width: 0;
 }
 
 .metric::before {
   content: "";
+  height: 3px;
   position: absolute;
+  left: 18px;
+  right: 18px;
   top: 0;
-  left: 15px;
-  right: 15px;
-  height: 2px;
-  background: var(--accent);
+  background: var(--accent, var(--cyan));
 }
 
-.metric-label {
-  color: #9eb2ce;
-  font-size: 11px;
-  display: flex;
-  justify-content: space-between;
-  gap: 5px;
-}
-
-.metric-icon {
-  color: var(--accent);
-  font-size: 16px;
-}
+.metric-label { color: #a9c7ed; }
 
 .metric-value {
-  font-size: clamp(22px, 2.4vw, 31px);
-  font-weight: 800;
+  font-size: clamp(25px, 2.2vw, 39px);
+  font-weight: 850;
   letter-spacing: -1px;
-  margin: 11px 0 4px;
+  margin: 28px 0 8px;
+  white-space: nowrap;
 }
 
-.metric-value em {
-  font-size: 12px;
-  font-style: normal;
-  color: var(--accent);
+.metric-value span {
+  font-size: 14px;
+  color: var(--accent, var(--cyan));
   letter-spacing: 0;
 }
 
-.metric-note {
-  color: var(--muted);
-  font-size: 10px;
-}
+.metric-foot { color: var(--muted); font-size: 13px; }
 
-/* DASHBOARD PANELS */
-
-.columns {
+.dashboard-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(270px, 1fr);
-  gap: 14px;
-  margin-top: 15px;
+  grid-template-columns: minmax(0, 1.5fr) minmax(280px, 1fr);
+  gap: 20px;
+  margin-top: 20px;
 }
 
-.card {
+.panel {
   background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 13px;
-  padding: 19px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
   min-width: 0;
 }
 
-.card-head {
+.panel-title {
   display: flex;
   justify-content: space-between;
-  align-items: start;
-  gap: 10px;
-  margin-bottom: 16px;
+  gap: 12px;
+  align-items: flex-start;
 }
 
-.card h3 {
-  margin: 0;
-  font-size: 15px;
-}
+.panel-title h3 { font-size: 21px; margin: 0 0 6px; }
+.panel-title p { margin: 0; color: var(--muted); font-size: 14px; }
 
-.card-head p {
-  margin: 4px 0 0;
-  font-size: 11px;
-  color: var(--muted);
-}
+.chart-wrap { margin-top: 22px; width: 100%; height: 250px; }
+.chart-wrap svg { width: 100%; height: 100%; display: block; }
 
-.tag {
-  color: var(--muted);
-  padding: 5px 8px;
-  font-size: 9px;
-}
-
-/* MARKET CHART */
-
-.chart {
-  display: block;
-  width: 100%;
-  height: 225px;
-}
-
-.gridline {
-  stroke: #26364c;
-  stroke-width: 1;
-}
-
-.axis {
-  fill: #758ba9;
-  font-size: 10px;
-}
-
-.chart-line-one,
-.chart-line-two {
-  fill: none;
-  stroke-width: 2.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.chart-line-one {
-  stroke: var(--cyan);
-}
-
-.chart-line-two {
-  stroke: var(--purple);
-  stroke-width: 2.5;
-}
-
-.legend {
+.chart-legend {
   display: flex;
-  gap: 18px;
+  gap: 20px;
+  flex-wrap: wrap;
   color: var(--muted);
-  font-size: 11px;
-  margin-top: 5px;
+  margin-top: 14px;
+  font-size: 13px;
 }
 
-.legend i {
+.legend-line {
   display: inline-block;
-  width: 16px;
-  height: 2px;
-  background: var(--cyan);
+  width: 22px;
+  height: 3px;
   vertical-align: middle;
-  margin-right: 6px;
+  margin-right: 7px;
+  background: var(--cyan);
 }
 
-.legend span + span i {
-  background: var(--purple);
-}
+.watch-list { margin-top: 20px; }
 
-/* MARKET WATCH */
-
-.symbol {
+.watch-item {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--line);
+  gap: 12px;
+  padding: 17px 0;
+  border-bottom: 1px solid #223247;
 }
 
-.symbol:last-child {
-  border-bottom: 0;
-}
+.watch-item:last-child { border-bottom: 0; }
 
-.ticker {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+.symbol { display: flex; align-items: center; gap: 12px; }
 
-.token {
-  background: #183044;
-  color: var(--cyan);
-  padding: 9px;
-  border-radius: 8px;
-  font-size: 10px;
-  font-weight: bold;
-}
-
-.ticker b {
-  display: block;
-  font-size: 12px;
-}
-
-.ticker small {
-  display: block;
-  color: var(--muted);
-  font-size: 10px;
-  margin-top: 2px;
-}
-
-.price {
-  text-align: right;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.up {
-  color: var(--green);
-  font-size: 11px;
-}
-
-.down {
-  color: var(--red);
-  font-size: 11px;
-}
-
-/* ORDER TABLE AND ENGINE HEALTH */
-
-.lower {
+.symbol-badge {
+  height: 45px;
+  width: 48px;
   display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(260px, 1fr);
-  gap: 14px;
-  margin-top: 15px;
+  place-items: center;
+  border-radius: 11px;
+  background: #173145;
+  color: var(--cyan);
+  font-weight: 800;
+  font-size: 12px;
 }
 
-.table-wrap {
-  overflow-x: auto;
+.symbol-name { font-weight: 800; }
+.symbol-desc { color: var(--muted); font-size: 12px; }
+
+.price { text-align: right; font-weight: 800; white-space: nowrap; }
+.change { font-size: 13px; }
+.positive { color: var(--green); }
+.negative { color: var(--red); }
+
+.orders-panel { margin-top: 20px; }
+
+.tools {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+  margin: 20px 0 15px;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  white-space: nowrap;
-  font-size: 11px;
+.tools input, .tools select {
+  background: #091321;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  color: var(--text);
+  padding: 10px 12px;
+  outline: none;
 }
+
+.tools input { flex: 1; min-width: 180px; }
+.tools input:focus, .tools select:focus { border-color: var(--cyan); }
+
+.btn-reset {
+  background: #12283a;
+  border: 1px solid #29445b;
+  color: #a9c7ed;
+  border-radius: 9px;
+  padding: 10px 13px;
+}
+
+.btn-reset:hover { color: var(--cyan); border-color: var(--cyan); }
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; white-space: nowrap; }
 
 th {
-  text-align: left;
-  color: #7287a5;
-  font-size: 9px;
+  font-size: 11px;
+  color: #7798c5;
   letter-spacing: 1px;
-  padding: 10px;
-  border-bottom: 1px solid var(--line);
+  text-align: left;
+  padding: 14px 10px;
+  border-bottom: 1px solid var(--border);
 }
 
 td {
-  padding: 13px 10px;
-  border-bottom: 1px solid #202e43;
-  color: #d4e0f1;
+  padding: 15px 10px;
+  border-bottom: 1px solid #223247;
+  font-size: 13px;
 }
 
-tbody tr:last-child td {
-  border-bottom: 0;
-}
+tbody tr:hover { background: #132237; }
+.side-buy { color: var(--green); font-weight: 800; }
+.side-sell { color: var(--red); font-weight: 800; }
 
-.side-buy {
+.status {
+  display: inline-block;
+  padding: 5px 8px;
+  border-radius: 8px;
+  font-size: 11px;
+  background: #12352e;
   color: var(--green);
-  font-weight: bold;
 }
 
-.side-sell {
-  color: var(--red);
-  font-weight: bold;
-}
+.status.pending { background: #332817; color: var(--orange); }
 
-.badge {
-  background: #16332d;
-  color: var(--green);
-  border-radius: 6px;
-  padding: 4px 7px;
-  font-size: 9px;
-}
+.empty { text-align: center; color: var(--muted); padding: 24px; }
 
-.badge.pending {
-  background: #302819;
-  color: var(--amber);
-}
+.health-list { margin-top: 22px; display: grid; gap: 20px; }
+.health-row { display: grid; gap: 9px; }
 
-.health-item {
-  margin-bottom: 17px;
-}
-
-.health-item:last-child {
-  margin-bottom: 0;
-}
-
-.health-row {
+.health-line {
   display: flex;
   justify-content: space-between;
   gap: 10px;
-  font-size: 12px;
+  color: #a9c7ed;
+  font-size: 14px;
 }
 
-.health-row span {
-  color: #a8bad2;
-}
+.health-line strong { color: var(--green); text-align: right; }
 
-.health-row strong {
-  color: var(--green);
-  font-size: 11px;
-}
-
-.health-row strong.warning {
-  color: var(--amber);
-}
-
-.progress {
-  height: 5px;
-  border-radius: 99px;
-  background: #25344a;
-  margin-top: 8px;
+.bar {
+  height: 7px;
+  background: #29384d;
+  border-radius: 9px;
   overflow: hidden;
 }
 
-.progress span {
+.bar span {
   display: block;
   height: 100%;
-  width: var(--width);
-  background: linear-gradient(90deg, #1599b7, var(--cyan));
-  border-radius: 99px;
+  width: 100%;
+  background: linear-gradient(90deg, #1499b1, var(--cyan));
 }
 
-/* FOOTER */
+.bar.partial span { width: 70%; }
+.bar.off span { width: 0; }
 
-footer {
-  border-top: 1px solid var(--line);
-  margin-top: 22px;
-  padding-top: 15px;
+.footer {
+  border-top: 1px solid var(--border);
+  margin-top: 30px;
+  padding-top: 18px;
+  color: #6f91bd;
+  font-size: 12px;
   display: flex;
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
-  color: #667d9d;
-  font-size: 10px;
 }
 
-/* RESPONSIVE DESIGN */
+.flash { animation: flash 1s ease; }
 
-@media (max-width: 1120px) {
-  .metrics {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .columns,
-  .lower {
-    grid-template-columns: 1fr;
-  }
+@keyframes flash {
+  40% { box-shadow: 0 0 0 2px #35d9ec55; }
 }
 
-@media (max-width: 700px) {
-  .app {
-    grid-template-columns: 1fr;
-  }
+.live-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  margin-right: 6px;
+}
 
+@media (max-width: 1250px) {
+  .app { grid-template-columns: 240px minmax(0, 1fr); }
+  .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .sidebar { padding: 18px 14px; }
+  .main { padding: 20px; }
+}
+
+@media (max-width: 760px) {
+  .app { display: block; }
   .sidebar {
-    padding: 14px;
-    gap: 14px;
-    border-right: 0;
-    border-bottom: 1px solid var(--line);
+    position: relative;
+    height: auto;
+    min-height: 0;
+    padding: 15px;
+    gap: 15px;
   }
-
-  .nav-label,
-  .sidebar-note {
-    display: none;
-  }
-
-  .nav {
-    display: flex;
-    overflow-x: auto;
-  }
-
-  .nav a {
-    white-space: nowrap;
-    font-size: 12px;
-    padding: 9px;
-  }
-
-  .main {
-    padding: 18px 12px;
-  }
-
-  .topbar {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .metric {
-    padding: 13px;
-  }
-
-  .metric-value {
-    font-size: 23px;
-  }
-
-  .card {
-    padding: 14px;
-  }
-
-  .chart {
-    height: 205px;
-  }
+  .side-label, .demo-note { display: none; }
+  .nav { display: flex; overflow-x: auto; gap: 5px; }
+  .nav button { padding: 11px; font-size: 13px; white-space: nowrap; }
+  .main { padding: 17px 13px; }
+  .page-head { display: block; padding: 10px 0 23px; }
+  .page-head h1 { font-size: 33px; }
+  .page-head p { font-size: 15px; }
+  .head-actions { margin-top: 17px; }
+  .panel { padding: 17px; }
+  .chart-wrap { height: 215px; }
 }
 
-@media (max-width: 390px) {
-  .metrics {
-    grid-template-columns: 1fr;
-  }
+@media (max-width: 420px) {
+  .metrics { grid-template-columns: 1fr; }
+  .metric-value { font-size: 34px; }
 }
 </style>
 </head>
@@ -647,178 +475,148 @@ footer {
 
   <aside class="sidebar">
     <div class="brand">
-      <div class="logo">C</div>
+      <div class="brand-mark">C</div>
       <div>
-        <b>ChronosMatch</b>
-        <small>TRADING ENGINE</small>
+        <div class="brand-name">ChronosMatch</div>
+        <div class="brand-sub">TRADING ENGINE</div>
       </div>
     </div>
 
-    <div>
-      <div class="nav-label">WORKSPACE</div>
-      <nav class="nav" aria-label="Dashboard navigation">
-        <a class="active" href="#overview"><span>▦</span>Overview</a>
-        <a href="#market"><span>⌁</span>Market Watch</a>
-        <a href="#orders"><span>⇄</span>Order Flow</a>
-        <a href="#performance"><span>◷</span>Performance</a>
-      </nav>
-    </div>
+    <div class="side-label">WORKSPACE</div>
 
-    <div class="sidebar-note">
-      <strong><span class="dot">●</span>DEMO ENVIRONMENT</strong>
-      <p>Market prices and chart values are illustrative demo data, not live exchange data.</p>
+    <nav class="nav" aria-label="Dashboard navigation">
+      <button class="active" data-target="overview"><span class="nav-icon">▦</span>Overview</button>
+      <button data-target="market-watch"><span class="nav-icon">⌁</span>Market Watch</button>
+      <button data-target="order-flow"><span class="nav-icon">⇄</span>Order Flow</button>
+      <button data-target="performance"><span class="nav-icon">◷</span>Performance</button>
+    </nav>
+
+    <div class="demo-note">
+      <strong>● DEMO ENVIRONMENT</strong>
+      Market prices, chart movements, and order records are simulated examples.
+      They are not live exchange data and are not connected to the Python engine.
     </div>
   </aside>
 
-  <main class="main" id="overview">
+  <main class="main">
+    <div class="topline">SYSTEM MONITOR / OVERVIEW</div>
 
-    <header class="topbar">
+    <header class="page-head" id="overview">
       <div>
-        <div class="eyebrow">SYSTEM MONITOR / OVERVIEW</div>
         <h1>Trading Engine Overview</h1>
-        <p class="subtitle">Monitor order flow, matching performance and engine metrics.</p>
+        <p>Monitor order flow, matching performance and engine metrics.</p>
       </div>
-
-      <div class="top-actions">
-        <span class="pill demo"><span class="dot">●</span>DEMO DATA</span>
-        <span class="tag">Python Engine</span>
+      <div class="head-actions">
+        <div class="pill">● DEMO DATA</div>
+        <div class="engine-pill">Python Engine · Not connected</div>
       </div>
     </header>
 
-    <div class="section-heading" id="performance">
-      <div>
-        <h2>Engine Performance</h2>
-        <p>Benchmark snapshot · Week 1</p>
+    <section class="section" id="performance">
+      <div class="section-head">
+        <div>
+          <h2>Engine Performance</h2>
+          <p>Benchmark snapshot · Week 1</p>
+        </div>
+        <span class="muted">Measured benchmark results</span>
       </div>
-      <span class="small">Measured benchmark results</span>
-    </div>
 
-    <section class="metrics" aria-label="Engine performance metrics">
+      <div class="metrics">
+        <article class="metric" style="--accent:var(--cyan)">
+          <div class="metric-label">Consumer Throughput ↗</div>
+          <div class="metric-value">97,512 <span>ops/s</span></div>
+          <div class="metric-foot">Measured benchmark result</div>
+        </article>
 
-      <article class="metric" style="--accent:var(--cyan)">
-        <div class="metric-label">Consumer Throughput <span class="metric-icon">↗</span></div>
-        <div class="metric-value">97,512 <em>ops/s</em></div>
-        <div class="metric-note">Measured benchmark result</div>
-      </article>
+        <article class="metric" style="--accent:#eef4ff">
+          <div class="metric-label">Orders Processed ⇄</div>
+          <div class="metric-value">300,000</div>
+          <div class="metric-foot">Orders in benchmark run</div>
+        </article>
 
-      <article class="metric" style="--accent:#edf4ff">
-        <div class="metric-label">Orders Processed <span class="metric-icon">⇄</span></div>
-        <div class="metric-value">300,000</div>
-        <div class="metric-note">Orders in benchmark run</div>
-      </article>
+        <article class="metric" style="--accent:var(--purple)">
+          <div class="metric-label">Mean Latency ◷</div>
+          <div class="metric-value">1.358 <span>ms</span></div>
+          <div class="metric-foot">Average measured latency</div>
+        </article>
 
-      <article class="metric" style="--accent:var(--purple)">
-        <div class="metric-label">Mean Latency <span class="metric-icon">◷</span></div>
-        <div class="metric-value">1.358 <em>ms</em></div>
-        <div class="metric-note">Average measured latency</div>
-      </article>
-
-      <article class="metric" style="--accent:var(--green)">
-        <div class="metric-label">P99 Latency <span class="metric-icon">⌁</span></div>
-        <div class="metric-value">2.786 <em>ms</em></div>
-        <div class="metric-note">99th percentile measured latency</div>
-      </article>
-
+        <article class="metric" style="--accent:var(--green)">
+          <div class="metric-label">P99 Latency ⌁</div>
+          <div class="metric-value">2.786 <span>ms</span></div>
+          <div class="metric-foot">99th percentile measured latency</div>
+        </article>
+      </div>
     </section>
 
-    <section class="columns">
-
-      <article class="card">
-        <div class="card-head">
+    <div class="dashboard-grid">
+      <section class="panel section" id="chart-panel">
+        <div class="panel-title">
           <div>
             <h3>Market Price Movement</h3>
-            <p>Illustrative data · Not live market prices</p>
+            <p>Simulated values · Not live market prices</p>
           </div>
-          <span class="tag">DEMO CHART</span>
+          <span class="small-tag"><span class="live-dot"></span>DEMO CHART</span>
         </div>
 
-        <svg class="chart" viewBox="0 0 700 230" role="img"
-             aria-label="Illustrative demo price movement chart">
-
-          <g class="gridline">
-            <path d="M45 25H685M45 75H685M45 125H685M45 175H685M45 205H685"/>
-          </g>
-
-          <g class="axis">
-            <text x="5" y="29">100</text>
-            <text x="12" y="79">85</text>
-            <text x="12" y="129">70</text>
-            <text x="12" y="179">55</text>
-            <text x="45" y="225">09:00</text>
-            <text x="195" y="225">10:00</text>
-            <text x="350" y="225">11:00</text>
-            <text x="510" y="225">12:00</text>
-            <text x="645" y="225">13:00</text>
-          </g>
-
-          <polyline class="chart-line-one"
-            points="45,188 100,172 160,180 220,148 275,160 335,135 390,146 450,116 505,128 565,95 620,106 685,72"/>
-
-          <polyline class="chart-line-two"
-            points="45,102 105,115 160,91 220,107 275,78 335,95 390,69 450,83 505,61 565,75 620,52 685,64"/>
-
-        </svg>
-
-        <div class="legend">
-          <span><i></i>DEMO-XYZ</span>
-          <span><i></i>DEMO-ABC</span>
+        <div class="chart-wrap">
+          <svg id="price-chart" viewBox="0 0 760 250" role="img"
+               aria-label="Simulated price movement chart">
+            <g id="chart-grid"></g>
+            <polyline id="line-xyz" fill="none" stroke="#35d9ec"
+              stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+            <polyline id="line-abc" fill="none" stroke="#a58bff"
+              stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+            <g id="chart-labels"></g>
+          </svg>
         </div>
-      </article>
 
-      <article class="card" id="market">
-        <div class="card-head">
+        <div class="chart-legend">
+          <span><i class="legend-line"></i>DEMO-XYZ</span>
+          <span><i class="legend-line" style="background:var(--purple)"></i>DEMO-ABC</span>
+          <span class="muted" id="chart-updated">Starting demo chart…</span>
+        </div>
+      </section>
+
+      <section class="panel section" id="market-watch">
+        <div class="panel-title">
           <div>
             <h3>Market Watch</h3>
-            <p>Sample instruments · Demo values</p>
+            <p>Sample instruments · Simulated values</p>
           </div>
-          <span class="tag">3 SYMBOLS</span>
+          <span class="small-tag">3 SYMBOLS</span>
         </div>
+        <div class="watch-list" id="watch-list"></div>
+      </section>
+    </div>
 
-        <div class="symbol">
-          <div class="ticker">
-            <span class="token">XYZ</span>
-            <div>
-              <b>DEMO-XYZ</b>
-              <small>Sample instrument</small>
-            </div>
-          </div>
-          <div class="price">104.28<div class="up">+1.24%</div></div>
-        </div>
-
-        <div class="symbol">
-          <div class="ticker">
-            <span class="token">ABC</span>
-            <div>
-              <b>DEMO-ABC</b>
-              <small>Sample instrument</small>
-            </div>
-          </div>
-          <div class="price">87.64<div class="down">−0.42%</div></div>
-        </div>
-
-        <div class="symbol">
-          <div class="ticker">
-            <span class="token">QRS</span>
-            <div>
-              <b>DEMO-QRS</b>
-              <small>Sample instrument</small>
-            </div>
-          </div>
-          <div class="price">212.10<div class="up">+0.86%</div></div>
-        </div>
-      </article>
-
-    </section>
-
-    <section class="lower" id="orders">
-
-      <article class="card">
-        <div class="card-head">
+    <div class="dashboard-grid">
+      <section class="panel section orders-panel" id="order-flow">
+        <div class="panel-title">
           <div>
             <h3>Recent Order Activity</h3>
             <p>Illustrative order records for interface preview</p>
           </div>
-          <span class="tag">DEMO RECORDS</span>
+          <span class="small-tag">DEMO RECORDS</span>
+        </div>
+
+        <div class="tools">
+          <input type="search" id="order-search"
+            placeholder="Search order ID or instrument…"
+            aria-label="Search orders">
+
+          <select id="side-filter" aria-label="Filter by side">
+            <option value="all">All sides</option>
+            <option value="BUY">Buy only</option>
+            <option value="SELL">Sell only</option>
+          </select>
+
+          <select id="status-filter" aria-label="Filter by status">
+            <option value="all">All statuses</option>
+            <option value="Matched">Matched</option>
+            <option value="Pending">Pending</option>
+          </select>
+
+          <button class="btn-reset" id="reset-filters" type="button">Reset</button>
         </div>
 
         <div class="table-wrap">
@@ -833,112 +631,260 @@ footer {
                 <th>STATUS</th>
               </tr>
             </thead>
-
-            <tbody>
-              <tr>
-                <td>ORD-1001</td>
-                <td>DEMO-XYZ</td>
-                <td class="side-buy">BUY</td>
-                <td>104.20</td>
-                <td>50</td>
-                <td><span class="badge">Matched · Demo</span></td>
-              </tr>
-
-              <tr>
-                <td>ORD-1002</td>
-                <td>DEMO-ABC</td>
-                <td class="side-sell">SELL</td>
-                <td>87.70</td>
-                <td>25</td>
-                <td><span class="badge">Matched · Demo</span></td>
-              </tr>
-
-              <tr>
-                <td>ORD-1003</td>
-                <td>DEMO-QRS</td>
-                <td class="side-buy">BUY</td>
-                <td>212.00</td>
-                <td>40</td>
-                <td><span class="badge pending">Pending · Demo</span></td>
-              </tr>
-
-              <tr>
-                <td>ORD-1004</td>
-                <td>DEMO-XYZ</td>
-                <td class="side-sell">SELL</td>
-                <td>104.35</td>
-                <td>15</td>
-                <td><span class="badge">Matched · Demo</span></td>
-              </tr>
-            </tbody>
+            <tbody id="orders-body"></tbody>
           </table>
+          <div class="empty" id="empty-state" hidden>
+            No demo orders match your search.
+          </div>
         </div>
-      </article>
+      </section>
 
-      <article class="card">
-        <div class="card-head">
+      <section class="panel section" id="health-panel">
+        <div class="panel-title">
           <div>
             <h3>Engine Health</h3>
             <p>Project indicators · Not a live health feed</p>
           </div>
-          <span class="tag">PROJECT STATUS</span>
+          <span class="small-tag">PROJECT STATUS</span>
         </div>
 
-        <div class="health-item">
+        <div class="health-list">
           <div class="health-row">
-            <span>Order validation</span>
-            <strong>Implemented</strong>
+            <div class="health-line"><span>Order validation</span><strong>Implemented</strong></div>
+            <div class="bar"><span></span></div>
           </div>
-          <div class="progress"><span style="--width:100%"></span></div>
-        </div>
 
-        <div class="health-item">
           <div class="health-row">
-            <span>Matching engine tests</span>
-            <strong>13 passed</strong>
+            <div class="health-line"><span>Matching engine tests</span><strong>30 passed</strong></div>
+            <div class="bar"><span></span></div>
           </div>
-          <div class="progress"><span style="--width:100%"></span></div>
-        </div>
 
-        <div class="health-item">
           <div class="health-row">
-            <span>Benchmark snapshot</span>
-            <strong>Week 1 data</strong>
+            <div class="health-line"><span>Benchmark snapshot</span><strong>Week 1 data</strong></div>
+            <div class="bar partial"><span></span></div>
           </div>
-          <div class="progress"><span style="--width:72%"></span></div>
-        </div>
 
-        <div class="health-item">
           <div class="health-row">
-            <span>Live market connection</span>
-            <strong class="warning">Not connected</strong>
+            <div class="health-line">
+              <span>Live market connection</span>
+              <strong style="color:var(--orange)">Not connected</strong>
+            </div>
+            <div class="bar off"><span></span></div>
           </div>
-          <div class="progress"><span style="--width:0%"></span></div>
         </div>
-      </article>
+      </section>
+    </div>
 
-    </section>
-
-    <footer>
-      <span>ChronosMatch · High-Frequency Trading Engine</span>
-      <span>Benchmark metrics are measured; market and order examples are demo data.</span>
+    <footer class="footer">
+      <span>ChronosMatch · Trading Engine Dashboard</span>
+      <span>Demo interface only · No live exchange connection</span>
     </footer>
-
   </main>
 </div>
 
 <script>
-/* Highlight the selected dashboard section in the sidebar. */
-document.querySelectorAll(".nav a").forEach(function(link) {
-  link.addEventListener("click", function() {
-    document.querySelectorAll(".nav a").forEach(function(item) {
+// All market prices, chart movements, and order records are simulated.
+// This page does not connect to the Python engine or a live exchange.
+
+const orders = [
+  {id:"ORD-1001",instrument:"DEMO-XYZ",side:"BUY",price:104.20,qty:50,status:"Matched"},
+  {id:"ORD-1002",instrument:"DEMO-ABC",side:"SELL",price:87.70,qty:25,status:"Matched"},
+  {id:"ORD-1003",instrument:"DEMO-QRS",side:"BUY",price:212.00,qty:40,status:"Pending"},
+  {id:"ORD-1004",instrument:"DEMO-XYZ",side:"SELL",price:104.35,qty:15,status:"Matched"},
+  {id:"ORD-1005",instrument:"DEMO-ABC",side:"BUY",price:87.52,qty:35,status:"Pending"},
+  {id:"ORD-1006",instrument:"DEMO-QRS",side:"SELL",price:212.24,qty:12,status:"Matched"},
+  {id:"ORD-1007",instrument:"DEMO-XYZ",side:"BUY",price:104.12,qty:20,status:"Pending"},
+  {id:"ORD-1008",instrument:"DEMO-ABC",side:"SELL",price:87.81,qty:18,status:"Matched"}
+];
+
+const ordersBody = document.getElementById("orders-body");
+const search = document.getElementById("order-search");
+const sideFilter = document.getElementById("side-filter");
+const statusFilter = document.getElementById("status-filter");
+const emptyState = document.getElementById("empty-state");
+
+function renderOrders() {
+  const query = search.value.trim().toLowerCase();
+  const side = sideFilter.value;
+  const status = statusFilter.value;
+
+  const filteredOrders = orders.filter(order => {
+    const matchesSearch =
+      !query ||
+      order.id.toLowerCase().includes(query) ||
+      order.instrument.toLowerCase().includes(query);
+
+    const matchesSide = side === "all" || order.side === side;
+    const matchesStatus = status === "all" || order.status === status;
+
+    return matchesSearch && matchesSide && matchesStatus;
+  });
+
+  ordersBody.innerHTML = filteredOrders.map(order => `
+    <tr>
+      <td>${order.id}</td>
+      <td>${order.instrument}</td>
+      <td class="${order.side === "BUY" ? "side-buy" : "side-sell"}">
+        ${order.side}
+      </td>
+      <td>${order.price.toFixed(2)}</td>
+      <td>${order.qty}</td>
+      <td>
+        <span class="status ${order.status === "Pending" ? "pending" : ""}">
+          ${order.status} · Demo
+        </span>
+      </td>
+    </tr>
+  `).join("");
+
+  emptyState.hidden = filteredOrders.length > 0;
+}
+
+search.addEventListener("input", renderOrders);
+sideFilter.addEventListener("change", renderOrders);
+statusFilter.addEventListener("change", renderOrders);
+
+document.getElementById("reset-filters").addEventListener("click", () => {
+  search.value = "";
+  sideFilter.value = "all";
+  statusFilter.value = "all";
+  renderOrders();
+});
+
+renderOrders();
+
+// Sidebar navigation: scroll to each section and highlight the selected item.
+document.querySelectorAll(".nav button").forEach(button => {
+  button.addEventListener("click", () => {
+    document.querySelectorAll(".nav button").forEach(item => {
       item.classList.remove("active");
     });
 
-    link.classList.add("active");
+    button.classList.add("active");
+
+    const section = document.getElementById(button.dataset.target);
+    if (section) {
+      section.scrollIntoView({behavior:"smooth", block:"start"});
+      section.classList.remove("flash");
+      void section.offsetWidth;
+      section.classList.add("flash");
+    }
   });
 });
-</script>
 
+// Simulated chart data. New points are generated in the browser only.
+const chartWidth = 760;
+const chartHeight = 250;
+const left = 48;
+const right = 18;
+const top = 18;
+const bottom = 30;
+
+let xyz = [52,56,54,63,59,67,64,73,69,78,75,83,79,88,84];
+let abc = [78,74,72,79,76,84,80,87,83,90,86,92,89,96,93];
+
+const chartGrid = document.getElementById("chart-grid");
+const chartLabels = document.getElementById("chart-labels");
+
+function makeChartBase() {
+  chartGrid.innerHTML = "";
+  chartLabels.innerHTML = "";
+
+  [50,60,70,80,90,100].forEach(value => {
+    const y = top + (100 - value) / 60 *
+      (chartHeight - top - bottom);
+
+    chartGrid.innerHTML += `
+      <line x1="${left}" y1="${y}" x2="${chartWidth-right}" y2="${y}"
+        stroke="#26374d" stroke-width="1"/>
+      <text x="4" y="${y+4}" fill="#7798c5" font-size="11">${value}</text>
+    `;
+  });
+
+  ["09:00","10:00","11:00","12:00","13:00"].forEach((time,index) => {
+    const x = left + index * (chartWidth-left-right) / 4;
+    const anchor = index === 0 ? "start" : index === 4 ? "end" : "middle";
+
+    chartLabels.innerHTML += `
+      <text x="${x}" y="${chartHeight-4}" fill="#7798c5"
+        font-size="11" text-anchor="${anchor}">${time}</text>
+    `;
+  });
+}
+
+function pointsFor(values) {
+  return values.map((value,index) => {
+    const x = left + index * (chartWidth-left-right) / (values.length-1);
+    const y = top + (100-value) / 60 * (chartHeight-top-bottom);
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(" ");
+}
+
+function drawChart() {
+  document.getElementById("line-xyz")
+    .setAttribute("points", pointsFor(xyz));
+
+  document.getElementById("line-abc")
+    .setAttribute("points", pointsFor(abc));
+
+  document.getElementById("chart-updated").textContent =
+    "Demo updated: " + new Date().toLocaleTimeString();
+}
+
+makeChartBase();
+drawChart();
+
+// Update chart every four seconds using random demo movements.
+setInterval(() => {
+  xyz.push(Math.max(50, Math.min(98,
+    Math.round(xyz[xyz.length-1] + (Math.random()-0.48)*8))));
+  xyz.shift();
+
+  abc.push(Math.max(50, Math.min(98,
+    Math.round(abc[abc.length-1] + (Math.random()-0.5)*7))));
+  abc.shift();
+
+  drawChart();
+}, 4000);
+
+// Simulated Market Watch prices.
+const watchData = [
+  {symbol:"XYZ",name:"DEMO-XYZ",price:104.28,change:1.24},
+  {symbol:"ABC",name:"DEMO-ABC",price:87.64,change:-0.42},
+  {symbol:"QRS",name:"DEMO-QRS",price:212.10,change:0.86}
+];
+
+function renderWatch() {
+  document.getElementById("watch-list").innerHTML = watchData.map(item => `
+    <div class="watch-item">
+      <div class="symbol">
+        <div class="symbol-badge">${item.symbol}</div>
+        <div>
+          <div class="symbol-name">${item.name}</div>
+          <div class="symbol-desc">Sample instrument · Simulated</div>
+        </div>
+      </div>
+      <div class="price">
+        ${item.price.toFixed(2)}
+        <div class="change ${item.change >= 0 ? "positive" : "negative"}">
+          ${item.change >= 0 ? "+" : ""}${item.change.toFixed(2)}%
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+
+renderWatch();
+
+// Refresh demo prices every five seconds.
+setInterval(() => {
+  watchData.forEach(item => {
+    item.price = Math.max(1, item.price + (Math.random()-0.49) * item.price * 0.001);
+    item.change += (Math.random()-0.5) * 0.12;
+  });
+
+  renderWatch();
+}, 5000);
+</script>
 </body>
 </html>
