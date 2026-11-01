@@ -359,3 +359,26 @@ The Cython matching engine exposes the following real-time market data and telem
 - [ ] **Week 3**: **Multi-Symbol & Lock-Free Multi-Producer Extensions**
   - Multi-symbol routing and advanced lock-free concurrency structures.
 
+## Weeks 2–4: Extended Features and Testing
+
+### Week 2 — Order Book Improvements
+- Tested pending order cancellation.
+- Tested trade summaries and executed trade quantities.
+- Verified price-priority matching using regression tests.
+
+### Week 3 — Multi-Symbol Routing
+- Added a separate order book for each trading symbol.
+- Added symbol-specific order submission and cancellation.
+- Tested routing and isolation between AAPL and MSFT.
+
+### Week 4 — Risk Validation and Regression Testing
+- Added order quantity and price risk limits.
+- Added duplicate open order ID protection.
+- Added tests for order validation and safe matching.
+
+### Validation Results
+- Existing tests: 35 passed.
+- New regression tests: 6 passed.
+- Total: 41 passed.
+- Command: `python -m pytest -q`
+
