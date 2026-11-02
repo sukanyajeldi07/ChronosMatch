@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,161 +8,540 @@
 
 <style>
 :root {
-  --bg:#080d16;--sidebar:#0a1220;--panel:#101b2b;
-  --border:#26374d;--text:#eef4ff;--muted:#8eadd6;
-  --cyan:#35d9ec;--green:#26e6a5;--purple:#a58bff;
-  --orange:#ffb547;--red:#ff5e79;
+  --bg:#080d16;
+  --sidebar:#0a1220;
+  --panel:#101b2b;
+  --border:#26374d;
+  --text:#eef4ff;
+  --muted:#8eadd6;
+  --cyan:#35d9ec;
+  --green:#26e6a5;
+  --purple:#a58bff;
+  --orange:#ffb547;
+  --red:#ff5e79;
 }
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--text);
-font-family:Inter,"Segoe UI",Arial,sans-serif;line-height:1.5}
-button,input,select{font:inherit}
-button{cursor:pointer}
-.app{min-height:100vh;display:grid;grid-template-columns:260px minmax(0,1fr)}
-.sidebar{background:var(--sidebar);border-right:1px solid var(--border);
-padding:24px 18px;display:flex;flex-direction:column;gap:28px;
-min-height:100vh;position:sticky;top:0;height:100vh}
-.brand{display:flex;align-items:center;gap:13px}
-.brand-mark{width:54px;height:54px;border-radius:15px;
-background:linear-gradient(140deg,#43deeb,#1689a8);
-display:grid;place-items:center;color:#06202b;font-size:32px;font-weight:900}
-.brand-name{font-size:22px;font-weight:800}
-.brand-sub{font-size:11px;color:var(--muted);letter-spacing:2px}
-.side-label{font-size:12px;color:#7798c5;font-weight:800;letter-spacing:2px}
-.nav{display:grid;gap:8px}
-.nav button{border:0;background:transparent;color:#9bb9df;text-align:left;
-padding:13px;border-radius:11px;font-weight:650;display:flex;gap:12px}
-.nav button:hover,.nav button.active{background:#153246;color:var(--cyan)}
-.demo-note{margin-top:auto;border:1px solid var(--border);border-radius:14px;
-padding:15px;color:var(--muted);background:#0c1726;font-size:13px}
-.demo-note strong{color:var(--orange);display:block;margin-bottom:8px}
-.main{padding:24px;min-width:0}
-.topline{color:var(--cyan);font-weight:800;letter-spacing:3px;font-size:12px}
-.page-head{display:flex;align-items:center;justify-content:space-between;gap:20px;
-padding:20px 0 28px;border-bottom:1px solid var(--border);margin-bottom:28px}
-.page-head h1{font-size:clamp(30px,3vw,46px);line-height:1.1;margin:8px 0 12px}
-.page-head p{font-size:17px;color:var(--muted);margin:0}
-.head-actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
-.action-button{border:1px solid var(--border);background:#12283a;color:var(--text);
-border-radius:9px;padding:10px 12px;font-weight:700;font-size:12px}
-.action-button:hover{border-color:var(--cyan);color:var(--cyan)}
-.pill,.engine-pill,.small-tag{border-radius:9px;padding:9px 12px;
-white-space:nowrap;font-size:11px}
-.pill{border:1px solid #735224;background:#2a2115;color:var(--orange)}
-.engine-pill,.small-tag{border:1px solid var(--border);color:#9bb9df}
-.pause-state{color:var(--green);font-size:12px}
-.section{scroll-margin-top:20px;margin-bottom:24px}
-.section-head{display:flex;justify-content:space-between;align-items:end;
-gap:12px;margin-bottom:17px}
-.section-head h2{font-size:23px;margin:0 0 5px}
-.section-head p{margin:0;color:var(--muted)}
-.muted{color:var(--muted)}
-.week-selector{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
-gap:12px;margin:18px 0 22px}
-.week-button{background:var(--panel);border:1px solid var(--border);
-color:#a9c7ed;border-radius:12px;padding:14px;text-align:left;min-width:0}
-.week-button strong{display:block;color:var(--text);font-size:15px;margin-bottom:4px}
-.week-button span{display:block;color:var(--muted);font-size:12px}
-.week-button.active{border-color:var(--cyan);background:#123044;
-box-shadow:inset 0 3px var(--cyan)}
-.week-summary{border:1px solid var(--border);background:#0d1928;
-border-radius:13px;padding:16px 18px;margin-bottom:22px}
-.week-summary h3{margin:0 0 5px;font-size:18px}
-.week-summary p{margin:0;color:var(--muted);font-size:13px}
-.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}
-.metric{position:relative;background:linear-gradient(145deg,#111d2e,#0e1725);
-border:1px solid var(--border);border-radius:17px;padding:20px;min-width:0}
-.metric:before{content:"";height:3px;position:absolute;left:18px;right:18px;top:0;
-background:var(--accent,var(--cyan))}
-.metric-label{color:#a9c7ed;font-size:13px}
-.metric-value{font-size:clamp(22px,2vw,34px);font-weight:850;
-margin:24px 0 8px;overflow-wrap:anywhere}
-.metric-value span{font-size:13px;color:var(--accent,var(--cyan))}
-.metric-foot{color:var(--muted);font-size:12px}
-.dashboard-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,1fr);
-gap:18px;margin-top:20px}
-.panel{background:var(--panel);border:1px solid var(--border);
-border-radius:17px;padding:22px;min-width:0}
-.panel-title{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
-.panel-title h3{font-size:20px;margin:0 0 6px}
-.panel-title p{margin:0;color:var(--muted);font-size:13px}
-.chart-wrap{margin-top:20px;width:100%;height:240px}
-.chart-wrap svg{width:100%;height:100%;display:block}
-.chart-legend{display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);
-margin-top:14px;font-size:12px}
-.legend-line{display:inline-block;width:22px;height:3px;vertical-align:middle;
-margin-right:7px;background:var(--cyan)}
-.watch-list{margin-top:18px}
-.watch-item{display:flex;align-items:center;justify-content:space-between;
-gap:12px;padding:16px 0;border-bottom:1px solid #223247}
-.watch-item:last-child{border-bottom:0}
-.symbol{display:flex;align-items:center;gap:11px}
-.symbol-badge{height:43px;width:46px;display:grid;place-items:center;
-border-radius:10px;background:#173145;color:var(--cyan);font-weight:800;font-size:12px}
-.symbol-name{font-weight:800}
-.symbol-desc{color:var(--muted);font-size:11px}
-.price{text-align:right;font-weight:800;white-space:nowrap}
-.change{font-size:12px}
-.positive{color:var(--green)}
-.negative{color:var(--red)}
-.orders-panel{margin-top:20px}
-.tools{display:flex;gap:9px;flex-wrap:wrap;margin:19px 0 14px}
-.tools input,.tools select{background:#091321;border:1px solid var(--border);
-border-radius:9px;color:var(--text);padding:10px 12px;outline:none}
-.tools input{flex:1;min-width:160px}
-.tools input:focus,.tools select:focus{border-color:var(--cyan)}
-.btn-reset{background:#12283a;border:1px solid #29445b;color:#a9c7ed;
-border-radius:9px;padding:10px 13px}
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;white-space:nowrap}
-th{font-size:11px;color:#7798c5;letter-spacing:1px;text-align:left;
-padding:13px 9px;border-bottom:1px solid var(--border)}
-td{padding:14px 9px;border-bottom:1px solid #223247;font-size:13px}
-tbody tr:hover{background:#132237}
-.side-buy{color:var(--green);font-weight:800}
-.side-sell{color:var(--red);font-weight:800}
-.status{display:inline-block;padding:5px 8px;border-radius:8px;
-font-size:11px;background:#12352e;color:var(--green)}
-.status.pending{background:#332817;color:var(--orange)}
-.empty{text-align:center;color:var(--muted);padding:24px}
-.health-list{margin-top:22px;display:grid;gap:20px}
-.health-row{display:grid;gap:9px}
-.health-line{display:flex;justify-content:space-between;gap:10px;
-color:#a9c7ed;font-size:13px}
-.health-line strong{color:var(--green);text-align:right}
-.bar{height:7px;background:#29384d;border-radius:9px;overflow:hidden}
-.bar span{display:block;height:100%;background:linear-gradient(90deg,#1499b1,var(--cyan))}
-.footer{border-top:1px solid var(--border);margin-top:30px;padding-top:18px;
-color:#6f91bd;font-size:12px;display:flex;justify-content:space-between;
-gap:12px;flex-wrap:wrap}
-.flash{animation:flash 1s ease}
-@keyframes flash{40%{box-shadow:0 0 0 2px #35d9ec55}}
-@media(max-width:1200px){
-  .app{grid-template-columns:225px minmax(0,1fr)}
-  .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .dashboard-grid{grid-template-columns:1fr}
+
+* { box-sizing:border-box; }
+
+html { scroll-behavior:smooth; }
+
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,"Segoe UI",Arial,sans-serif;
+  line-height:1.5;
 }
-@media(max-width:760px){
-  .app{display:block}
-  .sidebar{position:relative;height:auto;min-height:0;padding:15px;gap:15px}
-  .side-label,.demo-note{display:none}
-  .nav{display:flex;overflow-x:auto;gap:5px}
-  .nav button{padding:10px;font-size:12px;white-space:nowrap}
-  .main{padding:16px 12px}
-  .page-head{display:block;padding:10px 0 22px}
-  .page-head h1{font-size:32px}
-  .head-actions{margin-top:16px}
-  .panel{padding:16px}
-  .week-selector{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .chart-wrap{height:210px}
+
+button,input,select { font:inherit; }
+button { cursor:pointer; }
+
+.app {
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:260px minmax(0,1fr);
 }
-@media(max-width:420px){.metrics{grid-template-columns:1fr}}
+
+.sidebar {
+  background:var(--sidebar);
+  border-right:1px solid var(--border);
+  padding:24px 18px;
+  display:flex;
+  flex-direction:column;
+  gap:28px;
+  min-height:100vh;
+  position:sticky;
+  top:0;
+  height:100vh;
+}
+
+.brand {
+  display:flex;
+  align-items:center;
+  gap:13px;
+}
+
+.brand-mark {
+  width:54px;
+  height:54px;
+  border-radius:15px;
+  background:linear-gradient(140deg,#43deeb,#1689a8);
+  display:grid;
+  place-items:center;
+  color:#06202b;
+  font-size:32px;
+  font-weight:900;
+}
+
+.brand-name { font-size:22px; font-weight:800; }
+
+.brand-sub {
+  font-size:11px;
+  color:var(--muted);
+  letter-spacing:2px;
+}
+
+.side-label {
+  font-size:12px;
+  color:#7798c5;
+  font-weight:800;
+  letter-spacing:2px;
+}
+
+.nav { display:grid; gap:8px; }
+
+.nav button {
+  border:0;
+  background:transparent;
+  color:#9bb9df;
+  text-align:left;
+  padding:13px;
+  border-radius:11px;
+  font-weight:650;
+  display:flex;
+  gap:12px;
+}
+
+.nav button:hover,
+.nav button.active {
+  background:#153246;
+  color:var(--cyan);
+}
+
+.demo-note {
+  margin-top:auto;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:15px;
+  color:var(--muted);
+  background:#0c1726;
+  font-size:13px;
+}
+
+.demo-note strong {
+  color:var(--orange);
+  display:block;
+  margin-bottom:8px;
+}
+
+.main { padding:24px; min-width:0; }
+
+.topline {
+  color:var(--cyan);
+  font-weight:800;
+  letter-spacing:3px;
+  font-size:12px;
+}
+
+.page-head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  padding:20px 0 28px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:28px;
+}
+
+.page-head h1 {
+  font-size:clamp(30px,3vw,46px);
+  line-height:1.1;
+  margin:8px 0 12px;
+}
+
+.page-head p {
+  font-size:17px;
+  color:var(--muted);
+  margin:0;
+}
+
+.head-actions {
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+.action-button {
+  border:1px solid var(--border);
+  background:#12283a;
+  color:var(--text);
+  border-radius:9px;
+  padding:10px 12px;
+  font-weight:700;
+  font-size:12px;
+}
+
+.action-button:hover {
+  border-color:var(--cyan);
+  color:var(--cyan);
+}
+
+.pill,.engine-pill,.small-tag {
+  border-radius:9px;
+  padding:9px 12px;
+  white-space:nowrap;
+  font-size:11px;
+}
+
+.pill {
+  border:1px solid #735224;
+  background:#2a2115;
+  color:var(--orange);
+}
+
+.engine-pill,.small-tag {
+  border:1px solid var(--border);
+  color:#9bb9df;
+}
+
+.pause-state { color:var(--green); font-size:12px; }
+
+.section {
+  scroll-margin-top:20px;
+  margin-bottom:24px;
+}
+
+.section-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  gap:12px;
+  margin-bottom:17px;
+}
+
+.section-head h2 {
+  font-size:23px;
+  margin:0 0 5px;
+}
+
+.section-head p { margin:0; color:var(--muted); }
+.muted { color:var(--muted); }
+
+.week-selector {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+  margin:18px 0 22px;
+}
+
+.week-button {
+  background:var(--panel);
+  border:1px solid var(--border);
+  color:#a9c7ed;
+  border-radius:12px;
+  padding:14px;
+  text-align:left;
+  min-width:0;
+  position:relative;
+  z-index:1;
+  pointer-events:auto;
+}
+
+.week-button strong {
+  display:block;
+  color:var(--text);
+  font-size:15px;
+  margin-bottom:4px;
+}
+
+.week-button span {
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.week-button:hover {
+  border-color:var(--cyan);
+}
+
+.week-button.active {
+  border-color:var(--cyan);
+  background:#123044;
+  box-shadow:inset 0 3px var(--cyan);
+}
+
+.week-button:focus-visible {
+  outline:2px solid var(--cyan);
+  outline-offset:3px;
+}
+
+.week-summary {
+  border:1px solid var(--border);
+  background:#0d1928;
+  border-radius:13px;
+  padding:16px 18px;
+  margin-bottom:22px;
+}
+
+.week-summary h3 { margin:0 0 5px; font-size:18px; }
+.week-summary p { margin:0; color:var(--muted); font-size:13px; }
+
+.metrics {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:15px;
+}
+
+.metric {
+  position:relative;
+  background:linear-gradient(145deg,#111d2e,#0e1725);
+  border:1px solid var(--border);
+  border-radius:17px;
+  padding:20px;
+  min-width:0;
+}
+
+.metric:before {
+  content:"";
+  height:3px;
+  position:absolute;
+  left:18px;
+  right:18px;
+  top:0;
+  background:var(--accent,var(--cyan));
+}
+
+.metric-label { color:#a9c7ed; font-size:13px; }
+
+.metric-value {
+  font-size:clamp(22px,2vw,34px);
+  font-weight:850;
+  margin:24px 0 8px;
+  overflow-wrap:anywhere;
+}
+
+.metric-value span {
+  font-size:13px;
+  color:var(--accent,var(--cyan));
+}
+
+.metric-foot { color:var(--muted); font-size:12px; }
+
+.dashboard-grid {
+  display:grid;
+  grid-template-columns:minmax(0,1.5fr) minmax(260px,1fr);
+  gap:18px;
+  margin-top:20px;
+}
+
+.panel {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:17px;
+  padding:22px;
+  min-width:0;
+}
+
+.panel-title {
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start;
+}
+
+.panel-title h3 { font-size:20px; margin:0 0 6px; }
+.panel-title p { margin:0; color:var(--muted); font-size:13px; }
+
+.chart-wrap { margin-top:20px; width:100%; height:240px; }
+.chart-wrap svg { width:100%; height:100%; display:block; }
+
+.chart-legend {
+  display:flex;
+  gap:18px;
+  flex-wrap:wrap;
+  color:var(--muted);
+  margin-top:14px;
+  font-size:12px;
+}
+
+.legend-line {
+  display:inline-block;
+  width:22px;
+  height:3px;
+  vertical-align:middle;
+  margin-right:7px;
+  background:var(--cyan);
+}
+
+.watch-list { margin-top:18px; }
+
+.watch-item {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:16px 0;
+  border-bottom:1px solid #223247;
+}
+
+.watch-item:last-child { border-bottom:0; }
+
+.symbol { display:flex; align-items:center; gap:11px; }
+
+.symbol-badge {
+  height:43px;
+  width:46px;
+  display:grid;
+  place-items:center;
+  border-radius:10px;
+  background:#173145;
+  color:var(--cyan);
+  font-weight:800;
+  font-size:12px;
+}
+
+.symbol-name { font-weight:800; }
+.symbol-desc { color:var(--muted); font-size:11px; }
+.price { text-align:right; font-weight:800; white-space:nowrap; }
+.change { font-size:12px; }
+.positive { color:var(--green); }
+.negative { color:var(--red); }
+
+.orders-panel { margin-top:20px; }
+
+.tools {
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+  margin:19px 0 14px;
+}
+
+.tools input,.tools select {
+  background:#091321;
+  border:1px solid var(--border);
+  border-radius:9px;
+  color:var(--text);
+  padding:10px 12px;
+  outline:none;
+}
+
+.tools input { flex:1; min-width:160px; }
+
+.tools input:focus,.tools select:focus { border-color:var(--cyan); }
+
+.btn-reset {
+  background:#12283a;
+  border:1px solid #29445b;
+  color:#a9c7ed;
+  border-radius:9px;
+  padding:10px 13px;
+}
+
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; white-space:nowrap; }
+
+th {
+  font-size:11px;
+  color:#7798c5;
+  letter-spacing:1px;
+  text-align:left;
+  padding:13px 9px;
+  border-bottom:1px solid var(--border);
+}
+
+td {
+  padding:14px 9px;
+  border-bottom:1px solid #223247;
+  font-size:13px;
+}
+
+tbody tr:hover { background:#132237; }
+.side-buy { color:var(--green); font-weight:800; }
+.side-sell { color:var(--red); font-weight:800; }
+
+.status {
+  display:inline-block;
+  padding:5px 8px;
+  border-radius:8px;
+  font-size:11px;
+  background:#12352e;
+  color:var(--green);
+}
+
+.status.pending { background:#332817; color:var(--orange); }
+.empty { text-align:center; color:var(--muted); padding:24px; }
+
+.health-list { margin-top:22px; display:grid; gap:20px; }
+.health-row { display:grid; gap:9px; }
+
+.health-line {
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  color:#a9c7ed;
+  font-size:13px;
+}
+
+.health-line strong { color:var(--green); text-align:right; }
+
+.bar {
+  height:7px;
+  background:#29384d;
+  border-radius:9px;
+  overflow:hidden;
+}
+
+.bar span {
+  display:block;
+  height:100%;
+  background:linear-gradient(90deg,#1499b1,var(--cyan));
+}
+
+.footer {
+  border-top:1px solid var(--border);
+  margin-top:30px;
+  padding-top:18px;
+  color:#6f91bd;
+  font-size:12px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.flash { animation:flash 1s ease; }
+
+@keyframes flash {
+  40% { box-shadow:0 0 0 2px #35d9ec55; }
+}
+
+@media(max-width:1200px) {
+  .app { grid-template-columns:225px minmax(0,1fr); }
+  .metrics { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .dashboard-grid { grid-template-columns:1fr; }
+}
+
+@media(max-width:760px) {
+  .app { display:block; }
+  .sidebar {
+    position:relative;
+    height:auto;
+    min-height:0;
+    padding:15px;
+    gap:15px;
+  }
+  .side-label,.demo-note { display:none; }
+  .nav { display:flex; overflow-x:auto; gap:5px; }
+  .nav button { padding:10px; font-size:12px; white-space:nowrap; }
+  .main { padding:16px 12px; }
+  .page-head { display:block; padding:10px 0 22px; }
+  .page-head h1 { font-size:32px; }
+  .head-actions { margin-top:16px; }
+  .panel { padding:16px; }
+  .week-selector { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .chart-wrap { height:210px; }
+}
+
+@media(max-width:420px) {
+  .metrics { grid-template-columns:1fr; }
+}
 </style>
 </head>
 
 <body>
 <div class="app">
+
   <aside class="sidebar">
     <div class="brand">
       <div class="brand-mark">C</div>
@@ -191,6 +569,7 @@ gap:12px;flex-wrap:wrap}
   </aside>
 
   <main class="main">
+
     <div class="topline">SYSTEM MONITOR / OVERVIEW</div>
 
     <header class="page-head" id="overview">
@@ -198,6 +577,7 @@ gap:12px;flex-wrap:wrap}
         <h1>Trading Engine Overview</h1>
         <p>Monitor order flow, matching performance and engine features.</p>
       </div>
+
       <div class="head-actions">
         <div class="pill">● DEMO DATA</div>
         <div class="engine-pill">Four-Week Project Dashboard</div>
@@ -218,16 +598,23 @@ gap:12px;flex-wrap:wrap}
 
       <div class="week-selector" role="group" aria-label="Select project week">
         <button class="week-button active" data-week="1" type="button">
-          <strong>Week 1</strong><span>Core engine &amp; benchmark</span>
+          <strong>Week 1</strong>
+          <span>Core engine &amp; benchmark</span>
         </button>
+
         <button class="week-button" data-week="2" type="button">
-          <strong>Week 2</strong><span>Market routing</span>
+          <strong>Week 2</strong>
+          <span>Market routing</span>
         </button>
+
         <button class="week-button" data-week="3" type="button">
-          <strong>Week 3</strong><span>Risk management</span>
+          <strong>Week 3</strong>
+          <span>Risk management</span>
         </button>
+
         <button class="week-button" data-week="4" type="button">
-          <strong>Week 4</strong><span>Safe engine</span>
+          <strong>Week 4</strong>
+          <span>Safe engine</span>
         </button>
       </div>
 
@@ -247,30 +634,36 @@ gap:12px;flex-wrap:wrap}
       </div>
 
       <div class="metrics">
+
         <article class="metric" style="--accent:var(--cyan)">
           <div class="metric-label" id="metric-label-1">Consumer Throughput ↗</div>
           <div class="metric-value" id="metric-value-1">97,512 <span>ops/s</span></div>
           <div class="metric-foot" id="metric-foot-1">Measured benchmark result</div>
         </article>
+
         <article class="metric" style="--accent:#eef4ff">
           <div class="metric-label" id="metric-label-2">Orders Processed ⇄</div>
           <div class="metric-value" id="metric-value-2">300,000</div>
           <div class="metric-foot" id="metric-foot-2">Orders in benchmark run</div>
         </article>
+
         <article class="metric" style="--accent:var(--purple)">
           <div class="metric-label" id="metric-label-3">Mean Latency ◷</div>
           <div class="metric-value" id="metric-value-3">1.358 <span>ms</span></div>
           <div class="metric-foot" id="metric-foot-3">Average measured latency</div>
         </article>
+
         <article class="metric" style="--accent:var(--green)">
           <div class="metric-label" id="metric-label-4">P99 Latency ⌁</div>
           <div class="metric-value" id="metric-value-4">2.786 <span>ms</span></div>
           <div class="metric-foot" id="metric-foot-4">99th percentile measured latency</div>
         </article>
+
       </div>
     </section>
 
     <div class="dashboard-grid">
+
       <section class="panel section" id="price-panel">
         <div class="panel-title">
           <div>
@@ -279,17 +672,19 @@ gap:12px;flex-wrap:wrap}
           </div>
           <span class="small-tag">DEMO CHART</span>
         </div>
+
         <div class="chart-wrap">
           <svg id="price-chart" viewBox="0 0 760 250" role="img"
                aria-label="Simulated price movement chart">
             <g id="chart-grid"></g>
             <polyline id="line-xyz" fill="none" stroke="#35d9ec"
-              stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+              stroke-width="3" stroke-linejoin="round" stroke-linecap="round"></polyline>
             <polyline id="line-abc" fill="none" stroke="#a58bff"
-              stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+              stroke-width="3" stroke-linejoin="round" stroke-linecap="round"></polyline>
             <g id="chart-labels"></g>
           </svg>
         </div>
+
         <div class="chart-legend">
           <span><i class="legend-line"></i>DEMO-XYZ</span>
           <span><i class="legend-line" style="background:var(--purple)"></i>DEMO-ABC</span>
@@ -305,11 +700,14 @@ gap:12px;flex-wrap:wrap}
           </div>
           <span class="small-tag">3 SYMBOLS</span>
         </div>
+
         <div class="watch-list" id="watch-list"></div>
       </section>
+
     </div>
 
     <div class="dashboard-grid">
+
       <section class="panel section orders-panel" id="order-flow">
         <div class="panel-title">
           <div>
@@ -323,16 +721,19 @@ gap:12px;flex-wrap:wrap}
           <input type="search" id="order-search"
                  placeholder="Search order ID or instrument..."
                  aria-label="Search orders">
+
           <select id="side-filter" aria-label="Filter by side">
             <option value="all">All sides</option>
             <option value="BUY">Buy only</option>
             <option value="SELL">Sell only</option>
           </select>
+
           <select id="status-filter" aria-label="Filter by status">
             <option value="all">All statuses</option>
             <option value="Matched">Matched</option>
             <option value="Pending">Pending</option>
           </select>
+
           <button class="btn-reset" id="reset-filters" type="button">Reset</button>
         </div>
 
@@ -340,13 +741,20 @@ gap:12px;flex-wrap:wrap}
           <table>
             <thead>
               <tr>
-                <th>ORDER ID</th><th>INSTRUMENT</th><th>SIDE</th>
-                <th>PRICE</th><th>QTY</th><th>STATUS</th>
+                <th>ORDER ID</th>
+                <th>INSTRUMENT</th>
+                <th>SIDE</th>
+                <th>PRICE</th>
+                <th>QTY</th>
+                <th>STATUS</th>
               </tr>
             </thead>
             <tbody id="orders-body"></tbody>
           </table>
-          <div class="empty" id="empty-state" hidden>No demo orders match your search.</div>
+
+          <div class="empty" id="empty-state" hidden>
+            No demo orders match your search.
+          </div>
         </div>
       </section>
 
@@ -358,21 +766,32 @@ gap:12px;flex-wrap:wrap}
           </div>
           <span class="small-tag">PROJECT FEATURES</span>
         </div>
+
         <div class="health-list" id="health-list"></div>
-        <p id="health-note" class="muted" style="margin:25px 0 0;font-size:13px;line-height:1.7">
+
+        <p id="health-note" class="muted"
+           style="margin:25px 0 0;font-size:13px;line-height:1.7">
           Demo market values are simulated. Week 1 figures are recorded benchmark values.
         </p>
       </section>
+
     </div>
 
     <footer class="footer">
       <span>ChronosMatch · Trading Engine Dashboard</span>
       <span>Demo interface · Simulated market values</span>
     </footer>
+
   </main>
 </div>
 
 <script>
+"use strict";
+
+/* ======================================================
+   1. DEMO ORDER DATA
+====================================================== */
+
 const orders = [
   {id:"ORD-1001",instrument:"DEMO-XYZ",side:"BUY",price:104.20,qty:50,status:"Matched"},
   {id:"ORD-1002",instrument:"DEMO-ABC",side:"SELL",price:87.70,qty:25,status:"Matched"},
@@ -385,14 +804,22 @@ const orders = [
 ];
 
 const $ = id => document.getElementById(id);
+
 const search = $("order-search");
 const sideFilter = $("side-filter");
 const statusFilter = $("status-filter");
 
+
+/* ======================================================
+   2. ORDER TABLE AND FILTERS
+====================================================== */
+
 function renderOrders() {
   const query = search.value.trim().toLowerCase();
+
   const filtered = orders.filter(order =>
-    (!query || order.id.toLowerCase().includes(query) ||
+    (!query ||
+      order.id.toLowerCase().includes(query) ||
       order.instrument.toLowerCase().includes(query)) &&
     (sideFilter.value === "all" || order.side === sideFilter.value) &&
     (statusFilter.value === "all" || order.status === statusFilter.value)
@@ -405,31 +832,51 @@ function renderOrders() {
       <td class="${order.side === "BUY" ? "side-buy" : "side-sell"}">${order.side}</td>
       <td>${order.price.toFixed(2)}</td>
       <td>${order.qty}</td>
-      <td><span class="status ${order.status === "Pending" ? "pending" : ""}">${order.status} · Demo</span></td>
+      <td>
+        <span class="status ${order.status === "Pending" ? "pending" : ""}">
+          ${order.status} · Demo
+        </span>
+      </td>
     </tr>
   `).join("");
 
   $("empty-state").hidden = filtered.length > 0;
 }
 
-search.addEventListener("input", renderOrders);
-sideFilter.addEventListener("change", renderOrders);
-statusFilter.addEventListener("change", renderOrders);
-$("reset-filters").addEventListener("click", () => {
+search.addEventListener("input",renderOrders);
+sideFilter.addEventListener("change",renderOrders);
+statusFilter.addEventListener("change",renderOrders);
+
+$("reset-filters").addEventListener("click",() => {
   search.value = "";
   sideFilter.value = "all";
   statusFilter.value = "all";
   renderOrders();
 });
+
 renderOrders();
 
+
+/* ======================================================
+   3. SIDEBAR NAVIGATION
+====================================================== */
+
 document.querySelectorAll(".nav button").forEach(button => {
-  button.addEventListener("click", () => {
-    document.querySelectorAll(".nav button").forEach(item => item.classList.remove("active"));
+  button.addEventListener("click",() => {
+    document.querySelectorAll(".nav button").forEach(item => {
+      item.classList.remove("active");
+    });
+
     button.classList.add("active");
+
     const target = $(button.dataset.target);
+
     if (target) {
-      target.scrollIntoView({behavior:"smooth",block:"start"});
+      target.scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+      });
+
       target.classList.remove("flash");
       void target.offsetWidth;
       target.classList.add("flash");
@@ -437,38 +884,73 @@ document.querySelectorAll(".nav button").forEach(button => {
   });
 });
 
+
+/* ======================================================
+   4. PAUSE / RESUME DEMO
+====================================================== */
+
 let demoPaused = false;
-$("pause-demo").addEventListener("click", () => {
+
+$("pause-demo").addEventListener("click",() => {
   demoPaused = !demoPaused;
+
   $("pause-demo").textContent = demoPaused ? "Resume Demo" : "Pause Demo";
   $("pause-state").textContent = demoPaused ? "PAUSED" : "RUNNING";
-  $("pause-state").style.color = demoPaused ? "var(--orange)" : "var(--green)";
-  $("chart-updated").textContent = demoPaused ? "Demo paused" : "Demo resumed";
+
+  $("pause-state").style.color = demoPaused
+    ? "var(--orange)"
+    : "var(--green)";
+
+  $("chart-updated").textContent = demoPaused
+    ? "Demo paused"
+    : "Demo resumed";
 });
 
-const chartW=760,chartH=250,left=48,right=18,top=18,bottom=30;
-let xyz=[52,56,54,63,59,67,64,73,69,78,75,83,79,88,84];
-let abc=[78,74,72,79,76,84,80,87,83,90,86,92,89,96,93];
+
+/* ======================================================
+   5. SIMULATED PRICE CHART
+====================================================== */
+
+const chartW = 760;
+const chartH = 250;
+const left = 48;
+const right = 18;
+const top = 18;
+const bottom = 30;
+
+let xyz = [52,56,54,63,59,67,64,73,69,78,75,83,79,88,84];
+let abc = [78,74,72,79,76,84,80,87,83,90,86,92,89,96,93];
 
 function makeChartBase() {
   [50,60,70,80,90,100].forEach(value => {
-    const y=top+(100-value)/60*(chartH-top-bottom);
-    $("chart-grid").innerHTML +=
-      `<line x1="${left}" y1="${y}" x2="${chartW-right}" y2="${y}" stroke="#26374d"/>
-       <text x="4" y="${y+4}" fill="#7798c5" font-size="11">${value}</text>`;
+    const y = top + (100-value)/60*(chartH-top-bottom);
+
+    $("chart-grid").innerHTML += `
+      <line x1="${left}" y1="${y}"
+            x2="${chartW-right}" y2="${y}"
+            stroke="#26374d"></line>
+      <text x="4" y="${y+4}"
+            fill="#7798c5" font-size="11">${value}</text>
+    `;
   });
+
   ["09:00","10:00","11:00","12:00","13:00"].forEach((time,i) => {
-    const x=left+i*(chartW-left-right)/4;
-    const anchor=i===0?"start":i===4?"end":"middle";
-    $("chart-labels").innerHTML +=
-      `<text x="${x}" y="${chartH-4}" fill="#7798c5" font-size="11" text-anchor="${anchor}">${time}</text>`;
+    const x = left + i*(chartW-left-right)/4;
+    const anchor = i===0 ? "start" : i===4 ? "end" : "middle";
+
+    $("chart-labels").innerHTML += `
+      <text x="${x}" y="${chartH-4}"
+            fill="#7798c5" font-size="11"
+            text-anchor="${anchor}">${time}</text>
+    `;
   });
 }
 
 function chartPoints(values) {
   return values.map((value,i) => {
-    const x=left+i*(chartW-left-right)/(values.length-1);
-    const y=top+(100-value)/60*(chartH-top-bottom);
+    const x = left + i*(chartW-left-right)/(values.length-1);
+    const y = top + (100-value)/60*(chartH-top-bottom);
+
     return `${x.toFixed(1)},${y.toFixed(1)}`;
   }).join(" ");
 }
@@ -476,28 +958,51 @@ function chartPoints(values) {
 function drawChart() {
   $("line-xyz").setAttribute("points",chartPoints(xyz));
   $("line-abc").setAttribute("points",chartPoints(abc));
-  $("chart-updated").textContent="Demo updated: "+new Date().toLocaleTimeString();
+
+  if (!demoPaused) {
+    $("chart-updated").textContent =
+      "Demo updated: " + new Date().toLocaleTimeString();
+  }
 }
+
 makeChartBase();
 drawChart();
 
 setInterval(() => {
   if (demoPaused) return;
-  xyz.push(Math.max(50,Math.min(98,Math.round(xyz.at(-1)+(Math.random()-.48)*8))));
+
+  /* Fixed: use array[array.length - 1] instead of .at(-1). */
+  const lastXyz = xyz[xyz.length - 1];
+  const lastAbc = abc[abc.length - 1];
+
+  xyz.push(Math.max(
+    50,
+    Math.min(98,Math.round(lastXyz+(Math.random()-.48)*8))
+  ));
   xyz.shift();
-  abc.push(Math.max(50,Math.min(98,Math.round(abc.at(-1)+(Math.random()-.5)*7))));
+
+  abc.push(Math.max(
+    50,
+    Math.min(98,Math.round(lastAbc+(Math.random()-.5)*7))
+  ));
   abc.shift();
+
   drawChart();
 },4000);
 
-const watchData=[
+
+/* ======================================================
+   6. MARKET WATCH
+====================================================== */
+
+const watchData = [
   {symbol:"XYZ",name:"DEMO-XYZ",price:104.28,change:1.24},
   {symbol:"ABC",name:"DEMO-ABC",price:87.64,change:-0.42},
   {symbol:"QRS",name:"DEMO-QRS",price:212.10,change:0.86}
 ];
 
 function renderWatch() {
-  $("watch-list").innerHTML=watchData.map(item=>`
+  $("watch-list").innerHTML = watchData.map(item => `
     <div class="watch-item">
       <div class="symbol">
         <div class="symbol-badge">${item.symbol}</div>
@@ -506,87 +1011,113 @@ function renderWatch() {
           <div class="symbol-desc">Sample instrument · Simulated</div>
         </div>
       </div>
+
       <div class="price">
         ${item.price.toFixed(2)}
-        <div class="change ${item.change>=0?"positive":"negative"}">${item.change>=0?"+":""}${item.change.toFixed(2)}%</div>
+        <div class="change ${item.change>=0 ? "positive" : "negative"}">
+          ${item.change>=0 ? "+" : ""}${item.change.toFixed(2)}%
+        </div>
       </div>
     </div>
   `).join("");
 }
+
 renderWatch();
 
 setInterval(() => {
   if (demoPaused) return;
+
   watchData.forEach(item => {
-    item.price=Math.max(1,item.price+(Math.random()-.49)*item.price*.001);
-    item.change+=(Math.random()-.5)*.12;
+    item.price = Math.max(
+      1,
+      item.price + (Math.random()-.49)*item.price*.001
+    );
+
+    item.change += (Math.random()-.5)*.12;
   });
+
   renderWatch();
 },5000);
 
+
+/* ======================================================
+   7. PROJECT WEEK DATA
+====================================================== */
+
 const projectWeeks = {
-  1:{
+  1: {
     title:"Week 1 — Core Engine",
     description:"Core order processing and recorded benchmark results.",
     subtitle:"Benchmark snapshot · Week 1",
     label:"Core Engine & Benchmark",
+
     metrics:[
       ["Consumer Throughput ↗","97,512 <span>ops/s</span>","Measured benchmark result"],
       ["Orders Processed ⇄","300,000","Orders in benchmark run"],
       ["Mean Latency ◷","1.358 <span>ms</span>","Average measured latency"],
       ["P99 Latency ⌁","2.786 <span>ms</span>","99th percentile measured latency"]
     ],
+
     health:[
       ["Order validation","Implemented",100],
       ["Order book","Available",100],
       ["Benchmark snapshot","Week 1",70]
     ]
   },
-  2:{
+
+  2: {
     title:"Week 2 — Market Routing",
     description:"Market routing feature overview.",
     subtitle:"Market Routing",
     label:"Market Routing",
+
     metrics:[
       ["Project Week","Week 2","Market routing"],
       ["Main Feature","Market Router","Order routing"],
       ["Routing","Market Routing","Project feature"],
       ["Market Feed","Demo","Simulated market data"]
     ],
+
     health:[
       ["Market router","Feature overview",100],
       ["Order routing","Routing feature",75],
       ["Market data","Demo data",70]
     ]
   },
-  3:{
+
+  3: {
     title:"Week 3 — Risk Management",
     description:"Risk management and order-control feature overview.",
     subtitle:"Risk Management",
     label:"Risk Management",
+
     metrics:[
       ["Project Week","Week 3","Risk management"],
       ["Main Feature","Risk Management","Order risk controls"],
       ["Risk Control","Order Checks","Risk-control feature"],
       ["Engine Focus","Order Safety","Project feature"]
     ],
+
     health:[
       ["Risk management","Feature overview",100],
       ["Order checks","Risk controls",75],
       ["Engine safety","Project feature",70]
     ]
   },
-  4:{
+
+  4: {
     title:"Week 4 — Safe Engine",
     description:"Safe Engine feature overview.",
     subtitle:"Safe Engine",
     label:"Safe Engine",
+
     metrics:[
       ["Project Week","Week 4","Safe Engine"],
       ["Main Feature","Safe Engine","Engine safeguards"],
       ["Engine Safety","Safeguards","Safe processing"],
       ["Core Focus","Validation","Engine protection"]
     ],
+
     health:[
       ["Safe engine","Feature overview",100],
       ["Engine safeguards","Safety feature",75],
@@ -595,77 +1126,152 @@ const projectWeeks = {
   }
 };
 
+
+/* ======================================================
+   8. WEEK BUTTON FIX
+   All four buttons use one delegated click listener.
+====================================================== */
+
 function selectProjectWeek(weekNumber) {
-  const data=projectWeeks[weekNumber];
+  const data = projectWeeks[weekNumber];
+
   if (!data) return;
 
+  /* Update the selected button. */
   document.querySelectorAll(".week-button").forEach(button => {
-    button.classList.toggle("active",button.dataset.week===String(weekNumber));
+    button.classList.toggle(
+      "active",
+      Number(button.getAttribute("data-week")) === weekNumber
+    );
   });
 
-  $("week-title").textContent=data.title;
-  $("week-description").textContent=data.description;
-  $("performance-title").textContent=weekNumber===1?"Engine Performance":data.title;
-  $("performance-subtitle").textContent=data.subtitle;
-  $("benchmark-label").textContent=data.label;
+  /* Update week title and description. */
+  $("week-title").textContent = data.title;
+  $("week-description").textContent = data.description;
 
+  /* Update performance section. */
+  $("performance-title").textContent =
+    weekNumber === 1 ? "Engine Performance" : data.title;
+
+  $("performance-subtitle").textContent = data.subtitle;
+  $("benchmark-label").textContent = data.label;
+
+  /* Update all four metric cards. */
   data.metrics.forEach((metric,index) => {
-    const n=index+1;
-    $(`metric-label-${n}`).textContent=metric[0];
-    $(`metric-value-${n}`).innerHTML=metric[1];
-    $(`metric-foot-${n}`).textContent=metric[2];
+    const n = index + 1;
+
+    $(`metric-label-${n}`).textContent = metric[0];
+    $(`metric-value-${n}`).innerHTML = metric[1];
+    $(`metric-foot-${n}`).textContent = metric[2];
   });
 
-  $("health-title").textContent=weekNumber===1?"Engine Health":data.title;
-  $("health-description").textContent="Project features";
+  /* Update health and project feature list. */
+  $("health-title").textContent =
+    weekNumber === 1 ? "Engine Health" : data.title;
 
-  $("health-list").innerHTML=data.health.map(item=>`
+  $("health-description").textContent = "Project features";
+
+  $("health-list").innerHTML = data.health.map(item => `
     <div class="health-row">
-      <div class="health-line"><span>${item[0]}</span><strong>${item[1]}</strong></div>
-      <div class="bar"><span style="width:${item[2]}%"></span></div>
+      <div class="health-line">
+        <span>${item[0]}</span>
+        <strong>${item[1]}</strong>
+      </div>
+
+      <div class="bar">
+        <span style="width:${item[2]}%"></span>
+      </div>
     </div>
   `).join("");
 
-  $("health-note").textContent=weekNumber===1
+  $("health-note").textContent = weekNumber === 1
     ? "Market prices and order records are simulated. Week 1 figures are recorded benchmark values."
     : "Project feature overview. Market prices, chart movements and order records are simulated demo data.";
 }
 
-document.querySelectorAll(".week-button").forEach(button => {
-  button.addEventListener("click",()=>selectProjectWeek(Number(button.dataset.week)));
+/*
+  Event delegation: clicking the button text or any element inside
+  the button selects the correct week.
+*/
+document.addEventListener("click",event => {
+  const button = event.target.closest(".week-button");
+
+  if (!button) return;
+
+  event.preventDefault();
+
+  const weekNumber = Number(button.getAttribute("data-week"));
+
+  selectProjectWeek(weekNumber);
 });
 
-$("export-csv").addEventListener("click",()=>{
-  const active=document.querySelector(".week-button.active");
-  const weekNumber=Number(active?active.dataset.week:1);
-  const week=projectWeeks[weekNumber];
-  const rows=[
+
+/* ======================================================
+   9. EXPORT SELECTED WEEK TO CSV
+====================================================== */
+
+$("export-csv").addEventListener("click",() => {
+  const active = document.querySelector(".week-button.active");
+  const weekNumber = Number(active ? active.dataset.week : 1);
+  const week = projectWeeks[weekNumber];
+
+  const rows = [
     ["ChronosMatch Dashboard Export"],
     ["Selected Week",week.title],
     [],
     ["Metric","Value","Details"],
-    ...week.metrics.map(metric=>[
+
+    ...week.metrics.map(metric => [
       metric[0].replace(/[↗⇄◷⌁]/g,"").trim(),
       metric[1].replace(/<[^>]*>/g,""),
       metric[2]
     ]),
+
     [],
     ["Order ID","Instrument","Side","Price","Quantity","Status"],
-    ...orders.map(o=>[o.id,o.instrument,o.side,o.price.toFixed(2),o.qty,o.status])
+
+    ...orders.map(order => [
+      order.id,
+      order.instrument,
+      order.side,
+      order.price.toFixed(2),
+      order.qty,
+      order.status
+    ])
   ];
-  const csv=rows.map(row=>row.map(value=>`"${String(value??"").replace(/"/g,'""')}"`).join(",")).join("\r\n");
-  const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});
-  const url=URL.createObjectURL(blob);
-  const link=document.createElement("a");
-  link.href=url;
-  link.download=`ChronosMatch_Week${weekNumber}_Dashboard.csv`;
+
+  const csv = rows.map(row =>
+    row.map(value =>
+      `"${String(value ?? "").replace(/"/g,'""')}"`
+    ).join(",")
+  ).join("\r\n");
+
+  const blob = new Blob(
+    ["\uFEFF"+csv],
+    {type:"text/csv;charset=utf-8;"}
+  );
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = `ChronosMatch_Week${weekNumber}_Dashboard.csv`;
+
   document.body.appendChild(link);
   link.click();
   link.remove();
-  URL.revokeObjectURL(url);
+
+  setTimeout(() => URL.revokeObjectURL(url),1000);
 });
 
+
+/* ======================================================
+   10. INITIAL DASHBOARD STATE
+====================================================== */
+
+/* Show Week 1 when the page first opens. */
 selectProjectWeek(1);
+
 </script>
 </body>
 </html>
