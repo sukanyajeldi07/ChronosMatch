@@ -32,6 +32,7 @@ body {
 }
 button,input,select { font:inherit; }
 button { cursor:pointer; }
+
 .app {
   min-height:100vh;
   display:grid;
@@ -49,7 +50,7 @@ button { cursor:pointer; }
   top:0;
   height:100vh;
 }
-.brand { display:flex; align-items:center; gap:14px; }
+.brand { display:flex;align-items:center;gap:14px; }
 .brand-mark {
   width:58px;height:58px;border-radius:16px;
   background:linear-gradient(140deg,#43deeb,#1689a8);
@@ -68,40 +69,45 @@ button { cursor:pointer; }
   text-align:left;padding:15px;border-radius:12px;
   font-weight:650;display:flex;gap:14px;align-items:center;
 }
-.nav button:hover,.nav button.active { background:#153246;color:var(--cyan); }
+.nav button:hover,.nav button.active {
+  background:#153246;color:var(--cyan);
+}
 .nav-icon { width:20px;text-align:center; }
 .demo-note {
   margin-top:auto;border:1px solid var(--border);border-radius:14px;
   padding:16px;color:var(--muted);background:#0c1726;font-size:13px;
 }
-.demo-note strong { color:var(--orange);display:block;margin-bottom:8px; }
+.demo-note strong {
+  color:var(--orange);display:block;margin-bottom:8px;
+}
 .main { padding:24px;min-width:0; }
-.topline { color:var(--cyan);font-weight:800;letter-spacing:3px;font-size:13px; }
+.topline {
+  color:var(--cyan);font-weight:800;letter-spacing:3px;font-size:13px;
+}
 .page-head {
   display:flex;align-items:center;justify-content:space-between;
   gap:20px;padding:20px 0 30px;border-bottom:1px solid var(--border);
   margin-bottom:30px;
 }
-.page-head h1 { font-size:clamp(30px,3vw,48px);line-height:1.1;margin:6px 0 14px; }
+.page-head h1 {
+  font-size:clamp(30px,3vw,48px);line-height:1.1;margin:6px 0 14px;
+}
 .page-head p { font-size:18px;color:var(--muted);margin:0; }
-.head-actions { display:flex;gap:10px;flex-wrap:wrap;align-items:center; }
+.head-actions {
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
 .action-button {
   border:1px solid var(--border);background:#12283a;color:var(--text);
   border-radius:10px;padding:10px 13px;font-weight:700;font-size:12px;
 }
 .action-button:hover { border-color:var(--cyan);color:var(--cyan); }
-.demo-warning {
-  display:none;margin:0 0 16px;padding:13px 15px;border:1px solid #80682e;
-  border-radius:12px;background:#241e12;color:#f7c968;font-size:13px;line-height:1.6;
-}
-.demo-warning strong { display:block;margin-bottom:3px;letter-spacing:.4px; }
-.demo-warning.visible { display:block; }
-.pause-state { color:var(--orange);font-size:12px;min-width:64px; }
+.pause-state { color:var(--green);font-size:12px;min-width:64px; }
 .pill,.engine-pill,.small-tag {
   border-radius:10px;padding:10px 13px;white-space:nowrap;font-size:12px;
 }
 .pill { border:1px solid #735224;background:#2a2115;color:var(--orange); }
 .engine-pill,.small-tag { border:1px solid var(--border);color:#9bb9df; }
+
 .section { scroll-margin-top:20px;margin-bottom:24px; }
 .section-head {
   display:flex;justify-content:space-between;align-items:end;
@@ -110,7 +116,10 @@ button { cursor:pointer; }
 .section-head h2 { font-size:23px;margin:0 0 5px; }
 .section-head p { margin:0;color:var(--muted); }
 .muted { color:var(--muted); }
-.metrics { display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px; }
+
+.metrics {
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;
+}
 .metric {
   position:relative;background:linear-gradient(145deg,#111d2e,#0e1725);
   border:1px solid var(--border);border-radius:18px;
@@ -127,6 +136,7 @@ button { cursor:pointer; }
 }
 .metric-value span { font-size:14px;color:var(--accent,var(--cyan)); }
 .metric-foot { color:var(--muted);font-size:13px; }
+
 .dashboard-grid {
   display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);
   gap:20px;margin-top:20px;
@@ -135,9 +145,12 @@ button { cursor:pointer; }
   background:var(--panel);border:1px solid var(--border);
   border-radius:18px;padding:24px;min-width:0;
 }
-.panel-title { display:flex;justify-content:space-between;gap:12px;align-items:flex-start; }
+.panel-title {
+  display:flex;justify-content:space-between;gap:12px;align-items:flex-start;
+}
 .panel-title h3 { font-size:21px;margin:0 0 6px; }
 .panel-title p { margin:0;color:var(--muted);font-size:14px; }
+
 .chart-wrap { margin-top:22px;width:100%;height:250px; }
 .chart-wrap svg { width:100%;height:100%;display:block; }
 .chart-legend {
@@ -166,6 +179,7 @@ button { cursor:pointer; }
 .change { font-size:13px; }
 .positive { color:var(--green); }
 .negative { color:var(--red); }
+
 .orders-panel { margin-top:20px; }
 .tools { display:flex;gap:9px;flex-wrap:wrap;margin:20px 0 15px; }
 .tools input,.tools select {
@@ -195,6 +209,7 @@ tbody tr:hover { background:#132237; }
 }
 .status.pending { background:#332817;color:var(--orange); }
 .empty { text-align:center;color:var(--muted);padding:24px; }
+
 .health-list { margin-top:22px;display:grid;gap:20px; }
 .health-row { display:grid;gap:9px; }
 .health-line {
@@ -229,7 +244,9 @@ tbody tr:hover { background:#132237; }
   background:var(--panel);border:1px solid var(--border);color:#a9c7ed;
   border-radius:12px;padding:14px;text-align:left;min-width:0;
 }
-.week-button strong { display:block;color:var(--text);font-size:15px;margin-bottom:4px; }
+.week-button strong {
+  display:block;color:var(--text);font-size:15px;margin-bottom:4px;
+}
 .week-button span { display:block;color:var(--muted);font-size:12px; }
 .week-button.active {
   border-color:var(--cyan);background:#123044;
@@ -251,7 +268,9 @@ tbody tr:hover { background:#132237; }
 }
 @media(max-width:760px) {
   .app { display:block; }
-  .sidebar { position:relative;height:auto;min-height:0;padding:15px;gap:15px; }
+  .sidebar {
+    position:relative;height:auto;min-height:0;padding:15px;gap:15px;
+  }
   .side-label,.demo-note { display:none; }
   .nav { display:flex;overflow-x:auto;gap:5px; }
   .nav button { padding:11px;font-size:13px;white-space:nowrap; }
@@ -285,11 +304,11 @@ tbody tr:hover { background:#132237; }
     <div class="side-label">WORKSPACE</div>
 
     <nav class="nav" aria-label="Dashboard navigation">
-      <button class="active" data-target="overview"><span class="nav-icon">▦</span>Overview</button>
-      <button data-target="project-weeks"><span class="nav-icon">▤</span>Project Weeks</button>
-      <button data-target="market-watch"><span class="nav-icon">⌁</span>Market Watch</button>
-      <button data-target="order-flow"><span class="nav-icon">⇄</span>Order Flow</button>
-      <button data-target="performance"><span class="nav-icon">◷</span>Performance</button>
+      <button class="active" data-target="overview" type="button"><span class="nav-icon">▦</span>Overview</button>
+      <button data-target="project-weeks" type="button"><span class="nav-icon">▤</span>Project Weeks</button>
+      <button data-target="market-watch" type="button"><span class="nav-icon">⌁</span>Market Watch</button>
+      <button data-target="order-flow" type="button"><span class="nav-icon">⇄</span>Order Flow</button>
+      <button data-target="performance" type="button"><span class="nav-icon">◷</span>Performance</button>
     </nav>
 
     <div class="demo-note">
@@ -327,7 +346,7 @@ tbody tr:hover { background:#132237; }
 
       <div class="week-selector" role="group" aria-label="Select project week">
         <button class="week-button active" data-week="1" type="button">
-          <strong>Week 1</strong><span>Core engine & benchmark</span>
+          <strong>Week 1</strong><span>Core engine &amp; benchmark</span>
         </button>
         <button class="week-button" data-week="2" type="button">
           <strong>Week 2</strong><span>Market routing</span>
@@ -347,16 +366,12 @@ tbody tr:hover { background:#132237; }
     </section>
 
     <section class="section" id="performance">
-      <div class="demo-warning" id="demo-warning" role="status" aria-live="polite">
-        <strong>ILLUSTRATIVE DEMO METRICS — NOT BENCHMARK RESULTS</strong>
-        Weeks 2–4 values are example numbers added for dashboard preview only. They have not been measured from the ChronosMatch engine. Only Week 1 contains recorded benchmark figures.
-      </div>
       <div class="section-head">
         <div>
           <h2 id="performance-title">Engine Performance</h2>
           <p id="performance-subtitle">Benchmark snapshot · Week 1</p>
         </div>
-        <span class="muted">Recorded benchmark results</span>
+        <span class="muted" id="benchmark-label">Recorded benchmark results</span>
       </div>
 
       <div class="metrics">
@@ -475,20 +490,7 @@ tbody tr:hover { background:#132237; }
           <span class="small-tag">PROJECT VIEW</span>
         </div>
 
-        <div class="health-list" id="health-list">
-          <div class="health-row">
-            <div class="health-line"><span>Order validation</span><strong>Implemented</strong></div>
-            <div class="bar"><span></span></div>
-          </div>
-          <div class="health-row">
-            <div class="health-line"><span>Order book</span><strong>Available</strong></div>
-            <div class="bar"><span></span></div>
-          </div>
-          <div class="health-row">
-            <div class="health-line"><span>Benchmark snapshot</span><strong>Week 1 data</strong></div>
-            <div class="bar partial"><span></span></div>
-          </div>
-        </div>
+        <div class="health-list" id="health-list"></div>
 
         <p id="health-note" class="muted" style="margin:26px 0 0;font-size:13px;line-height:1.7;">
           Demo environment · Market prices, chart movements, and order records are simulated examples. Benchmark figures are recorded Week 1 results.
@@ -576,7 +578,7 @@ document.querySelectorAll(".nav button").forEach(button => {
   });
 });
 
-// Demo controls: pause/resume affects only the simulated browser animations.
+// Pause/resume affects only simulated browser animations.
 let demoPaused = false;
 const pauseButton = document.getElementById("pause-demo");
 const pauseState = document.getElementById("pause-state");
@@ -592,7 +594,7 @@ pauseButton.addEventListener("click", () => {
     : "Demo resumed · simulated values";
 });
 
-// Demo chart. The chart updates visually; it does not show live market prices.
+// Simulated chart only; no live market prices.
 const chartW = 760, chartH = 250, chartLeft = 48, chartRight = 18, chartTop = 18, chartBottom = 30;
 let xyz = [52,56,54,63,59,67,64,73,69,78,75,83,79,88,84];
 let abc = [78,74,72,79,76,84,80,87,83,90,86,92,89,96,93];
@@ -626,17 +628,22 @@ function pointsFor(values) {
 function drawChart() {
   document.getElementById("line-xyz").setAttribute("points",pointsFor(xyz));
   document.getElementById("line-abc").setAttribute("points",pointsFor(abc));
-  document.getElementById("chart-updated").textContent = "Demo updated: " + new Date().toLocaleTimeString();
+  document.getElementById("chart-updated").textContent =
+    "Demo updated: " + new Date().toLocaleTimeString();
 }
+
 makeChartBase();
 drawChart();
 
 setInterval(() => {
   if (demoPaused) return;
+
   xyz.push(Math.max(50,Math.min(98,Math.round(xyz[xyz.length-1]+(Math.random()-0.48)*8))));
   xyz.shift();
+
   abc.push(Math.max(50,Math.min(98,Math.round(abc[abc.length-1]+(Math.random()-0.5)*7))));
   abc.shift();
+
   drawChart();
 },4000);
 
@@ -675,12 +682,14 @@ setInterval(() => {
   renderWatch();
 },5000);
 
-// Project week selector. Week 1 is recorded; Weeks 2–4 below are illustrative demo values only.
+// Week 1 contains the recorded benchmark values.
+// Weeks 2–4 use illustrative preview values, not measured results.
 const projectWeeks = {
   1: {
     title:"Week 1 — Core Engine",
     description:"Core order processing and recorded benchmark results. The metrics below are measured Week 1 values.",
     subtitle:"Benchmark snapshot · Week 1",
+    label:"Recorded benchmark results",
     metrics:[
       ["Consumer Throughput ↗","97,512 <span>ops/s</span>","Measured benchmark result"],
       ["Orders Processed ⇄","300,000","Orders in benchmark run"],
@@ -696,53 +705,56 @@ const projectWeeks = {
   },
   2: {
     title:"Week 2 — Market Router",
-    description:"Market routing feature view. The numbers below are illustrative examples for layout testing, not measured engine results.",
-    subtitle:"Illustrative demo snapshot · Week 2 (not measured)",
+    description:"Market routing feature view. Benchmark results have not been recorded for this week.",
+    subtitle:"Project feature overview · Week 2",
+    label:"Benchmark not recorded",
     metrics:[
-      ["Demo Throughput","92,840 <span>ops/s</span>","Illustrative only · not benchmarked"],
-      ["Demo Orders","300,000","Example order count · not measured"],
-      ["Demo Mean Latency","1.420 <span>ms</span>","Illustrative only · not benchmarked"],
-      ["Demo P99 Latency","2.950 <span>ms</span>","Illustrative only · not benchmarked"]
+      ["Project Week","Week 2","Selected project view"],
+      ["Main Feature","Market Router","chronos/market_router.py"],
+      ["Benchmark","Not recorded","No Week 2 result shown"],
+      ["Market Feed","Demo only","No live exchange connection"]
     ],
     demo:true,
     health:[
-      ["Market router module","In project",100],
-      ["Routing feature","Project module",75],
-      ["Benchmark result","Demo values only",0]
+      ["Market router module","Project view",100],
+      ["Routing feature","Project feature",75],
+      ["Benchmark result","Not recorded",0]
     ]
   },
   3: {
     title:"Week 3 — Risk Management",
-    description:"Risk-management feature view. The numbers below are illustrative examples for layout testing, not measured engine results.",
-    subtitle:"Illustrative demo snapshot · Week 3 (not measured)",
+    description:"Risk-management feature overview. Benchmark results have not been recorded for this week.",
+    subtitle:"Project feature overview · Week 3",
+    label:"Benchmark not recorded",
     metrics:[
-      ["Demo Throughput","90,250 <span>ops/s</span>","Illustrative only · not benchmarked"],
-      ["Demo Orders","300,000","Example order count · not measured"],
-      ["Demo Mean Latency","1.510 <span>ms</span>","Illustrative only · not benchmarked"],
-      ["Demo P99 Latency","3.120 <span>ms</span>","Illustrative only · not benchmarked"]
+      ["Project Week","Week 3","Selected project view"],
+      ["Main Feature","Risk Management","Risk-control feature"],
+      ["Benchmark","Not recorded","No Week 3 result shown"],
+      ["Risk Checks","Project view","No benchmark recorded"]
     ],
     demo:true,
     health:[
-      ["Risk module","In project",100],
+      ["Risk module","Project view",100],
       ["Risk checks","Project feature",75],
-      ["Benchmark result","Demo values only",0]
+      ["Benchmark result","Not recorded",0]
     ]
   },
   4: {
     title:"Week 4 — Safe Engine",
-    description:"Safe-engine feature view. The numbers below are illustrative examples for layout testing, not measured engine results.",
-    subtitle:"Illustrative demo snapshot · Week 4 (not measured)",
+    description:"Safe-engine feature overview. Benchmark results have not been recorded for this week.",
+    subtitle:"Project feature overview · Week 4",
+    label:"Benchmark not recorded",
     metrics:[
-      ["Demo Throughput","101,230 <span>ops/s</span>","Illustrative only · not benchmarked"],
-      ["Demo Orders","300,000","Example order count · not measured"],
-      ["Demo Mean Latency","1.210 <span>ms</span>","Illustrative only · not benchmarked"],
-      ["Demo P99 Latency","2.480 <span>ms</span>","Illustrative only · not benchmarked"]
+      ["Project Week","Week 4","Selected project view"],
+      ["Main Feature","Safe Engine","Engine safeguards"],
+      ["Benchmark","Not recorded","No Week 4 result shown"],
+      ["Engine Safety","Project view","No benchmark recorded"]
     ],
     demo:true,
     health:[
-      ["Safe engine module","In project",100],
+      ["Safe engine module","Project view",100],
       ["Engine safeguards","Project feature",75],
-      ["Benchmark result","Demo values only",0]
+      ["Benchmark result","Not recorded",0]
     ]
   }
 };
@@ -757,9 +769,10 @@ function selectProjectWeek(weekNumber) {
 
   document.getElementById("week-title").textContent = data.title;
   document.getElementById("week-description").textContent = data.description;
-  document.getElementById("performance-title").textContent = weekNumber===1 ? "Engine Performance" : data.title;
+  document.getElementById("performance-title").textContent =
+    weekNumber===1 ? "Engine Performance" : data.title;
   document.getElementById("performance-subtitle").textContent = data.subtitle;
-  document.getElementById("demo-warning").classList.toggle("visible", Boolean(data.demo));
+  document.getElementById("benchmark-label").textContent = data.label;
 
   data.metrics.forEach((metric,index) => {
     const n = index+1;
@@ -768,37 +781,53 @@ function selectProjectWeek(weekNumber) {
     document.getElementById(`metric-foot-${n}`).textContent = metric[2];
   });
 
-  document.getElementById("health-description").textContent = data.title + " · Feature indicators";
+  document.getElementById("health-description").textContent =
+    data.title + " · Feature indicators";
+
   document.getElementById("health-list").innerHTML = data.health.map(item => `
     <div class="health-row">
       <div class="health-line"><span>${item[0]}</span><strong>${item[1]}</strong></div>
-      <div class="bar ${item[2]<100 ? "partial" : ""}"><span style="width:${item[2]}%"></span></div>
+      <div class="bar ${item[2]<100 ? "partial" : ""}">
+        <span style="width:${item[2]}%"></span>
+      </div>
     </div>
   `).join("");
 
   document.getElementById("health-note").textContent = weekNumber===1
     ? "Demo environment · Market prices, chart movements, and order records are simulated examples. Benchmark figures are recorded Week 1 results."
-    : "Illustrative demo metrics only · These example values have not been measured from the engine. Market prices and chart movements remain simulated data.";
+    : "Project feature overview · Benchmark results have not been recorded for this week. Market prices and chart movements are simulated demo data.";
 }
 
-// Export the selected week metrics and the visible demo order records as CSV.
+// Export selected week metrics and demo orders to CSV.
 document.getElementById("export-csv").addEventListener("click", () => {
   const activeButton = document.querySelector(".week-button.active");
   const weekNumber = Number(activeButton ? activeButton.dataset.week : 1);
   const week = projectWeeks[weekNumber];
+
   const rows = [
     ["ChronosMatch Dashboard Export"],
-    ["Selected Week", week.title],
-    ["Data Classification", week.demo ? "ILLUSTRATIVE DEMO VALUES - NOT MEASURED" : "Week 1 recorded benchmark values"],
+    ["Selected Week",week.title],
+    ["Data Classification",week.demo ? "Project overview; benchmark not recorded" : "Week 1 recorded benchmark values"],
     [],
-    ["Metric", "Value", "Notes"],
-    ...week.metrics.map(metric => [metric[0].replace(/[↗⇄◷⌁]/g, "").trim(), metric[1].replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " "), metric[2]]),
+    ["Metric","Value","Notes"],
+    ...week.metrics.map(metric => [
+      metric[0].replace(/[↗⇄◷⌁]/g,"").trim(),
+      metric[1].replace(/<[^>]*>/g,"").replace(/&nbsp;/g," "),
+      metric[2]
+    ]),
     [],
-    ["Order ID", "Instrument", "Side", "Price", "Quantity", "Status", "Data Classification"],
-    ...orders.map(order => [order.id, order.instrument, order.side, order.price.toFixed(2), order.qty, order.status, "Simulated demo order"])
+    ["Order ID","Instrument","Side","Price","Quantity","Status","Data Classification"],
+    ...orders.map(order => [
+      order.id,order.instrument,order.side,order.price.toFixed(2),
+      order.qty,order.status,"Simulated demo order"
+    ])
   ];
-  const csv = rows.map(row => row.map(value => `"${String(value ?? "").replace(/"/g, '""')}"`).join(",")).join("\r\n");
-  const blob = new Blob(["\uFEFF" + csv], {type:"text/csv;charset=utf-8;"});
+
+  const csv = rows.map(row =>
+    row.map(value => `"${String(value ?? "").replace(/"/g,'""')}"`).join(",")
+  ).join("\r\n");
+
+  const blob = new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
@@ -810,8 +839,11 @@ document.getElementById("export-csv").addEventListener("click", () => {
 });
 
 document.querySelectorAll(".week-button").forEach(button => {
-  button.addEventListener("click",() => selectProjectWeek(Number(button.dataset.week)));
+  button.addEventListener("click",() => {
+    selectProjectWeek(Number(button.dataset.week));
+  });
 });
+
 selectProjectWeek(1);
 </script>
 </body>
