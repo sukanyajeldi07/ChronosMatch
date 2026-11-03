@@ -1,212 +1,198 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080d18">
-<title>ChronosMatch | Trading Engine Dashboard</title>
+<meta name="description" content="ChronosMatch zero-copy high-frequency trading engine performance dashboard">
+<title>ChronosMatch | Performance Center</title>
 
 <style>
 :root {
+  color-scheme: dark;
   --bg: #080d18;
-  --panel: #101827;
-  --border: #243149;
+  --bg-soft: #0c1422;
+  --panel: #101a2a;
+  --panel-light: #142136;
+  --border: #26364e;
+  --border-light: #344865;
   --text: #edf3ff;
-  --muted: #8b9ab4;
+  --muted: #91a0b9;
   --blue: #64a7ff;
   --cyan: #43d9d0;
   --green: #42d392;
   --red: #ff7185;
+  --amber: #ffc76b;
+  --radius: 16px;
+  --shadow: 0 16px 40px #0003;
 }
-
-* {
-  box-sizing: border-box;
-}
-
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 body {
   margin: 0;
-  background: radial-gradient(ellipse at top left, #142343, transparent 40%), var(--bg);
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 5% 0%, #183052 0%, transparent 33%),
+    radial-gradient(ellipse at 95% 12%, #102b35 0%, transparent 25%),
+    var(--bg);
   color: var(--text);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  font-size: 14px;
 }
-
-button {
-  font: inherit;
-  cursor: pointer;
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, a:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
 }
-
+button:disabled { opacity: .55; cursor: not-allowed; }
+a { color: inherit; }
 .app {
-  max-width: 1450px;
+  width: min(1500px, 100%);
   margin: auto;
-  padding: 24px;
+  padding: 25px;
 }
-
-.topbar, .hero, .section-head, .panel-title, .footer {
+.topbar, .hero, .section-head, .panel-head, .footer,
+.toolbar, .brand, .header-actions, .inline-meta {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
   gap: 16px;
-  flex-wrap: wrap;
 }
-
 .topbar {
-  margin-bottom: 30px;
+  flex-wrap: wrap;
+  padding-bottom: 22px;
+  border-bottom: 1px solid #26364e99;
 }
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--text);
-  text-decoration: none;
-}
-
-.brand-mark {
-  display: grid;
-  place-items: center;
+.brand { justify-content: flex-start; text-decoration: none; }
+.brand-logo {
   width: 48px;
   height: 48px;
-  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 15px;
+  color: #07111e;
   background: linear-gradient(135deg, var(--blue), var(--cyan));
-  color: #06101e;
   font-size: 25px;
-  font-weight: bold;
+  font-weight: 900;
+  box-shadow: 0 8px 25px #43d9d022;
 }
-
-.brand h1 {
+.brand-name {
   margin: 0;
-  font-size: 21px;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -.6px;
 }
-
-.brand p, .muted, .hero p, .section-head p,
-.panel-title p, .metric-note {
+.brand-subtitle {
+  margin: 5px 0 0;
   color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 2px;
 }
-
-.brand p {
-  margin: 4px 0 0;
-  font-size: 11px;
-  letter-spacing: 1.5px;
-}
-
-.top-actions, .hero-meta, .week-buttons, .chart-legend {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.pill, .button, .tag {
-  padding: 9px 13px;
+.header-actions { flex-wrap: wrap; }
+.pill, .tag, .btn {
   border: 1px solid var(--border);
   border-radius: 10px;
-  background: var(--panel);
+  padding: 10px 13px;
+  background: #111c2d;
   color: var(--text);
   font-size: 12px;
 }
-
-.button:hover, .week-button:hover {
-  border-color: var(--blue);
-  transform: translateY(-1px);
-}
-
-.button.primary {
-  background: var(--blue);
-  color: #06101e;
-  font-weight: bold;
-}
-
-.dot {
-  display: inline-block;
+.pill { display: flex; align-items: center; gap: 8px; }
+.pulse-dot {
   width: 8px;
   height: 8px;
-  margin-right: 6px;
   border-radius: 50%;
   background: var(--green);
+  box-shadow: 0 0 12px #42d39280;
 }
-
+.btn { transition: border-color .18s, transform .18s; }
+.btn:hover { border-color: var(--blue); transform: translateY(-1px); }
+.btn-primary {
+  background: linear-gradient(135deg, var(--blue), var(--cyan));
+  color: #07111e;
+  border-color: transparent;
+  font-weight: 800;
+}
+.btn-primary:hover { border-color: #fff8; }
+.btn-quiet { background: transparent; }
 .hero {
   align-items: flex-end;
-  margin: 15px 0 30px;
+  flex-wrap: wrap;
+  margin: 32px 0;
 }
-
 .eyebrow {
   color: var(--cyan);
   font-size: 11px;
-  font-weight: bold;
-  letter-spacing: 2px;
+  font-weight: 800;
+  letter-spacing: 2.2px;
   text-transform: uppercase;
 }
-
 .hero h2 {
   margin: 10px 0;
-  font-size: clamp(26px, 4vw, 39px);
+  font-size: clamp(30px, 4vw, 44px);
+  letter-spacing: -1.5px;
+  line-height: 1.12;
 }
-
 .hero p {
-  max-width: 650px;
-  line-height: 1.7;
+  max-width: 670px;
+  color: var(--muted);
+  line-height: 1.8;
+  margin-bottom: 0;
 }
-
-.tag {
-  border-radius: 30px;
-}
-
-.section-head {
-  margin: 30px 0 15px;
-}
-
-.section-head h3, .panel-title h3 {
-  margin: 0;
-}
-
-.section-head p, .panel-title p {
-  margin: 5px 0 0;
-  font-size: 12px;
-}
-
-.week-buttons {
-  position: relative;
-  z-index: 2;
-  pointer-events: auto;
-}
-
+.inline-meta { justify-content: flex-start; flex-wrap: wrap; margin-top: 16px; }
+.tag { border-radius: 25px; color: #c8d8ed; }
+.demo-tag { color: var(--amber); border-color: #ffc76b55; }
+.section-head { flex-wrap: wrap; margin: 30px 0 16px; }
+.section-head h3, .panel-head h3 { margin: 0; font-size: 16px; }
+.section-head p, .panel-head p { margin: 6px 0 0; color: var(--muted); font-size: 12px; }
+.week-buttons { display: flex; flex-wrap: wrap; gap: 9px; }
 .week-button {
   position: relative;
-  z-index: 3;
-  min-width: 82px;
-  padding: 12px 18px;
+  min-width: 78px;
+  padding: 12px 16px;
+  color: #c6d4e8;
+  background: #101a2a;
   border: 1px solid var(--border);
   border-radius: 10px;
-  background: #101827;
-  color: #c5d1e6;
-  font-weight: bold;
-  pointer-events: auto;
-  touch-action: manipulation;
-  transition: 0.15s;
+  font-weight: 700;
+  transition: .18s ease;
 }
-
+.week-button:hover { border-color: var(--blue); }
 .week-button.active {
+  color: #07111e;
   background: linear-gradient(135deg, var(--blue), var(--cyan));
-  color: #06101e;
   border-color: transparent;
+  box-shadow: 0 6px 22px #64a7ff20;
 }
-
 .metrics {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 15px;
 }
-
 .metric, .panel {
   min-width: 0;
-  padding: 20px;
   border: 1px solid var(--border);
-  border-radius: 16px;
-  background: linear-gradient(145deg, #121d2d, #0d1523);
-  box-shadow: 0 12px 30px #0002;
+  border-radius: var(--radius);
+  background: linear-gradient(145deg, #131f31, #0d1523);
+  box-shadow: var(--shadow);
 }
-
+.metric {
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+}
+.metric::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 20px;
+  right: 20px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #64a7ff55, transparent);
+}
 .metric-top {
   display: flex;
   justify-content: space-between;
@@ -215,264 +201,216 @@ button {
   color: var(--muted);
   font-size: 12px;
 }
-
 .metric-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 35px;
+  height: 35px;
+  border-radius: 11px;
+  color: var(--blue);
+  background: #1c2d46;
+  font-size: 18px;
+}
+.metric-value {
+  margin: 19px 0 8px;
+  font-size: clamp(22px, 2.4vw, 31px);
+  font-weight: 800;
+  letter-spacing: -.7px;
+  overflow-wrap: anywhere;
+}
+.metric-value small { color: var(--muted); font-size: 12px; letter-spacing: 0; }
+.metric-note { color: var(--muted); font-size: 11px; line-height: 1.6; }
+.metric-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #26364e99;
+  color: var(--muted);
+  font-size: 10px;
+}
+.positive { color: var(--green) !important; }
+.negative { color: var(--red) !important; }
+.neutral { color: var(--amber) !important; }
+.main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr);
+  gap: 16px;
+  margin-top: 16px;
+}
+.panel { padding: 21px; }
+.panel-head {
+  align-items: flex-start;
+  margin-bottom: 19px;
+}
+.panel-head .tag { flex: 0 0 auto; }
+.chart-wrap { position: relative; width: 100%; height: 285px; }
+canvas { display: block; width: 100%; height: 100%; }
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-top: 13px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.legend-item { display: inline-flex; align-items: center; gap: 7px; }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+.legend-line { width: 18px; height: 3px; border-radius: 5px; }
+.market-list { display: flex; flex-direction: column; }
+.market-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 0;
+  border-bottom: 1px solid #26364e99;
+}
+.market-row:last-child { border-bottom: 0; }
+.symbol { font-size: 12px; font-weight: 800; }
+.company { margin-top: 5px; color: var(--muted); font-size: 10px; }
+.price { text-align: right; font-size: 12px; font-weight: 700; }
+.change {
+  min-width: 67px;
+  text-align: right;
+  font-size: 11px;
+  font-weight: 700;
+}
+.market-footnote { color: var(--muted); font-size: 10px; line-height: 1.6; }
+.wide-panel { margin-top: 16px; }
+.health-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 13px;
+}
+.health-item {
+  min-width: 0;
+  padding: 16px;
+  background: #0b1422;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.health-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.health-label { color: var(--muted); font-size: 11px; }
+.health-state { color: var(--green); font-size: 10px; font-weight: 800; }
+.health-value { margin-top: 10px; font-size: 18px; font-weight: 800; overflow-wrap: anywhere; }
+.health-description { margin-top: 6px; color: var(--muted); font-size: 10px; }
+.bar { height: 5px; margin-top: 14px; background: #26364e; border-radius: 10px; overflow: hidden; }
+.bar i { display: block; height: 100%; border-radius: 10px; background: linear-gradient(90deg, var(--blue), var(--cyan)); transition: width .3s; }
+.table-tools { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.search-input, .filter-select {
+  min-width: 0;
+  padding: 10px 12px;
+  color: var(--text);
+  background: #0a1321;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+}
+.search-input { width: 220px; }
+.table-wrap { width: 100%; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; white-space: nowrap; font-size: 11px; }
+th, td { padding: 14px 12px; text-align: left; border-bottom: 1px solid #26364e99; }
+th { color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .6px; }
+tbody tr:hover { background: #ffffff05; }
+.status {
+  display: inline-block;
+  padding: 5px 8px;
+  color: var(--green);
+  background: #12352e;
+  border: 1px solid #42d39222;
+  border-radius: 20px;
+  font-size: 9px;
+  font-weight: 800;
+}
+.status-sim { color: var(--amber); background: #342719; border-color: #ffc76b22; }
+.empty-state { padding: 25px; text-align: center; color: var(--muted); }
+.progress-track { height: 8px; background: #26364e; border-radius: 20px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--cyan)); border-radius: 20px; }
+.progress-row { display: grid; grid-template-columns: 90px minmax(0, 1fr) 45px; align-items: center; gap: 12px; margin: 17px 0; font-size: 11px; }
+.progress-label { color: var(--muted); }
+.progress-number { text-align: right; font-weight: 700; }
+.bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+.insight-list { display: grid; gap: 12px; }
+.insight {
+  display: flex;
+  gap: 12px;
+  padding: 13px;
+  background: #0c1524;
+  border: 1px solid #26364e;
+  border-radius: 11px;
+}
+.insight-icon {
   display: grid;
   place-items: center;
   width: 34px;
   height: 34px;
+  flex: 0 0 auto;
   border-radius: 10px;
-  background: #1b2b43;
-  color: var(--blue);
-  font-size: 18px;
+  background: #1a2b43;
+  color: var(--cyan);
 }
-
-.metric-value {
-  margin: 17px 0 7px;
-  font-size: clamp(22px, 2.4vw, 30px);
-  font-weight: bold;
-  overflow-wrap: anywhere;
-}
-
-.metric-value small {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.metric-note {
-  font-size: 12px;
-  line-height: 1.5;
-}
-
-.main-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr);
-  gap: 15px;
-  margin-top: 15px;
-}
-
-.panel-title {
-  align-items: flex-start;
-  margin-bottom: 16px;
-}
-
-.chart-wrap {
-  height: 260px;
-}
-
-canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.chart-legend {
-  margin-top: 12px;
-  color: var(--muted);
-  font-size: 11px;
-}
-
-.legend-dot {
-  display: inline-block;
-  width: 9px;
-  height: 9px;
-  margin-right: 5px;
-  border-radius: 50%;
-}
-
-.market-row {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 0;
-  border-bottom: 1px solid #202b3e;
-}
-
-.market-row:last-child {
-  border-bottom: none;
-}
-
-.symbol {
-  font-size: 13px;
-  font-weight: bold;
-}
-
-.company {
-  margin-top: 4px;
-  color: var(--muted);
-  font-size: 11px;
-}
-
-.price, .change {
-  text-align: right;
-  font-size: 12px;
-}
-
-.price {
-  font-weight: bold;
-}
-
-.change {
-  min-width: 65px;
-}
-
-.positive {
-  color: var(--green);
-}
-
-.negative {
-  color: var(--red);
-}
-
-.health-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.health-item {
-  padding: 15px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: #0c1421;
-}
-
-.health-item span {
-  display: block;
-  color: var(--muted);
-  font-size: 11px;
-}
-
-.health-item strong {
-  display: block;
-  margin-top: 8px;
-  font-size: 15px;
-  overflow-wrap: anywhere;
-}
-
-.bar {
-  height: 5px;
-  margin-top: 12px;
-  border-radius: 10px;
-  background: #243149;
-  overflow: hidden;
-}
-
-.bar i {
-  display: block;
-  height: 100%;
-  background: linear-gradient(90deg, var(--blue), var(--cyan));
-}
-
-.table-wrap {
-  overflow-x: auto;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  white-space: nowrap;
-  font-size: 12px;
-}
-
-th, td {
-  padding: 13px 12px;
-  text-align: left;
-  border-bottom: 1px solid #243149;
-}
-
-th {
-  color: var(--muted);
-}
-
-.status {
-  padding: 4px 8px;
-  border-radius: 20px;
-  background: #12352e;
-  color: var(--green);
-  font-size: 10px;
-  font-weight: bold;
-}
-
+.insight strong { display: block; font-size: 12px; }
+.insight p { margin: 5px 0 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
 .footer {
-  justify-content: space-between;
-  margin-top: 25px;
-  padding: 15px 0;
+  flex-wrap: wrap;
+  margin-top: 26px;
+  padding: 18px 0 6px;
+  border-top: 1px solid #26364e99;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 10px;
 }
-
 .toast {
   position: fixed;
   z-index: 100;
-  bottom: 20px;
   left: 50%;
+  bottom: 22px;
   transform: translateX(-50%);
+  max-width: calc(100vw - 30px);
   padding: 12px 18px;
-  border: 1px solid #365070;
+  color: var(--text);
+  background: #17263b;
+  border: 1px solid #405878;
   border-radius: 10px;
-  background: #15243a;
-  color: white;
+  box-shadow: var(--shadow);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s;
+  transition: opacity .2s;
 }
-
-.toast.show {
-  opacity: 1;
+.toast.show { opacity: 1; }
+.small-muted { color: var(--muted); font-size: 10px; line-height: 1.6; }
+@media (max-width: 1100px) {
+  .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .main-grid { grid-template-columns: 1fr; }
 }
-
-@media (max-width: 1000px) {
-  .metrics {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .main-grid {
-    grid-template-columns: 1fr;
-  }
+@media (max-width: 720px) {
+  .app { padding: 16px; }
+  .bottom-grid { grid-template-columns: 1fr; }
+  .health-grid { grid-template-columns: 1fr; }
+  .header-actions { width: 100%; justify-content: flex-start; }
+  .hero { margin: 25px 0; }
+  .chart-wrap { height: 250px; }
 }
-
-@media (max-width: 560px) {
-  .app {
-    padding: 14px;
-  }
-
-  .metrics {
-    gap: 9px;
-  }
-
-  .metric {
-    padding: 13px;
-  }
-
-  .metric-value {
-    font-size: 21px;
-  }
-
-  .week-buttons {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    width: 100%;
-  }
-
-  .week-button {
-    width: 100%;
-    min-width: 0;
-    padding: 12px 6px;
-  }
-
-  .health-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .panel {
-    padding: 14px;
-  }
-
-  .chart-wrap {
-    height: 220px;
-  }
+@media (max-width: 480px) {
+  .app { padding: 12px; }
+  .brand-name { font-size: 19px; }
+  .metrics { gap: 9px; }
+  .metric { padding: 13px; }
+  .metric-value { font-size: 21px; }
+  .metric-top { font-size: 10px; }
+  .metric-icon { width: 29px; height: 29px; }
+  .week-buttons { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; }
+  .week-button { min-width: 0; padding: 11px 5px; font-size: 11px; }
+  .panel { padding: 14px; }
+  .chart-wrap { height: 220px; }
+  .search-input { width: 100%; }
+  .table-tools { align-items: stretch; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
 }
 </style>
 </head>
@@ -480,190 +418,214 @@ th {
 <body>
 <div class="app">
 
-  <header class="topbar">
-    <a class="brand" href="#overview">
-      <div class="brand-mark">C</div>
-      <div>
-        <h1>ChronosMatch</h1>
-        <p>ZERO-COPY TRADING ENGINE</p>
-      </div>
-    </a>
-
-    <div class="top-actions">
-      <div class="pill">
-        <span class="dot"></span>
-        Engine status: <strong>Demo</strong>
-      </div>
-      <button class="button" id="pauseButton" type="button">Pause demo</button>
-      <button class="button primary" id="exportButton" type="button">Export CSV ↓</button>
+<header class="topbar">
+  <a class="brand" href="#overview" aria-label="ChronosMatch dashboard home">
+    <div class="brand-logo">C</div>
+    <div>
+      <h1 class="brand-name">ChronosMatch</h1>
+      <p class="brand-subtitle">ZERO-COPY TRADING ENGINE</p>
     </div>
-  </header>
+  </a>
 
-  <main id="overview">
+  <div class="header-actions">
+    <div class="pill"><span class="pulse-dot"></span><span>Dashboard status: <strong>Demo</strong></span></div>
+    <button class="btn" id="pauseButton" type="button">Pause demo</button>
+    <button class="btn btn-primary" id="exportButton" type="button">Export CSV ↓</button>
+  </div>
+</header>
 
-    <section class="hero">
-      <div>
-        <div class="eyebrow">Performance control center</div>
-        <h2>Low-latency order flow</h2>
-        <p>ChronosMatch benchmark metrics, weekly progress, and simulated market activity in one dashboard.</p>
-      </div>
-
-      <div class="hero-meta">
+<main id="overview">
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Performance control center</div>
+      <h2>Low-latency<br>order flow.</h2>
+      <p>Monitor ChronosMatch throughput, processing latency, project progress and simulated market activity through a single performance dashboard.</p>
+      <div class="inline-meta">
         <span class="tag">Python Development</span>
-        <span class="tag">300,000 benchmark orders</span>
-        <span class="tag" id="weekTag">Viewing Week 1</span>
+        <span class="tag">Benchmark: 300,000 orders</span>
+        <span class="tag demo-tag">SIMULATED MARKET</span>
       </div>
-    </section>
+    </div>
+    <div>
+      <div class="small-muted">SELECTED PROJECT PERIOD</div>
+      <div id="weekTag" style="font-size:23px;font-weight:800;margin-top:8px">Week 1</div>
+      <div class="small-muted" id="weekDescription">Initial local benchmark</div>
+    </div>
+  </section>
 
-    <section>
-      <div class="section-head">
+  <section aria-labelledby="weeksTitle">
+    <div class="section-head">
+      <div>
+        <h3 id="weeksTitle">Project performance</h3>
+        <p>Choose a project week to change the displayed metrics.</p>
+      </div>
+      <div class="week-buttons" id="weekButtons">
+        <button class="week-button active" type="button" data-week="1" aria-pressed="true">Week 1</button>
+        <button class="week-button" type="button" data-week="2" aria-pressed="false">Week 2</button>
+        <button class="week-button" type="button" data-week="3" aria-pressed="false">Week 3</button>
+        <button class="week-button" type="button" data-week="4" aria-pressed="false">Week 4</button>
+        <button class="week-button" type="button" data-week="5" aria-pressed="false">Week 5</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="metrics" aria-label="Performance metrics">
+    <article class="metric">
+      <div class="metric-top"><span>Consumer Throughput</span><span class="metric-icon">↗</span></div>
+      <div class="metric-value" id="metricThroughput">97,976 <small>orders/sec</small></div>
+      <div class="metric-note" id="throughputNote">Local benchmark result</div>
+      <div class="metric-foot"><span>Processing rate</span><span class="positive">ORDERS / SEC</span></div>
+    </article>
+
+    <article class="metric">
+      <div class="metric-top"><span>Orders Processed</span><span class="metric-icon">▤</span></div>
+      <div class="metric-value" id="metricOrders">300,000</div>
+      <div class="metric-note">Orders in the selected benchmark run</div>
+      <div class="metric-foot"><span>Workload</span><span>300K</span></div>
+    </article>
+
+    <article class="metric">
+      <div class="metric-top"><span>Mean Latency</span><span class="metric-icon">◷</span></div>
+      <div class="metric-value" id="metricMean">1.470 <small>ms</small></div>
+      <div class="metric-note" id="meanNote">Average processing latency</div>
+      <div class="metric-foot"><span>Lower is better</span><span class="positive">MEAN</span></div>
+    </article>
+
+    <article class="metric">
+      <div class="metric-top"><span>P99 Latency</span><span class="metric-icon">⌁</span></div>
+      <div class="metric-value" id="metricP99">3.532 <small>ms</small></div>
+      <div class="metric-note" id="p99Note">99th percentile processing latency</div>
+      <div class="metric-foot"><span>Tail latency</span><span class="neutral">P99</span></div>
+    </article>
+  </section>
+
+  <section class="main-grid">
+    <article class="panel">
+      <div class="panel-head">
         <div>
-          <h3>Project weeks</h3>
-          <p>Select any week to display its metrics.</p>
+          <h3>Market movement</h3>
+          <p>Illustrative price series, updated locally</p>
         </div>
+        <span class="tag" id="chartStatus">Demo running</span>
+      </div>
+      <div class="chart-wrap"><canvas id="priceChart" role="img" aria-label="Simulated XYZ and ABC market prices over time"></canvas></div>
+      <div class="chart-legend">
+        <span class="legend-item"><i class="legend-line" style="background:var(--blue)"></i>XYZ/USD</span>
+        <span class="legend-item"><i class="legend-line" style="background:var(--cyan)"></i>ABC/USD</span>
+        <span class="legend-item">Last update: <span id="lastUpdate">—</span></span>
+      </div>
+    </article>
 
-        <div class="week-buttons" id="weekButtons">
-          <button type="button" class="week-button active" data-week="1" aria-pressed="true">Week 1</button>
-          <button type="button" class="week-button" data-week="2" aria-pressed="false">Week 2</button>
-          <button type="button" class="week-button" data-week="3" aria-pressed="false">Week 3</button>
-          <button type="button" class="week-button" data-week="4" aria-pressed="false">Week 4</button>
+    <article class="panel">
+      <div class="panel-head">
+        <div><h3>Market watch</h3><p>Sample tickers and simulated changes</p></div>
+        <span class="tag demo-tag">DEMO</span>
+      </div>
+      <div class="market-list" id="marketList"></div>
+      <p class="market-footnote">These are fictional demonstration prices, not live exchange quotes or financial advice.</p>
+    </article>
+  </section>
+
+  <section class="panel wide-panel">
+    <div class="panel-head">
+      <div><h3>Engine health</h3><p id="healthSubtitle">Runtime indicators for Week 1</p></div>
+      <span class="tag">LOCAL BENCHMARK</span>
+    </div>
+    <div class="health-grid">
+      <div class="health-item">
+        <div class="health-top"><span class="health-label">Producer rate</span><span class="health-state">METRIC</span></div>
+        <div class="health-value" id="producerRate">100,136 orders/sec</div>
+        <div class="health-description">Orders generated per second</div>
+        <div class="bar"><i id="producerBar" style="width:99%"></i></div>
+      </div>
+      <div class="health-item">
+        <div class="health-top"><span class="health-label">End-to-end elapsed</span><span class="health-state">METRIC</span></div>
+        <div class="health-value" id="elapsedTime">3.062 seconds</div>
+        <div class="health-description">Total elapsed time in the run</div>
+        <div class="bar"><i id="elapsedBar" style="width:76%"></i></div>
+      </div>
+      <div class="health-item">
+        <div class="health-top"><span class="health-label">Maximum latency</span><span class="health-state">METRIC</span></div>
+        <div class="health-value" id="maxLatency">4.096 ms</div>
+        <div class="health-description">Highest observed latency in the run</div>
+        <div class="bar"><i id="latencyBar" style="width:68%"></i></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bottom-grid">
+    <article class="panel">
+      <div class="panel-head">
+        <div><h3>Performance profile</h3><p>Selected-week metrics at a glance</p></div>
+        <span class="tag" id="profileTag">WEEK 1</span>
+      </div>
+      <div class="progress-row">
+        <span class="progress-label">Throughput</span>
+        <div class="progress-track"><div class="progress-fill" id="throughputProgress" style="width:97%"></div></div>
+        <span class="progress-number" id="throughputPercent">97%</span>
+      </div>
+      <div class="progress-row">
+        <span class="progress-label">Producer rate</span>
+        <div class="progress-track"><div class="progress-fill" id="producerProgress" style="width:99%"></div></div>
+        <span class="progress-number" id="producerPercent">99%</span>
+      </div>
+      <div class="progress-row">
+        <span class="progress-label">Latency budget</span>
+        <div class="progress-track"><div class="progress-fill" id="latencyProgress" style="width:68%"></div></div>
+        <span class="progress-number" id="latencyPercent">68%</span>
+      </div>
+      <p class="small-muted">Progress bars are normalized visual indicators, not SLA guarantees.</p>
+    </article>
+
+    <article class="panel">
+      <div class="panel-head">
+        <div><h3>System notes</h3><p>Dashboard information</p></div>
+        <span class="tag">INFO</span>
+      </div>
+      <div class="insight-list">
+        <div class="insight">
+          <div class="insight-icon">↗</div>
+          <div><strong>Throughput monitoring</strong><p id="insightThroughput">Selected benchmark throughput is displayed above.</p></div>
+        </div>
+        <div class="insight">
+          <div class="insight-icon">◷</div>
+          <div><strong>Latency monitoring</strong><p id="insightLatency">Mean and P99 latency are shown in milliseconds.</p></div>
+        </div>
+        <div class="insight">
+          <div class="insight-icon">ⓘ</div>
+          <div><strong>Data integrity</strong><p>Weeks 2–5 are illustrative values. Replace them with measured results when available.</p></div>
         </div>
       </div>
-    </section>
+    </article>
+  </section>
 
-    <section class="metrics">
-      <article class="metric">
-        <div class="metric-top">
-          <span>Consumer Throughput</span><span class="metric-icon">↗</span>
-        </div>
-        <div class="metric-value" id="metric1Value">97,976 <small>orders/sec</small></div>
-        <div class="metric-note" id="metric1Note">Benchmark consumer rate</div>
-      </article>
+  <section class="panel wide-panel">
+    <div class="panel-head">
+      <div><h3>Recent order activity</h3><p>Example order records for interface demonstration</p></div>
+      <span class="tag demo-tag">SIMULATED</span>
+    </div>
+    <div class="table-tools">
+      <span class="small-muted">Showing sample records</span>
+      <input class="search-input" id="orderSearch" type="search" placeholder="Search order or symbol..." aria-label="Search sample orders">
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ORDER ID</th><th>SYMBOL</th><th>SIDE</th><th>QUANTITY</th>
+            <th>PRICE</th><th>STATUS</th><th>LATENCY</th>
+          </tr>
+        </thead>
+        <tbody id="ordersBody"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
 
-      <article class="metric">
-        <div class="metric-top">
-          <span>Orders Processed</span><span class="metric-icon">▤</span>
-        </div>
-        <div class="metric-value" id="metric2Value">300,000</div>
-        <div class="metric-note" id="metric2Note">Completed benchmark orders</div>
-      </article>
-
-      <article class="metric">
-        <div class="metric-top">
-          <span>Mean Latency</span><span class="metric-icon">◷</span>
-        </div>
-        <div class="metric-value" id="metric3Value">1.470 <small>ms</small></div>
-        <div class="metric-note" id="metric3Note">Average processing latency</div>
-      </article>
-
-      <article class="metric">
-        <div class="metric-top">
-          <span>P99 Latency</span><span class="metric-icon">⌁</span>
-        </div>
-        <div class="metric-value" id="metric4Value">3.532 <small>ms</small></div>
-        <div class="metric-note" id="metric4Note">99th percentile latency</div>
-      </article>
-    </section>
-
-    <section class="main-grid">
-
-      <article class="panel">
-        <div class="panel-title">
-          <div>
-            <h3>Market movement</h3>
-            <p>Illustrative simulated prices — not live market data</p>
-          </div>
-          <span class="tag" id="chartStatus">Demo running</span>
-        </div>
-
-        <div class="chart-wrap">
-          <canvas id="priceChart" aria-label="Simulated market price chart"></canvas>
-        </div>
-
-        <div class="chart-legend">
-          <span><i class="legend-dot" style="background:var(--blue)"></i>XYZ/USD</span>
-          <span><i class="legend-dot" style="background:var(--cyan)"></i>ABC/USD</span>
-          <span>Last update: <span id="lastUpdate">—</span></span>
-        </div>
-      </article>
-
-      <article class="panel">
-        <div class="panel-title">
-          <div>
-            <h3>Market watch</h3>
-            <p>Sample tickers with simulated prices</p>
-          </div>
-          <span class="tag">DEMO</span>
-        </div>
-        <div class="market-list" id="marketList"></div>
-      </article>
-
-    </section>
-
-    <section class="panel" style="margin-top:15px">
-      <div class="panel-title">
-        <div>
-          <h3>Engine health</h3>
-          <p id="healthSubtitle">Runtime indicators for Week 1</p>
-        </div>
-        <span class="tag">LOCAL BENCHMARK</span>
-      </div>
-
-      <div class="health-grid">
-        <div class="health-item">
-          <span>Producer rate</span>
-          <strong id="producerRate">100,136 orders/sec</strong>
-          <div class="bar"><i id="producerBar" style="width:99%"></i></div>
-        </div>
-
-        <div class="health-item">
-          <span>End-to-end elapsed</span>
-          <strong id="elapsedTime">3.062 seconds</strong>
-          <div class="bar"><i id="elapsedBar" style="width:76%"></i></div>
-        </div>
-
-        <div class="health-item">
-          <span>Maximum latency</span>
-          <strong id="maxLatency">4.096 ms</strong>
-          <div class="bar"><i id="latencyBar" style="width:68%"></i></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel" style="margin-top:15px">
-      <div class="panel-title">
-        <div>
-          <h3>Recent order activity</h3>
-          <p>Example records for dashboard demonstration</p>
-        </div>
-        <span class="tag">SIMULATED</span>
-      </div>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>ORDER ID</th>
-              <th>SYMBOL</th>
-              <th>SIDE</th>
-              <th>QUANTITY</th>
-              <th>PRICE</th>
-              <th>STATUS</th>
-              <th>LATENCY</th>
-            </tr>
-          </thead>
-          <tbody id="ordersBody"></tbody>
-        </table>
-      </div>
-    </section>
-
-  </main>
-
-  <footer class="footer">
-    <span>ChronosMatch · Zero-Copy High-Frequency Trading Engine</span>
-    <span>Demo dashboard · Simulated market data</span>
-  </footer>
-
+<footer class="footer">
+  <span>ChronosMatch · Zero-Copy High-Frequency Trading Engine</span>
+  <span>Performance dashboard · Local demo · <span id="footerTime">—</span></span>
+</footer>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -672,8 +634,9 @@ th {
 "use strict";
 
 /*
-  Week 1 values use the local benchmark results.
-  Weeks 2–4 values are illustrative demo values, not measured results.
+  Week 1 values below represent one local benchmark run from the project.
+  Weeks 2–5 are illustrative demo values, not measured benchmark results.
+  Market prices and order activity are simulated.
 */
 const projectWeeks = {
   1: {
@@ -685,7 +648,8 @@ const projectWeeks = {
     maxUs: 4095.70,
     producer: 100136,
     elapsed: 3.062,
-    notes: "Local benchmark results"
+    notes: "Local benchmark results",
+    description: "Initial local benchmark"
   },
   2: {
     throughput: 98240,
@@ -696,7 +660,8 @@ const projectWeeks = {
     maxUs: 4280.60,
     producer: 100420,
     elapsed: 3.055,
-    notes: "Illustrative Week 2 demo values"
+    notes: "Illustrative Week 2 demo values",
+    description: "Illustrative demo period"
   },
   3: {
     throughput: 98810,
@@ -707,7 +672,8 @@ const projectWeeks = {
     maxUs: 4022.10,
     producer: 100680,
     elapsed: 3.036,
-    notes: "Illustrative Week 3 demo values"
+    notes: "Illustrative Week 3 demo values",
+    description: "Illustrative demo period"
   },
   4: {
     throughput: 99520,
@@ -718,12 +684,26 @@ const projectWeeks = {
     maxUs: 3890.20,
     producer: 101020,
     elapsed: 3.015,
-    notes: "Illustrative Week 4 demo values"
+    notes: "Illustrative Week 4 demo values",
+    description: "Illustrative demo period"
+  },
+  5: {
+    throughput: 100100,
+    orders: 300000,
+    meanUs: 1165.20,
+    p99Us: 2380.50,
+    minUs: 350.20,
+    maxUs: 3720.40,
+    producer: 101250,
+    elapsed: 2.998,
+    notes: "Illustrative Week 5 demo values",
+    description: "Illustrative demo period"
   }
 };
 
 let selectedWeek = 1;
 let demoRunning = true;
+let toastTimer = null;
 
 const chartSeries = {
   xyz: [102.1,102.4,102.25,102.6,102.5,102.8,102.65,102.95,102.82,103.05,102.92,103.12,103.0,103.2,103.08,103.28],
@@ -731,11 +711,11 @@ const chartSeries = {
 };
 
 const market = [
-  {symbol:"XYZ/USD", name:"Chronos Index", price:103.28, change:0.42},
-  {symbol:"ABC/USD", name:"Alpha Basket", price:58.90, change:0.31},
-  {symbol:"QRS/USD", name:"Quantum Systems", price:214.65, change:-0.18},
-  {symbol:"LMN/USD", name:"Lumen Network", price:76.42, change:0.76},
-  {symbol:"DEF/USD", name:"Delta Exchange", price:141.08, change:-0.24}
+  {symbol:"XYZ/USD",name:"Chronos Index",price:103.28,change:0.42},
+  {symbol:"ABC/USD",name:"Alpha Basket",price:58.90,change:0.31},
+  {symbol:"QRS/USD",name:"Quantum Systems",price:214.65,change:-0.18},
+  {symbol:"LMN/USD",name:"Lumen Network",price:76.42,change:0.76},
+  {symbol:"DEF/USD",name:"Delta Exchange",price:141.08,change:-0.24}
 ];
 
 function byId(id) {
@@ -753,18 +733,14 @@ function showToast(message) {
   const toast = byId("toast");
   toast.textContent = message;
   toast.classList.add("show");
-
-  clearTimeout(showToast.timer);
-  showToast.timer = setTimeout(() => {
-    toast.classList.remove("show");
-  }, 2200);
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove("show"), 2400);
 }
 
-function setMetric(id, value) {
-  byId(id).innerHTML = value;
+function setText(id, value) {
+  byId(id).textContent = value;
 }
 
-/* This function updates the entire dashboard for the selected week. */
 function selectProjectWeek(week) {
   const weekNumber = Number(week);
   const data = projectWeeks[weekNumber];
@@ -777,107 +753,107 @@ function selectProjectWeek(week) {
   selectedWeek = weekNumber;
 
   document.querySelectorAll(".week-button").forEach(button => {
-    const active = Number(button.dataset.week) === selectedWeek;
-
-    button.classList.toggle("active", active);
-    button.setAttribute("aria-pressed", String(active));
+    const isActive = Number(button.dataset.week) === selectedWeek;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
   });
 
-  byId("weekTag").textContent = "Viewing Week " + selectedWeek;
+  setText("weekTag", "Week " + selectedWeek);
+  setText("weekDescription", data.description);
+  setText("profileTag", "WEEK " + selectedWeek);
 
-  setMetric(
-    "metric1Value",
-    formatNumber(data.throughput, 0) + " <small>orders/sec</small>"
-  );
+  byId("metricThroughput").innerHTML =
+    formatNumber(data.throughput, 0) + " <small>orders/sec</small>";
+  setText("metricOrders", formatNumber(data.orders, 0));
+  byId("metricMean").innerHTML =
+    (data.meanUs / 1000).toFixed(3) + " <small>ms</small>";
+  byId("metricP99").innerHTML =
+    (data.p99Us / 1000).toFixed(3) + " <small>ms</small>";
 
-  setMetric("metric2Value", formatNumber(data.orders, 0));
+  setText("throughputNote", data.notes);
+  setText("meanNote", "Average " + formatNumber(data.meanUs) + " microseconds");
+  setText("p99Note", "99th percentile " + formatNumber(data.p99Us) + " microseconds");
 
-  setMetric(
-    "metric3Value",
-    (data.meanUs / 1000).toFixed(3) + " <small>ms</small>"
-  );
+  setText("producerRate", formatNumber(data.producer, 0) + " orders/sec");
+  setText("elapsedTime", formatNumber(data.elapsed, 3) + " seconds");
+  setText("maxLatency", (data.maxUs / 1000).toFixed(3) + " ms");
+  setText("healthSubtitle", "Runtime indicators for Week " + selectedWeek);
 
-  setMetric(
-    "metric4Value",
-    (data.p99Us / 1000).toFixed(3) + " <small>ms</small>"
-  );
+  const throughputPct = Math.min(100, data.throughput / 101000 * 100);
+  const producerPct = Math.min(100, data.producer / 102000 * 100);
+  const latencyPct = Math.min(100, data.maxUs / 6000 * 100);
 
-  byId("metric1Note").textContent = data.notes;
-  byId("metric2Note").textContent = "Completed benchmark orders";
-  byId("metric3Note").textContent =
-    "Average " + formatNumber(data.meanUs) + " microseconds";
-  byId("metric4Note").textContent =
-    "99th percentile " + formatNumber(data.p99Us) + " microseconds";
+  byId("throughputProgress").style.width = throughputPct + "%";
+  byId("producerProgress").style.width = producerPct + "%";
+  byId("latencyProgress").style.width = latencyPct + "%";
 
-  byId("producerRate").textContent =
-    formatNumber(data.producer, 0) + " orders/sec";
+  setText("throughputPercent", Math.round(throughputPct) + "%");
+  setText("producerPercent", Math.round(producerPct) + "%");
+  setText("latencyPercent", Math.round(latencyPct) + "%");
 
-  byId("elapsedTime").textContent =
-    formatNumber(data.elapsed, 3) + " seconds";
-
-  byId("maxLatency").textContent =
-    (data.maxUs / 1000).toFixed(3) + " ms";
-
-  byId("producerBar").style.width =
-    Math.min(100, data.producer / 101000 * 100) + "%";
-
-  byId("elapsedBar").style.width =
-    Math.min(100, data.elapsed / 4 * 100) + "%";
-
-  byId("latencyBar").style.width =
-    Math.min(100, data.maxUs / 6000 * 100) + "%";
-
-  byId("healthSubtitle").textContent =
-    "Runtime indicators for Week " + selectedWeek;
+  setText("insightThroughput",
+    formatNumber(data.throughput, 0) + " orders/sec is displayed for Week " + selectedWeek + ".");
+  setText("insightLatency",
+    "Mean " + formatNumber(data.meanUs) + " µs; P99 " + formatNumber(data.p99Us) + " µs.");
 
   renderOrders(data);
   drawChart();
-
   showToast("Week " + selectedWeek + " selected");
 }
 
-/*
-  IMPORTANT:
-  Attach one direct click handler to EACH week button.
-  This avoids depending on a parent click listener.
-*/
+/* Direct click handlers ensure every week button is interactive. */
 document.querySelectorAll(".week-button").forEach(button => {
-  button.addEventListener("click", function(event) {
-    event.preventDefault();
-    event.stopPropagation();
-
-    const week = Number(this.dataset.week);
-    selectProjectWeek(week);
+  button.addEventListener("click", function() {
+    selectProjectWeek(this.dataset.week);
   });
 });
 
 function renderOrders(data) {
   const symbols = ["XYZ/USD","ABC/USD","QRS/USD","LMN/USD","DEF/USD"];
-
-  byId("ordersBody").innerHTML = Array.from({length: 6}, (_, index) => {
-    const orderId =
-      "CM-" + String(4201 + index + (selectedWeek - 1) * 100).padStart(6, "0");
+  const rows = Array.from({length: 8}, (_, index) => {
+    const orderId = "CM-" + String(
+      4201 + index + (selectedWeek - 1) * 100
+    ).padStart(6, "0");
 
     const isBuy = index % 2 === 0;
     const item = market[index % market.length];
-    const price = item.price + (index - 2) * 0.13;
-    const latency = (data.minUs + index * 37.4).toFixed(2);
+    const price = item.price + (index - 3) * 0.13;
+    const latency = data.minUs + index * 37.4;
 
-    return `
-      <tr>
-        <td>${orderId}</td>
-        <td>${symbols[index % symbols.length]}</td>
-        <td class="${isBuy ? "positive" : "negative"}">
-          ${isBuy ? "BUY" : "SELL"}
-        </td>
-        <td>${(100 * (index + 1)).toLocaleString("en-US")}</td>
-        <td>$${formatNumber(price)}</td>
-        <td><span class="status">FILLED</span></td>
-        <td>${latency} µs</td>
-      </tr>
-    `;
-  }).join("");
+    return {
+      orderId,
+      symbol: symbols[index % symbols.length],
+      side: isBuy ? "BUY" : "SELL",
+      quantity: 100 * (index + 1),
+      price,
+      latency
+    };
+  });
+
+  byId("ordersBody").innerHTML = rows.map(order => `
+    <tr>
+      <td>${order.orderId}</td>
+      <td>${order.symbol}</td>
+      <td class="${order.side === "BUY" ? "positive" : "negative"}">${order.side}</td>
+      <td>${order.quantity.toLocaleString("en-US")}</td>
+      <td>$${formatNumber(order.price)}</td>
+      <td><span class="status">FILLED</span></td>
+      <td>${formatNumber(order.latency)} µs</td>
+    </tr>
+  `).join("");
+
+  filterOrders();
 }
+
+function filterOrders() {
+  const query = byId("orderSearch").value.trim().toLowerCase();
+
+  document.querySelectorAll("#ordersBody tr").forEach(row => {
+    row.hidden = !row.textContent.toLowerCase().includes(query);
+  });
+}
+
+byId("orderSearch").addEventListener("input", filterOrders);
 
 function drawChart() {
   const canvas = byId("priceChart");
@@ -885,75 +861,74 @@ function drawChart() {
 
   if (!rect.width || !rect.height) return;
 
-  const ratio = window.devicePixelRatio || 1;
-
-  canvas.width = Math.round(rect.width * ratio);
-  canvas.height = Math.round(rect.height * ratio);
+  const pixelRatio = window.devicePixelRatio || 1;
+  canvas.width = Math.round(rect.width * pixelRatio);
+  canvas.height = Math.round(rect.height * pixelRatio);
 
   const ctx = canvas.getContext("2d");
-  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
 
   const width = rect.width;
   const height = rect.height;
-  const pad = {left: 42, right: 12, top: 14, bottom: 25};
-  const plotWidth = width - pad.left - pad.right;
-  const plotHeight = height - pad.top - pad.bottom;
+  const padding = {left: 44, right: 12, top: 16, bottom: 28};
+  const plotWidth = width - padding.left - padding.right;
+  const plotHeight = height - padding.top - padding.bottom;
 
   ctx.clearRect(0, 0, width, height);
 
   const values = chartSeries.xyz.concat(chartSeries.abc);
-  const min = Math.min(...values) - 0.25;
-  const max = Math.max(...values) + 0.25;
+  const lowValue = Math.min(...values) - 0.25;
+  const highValue = Math.max(...values) + 0.25;
 
   ctx.font = "10px Arial";
-  ctx.strokeStyle = "#243149";
-  ctx.fillStyle = "#8392aa";
   ctx.lineWidth = 1;
+  ctx.strokeStyle = "#26364e";
+  ctx.fillStyle = "#91a0b9";
 
-  for (let i = 0; i < 5; i++) {
-    const y = pad.top + plotHeight * i / 4;
+  for (let index = 0; index < 5; index++) {
+    const y = padding.top + plotHeight * index / 4;
 
     ctx.beginPath();
-    ctx.moveTo(pad.left, y);
-    ctx.lineTo(width - pad.right, y);
+    ctx.moveTo(padding.left, y);
+    ctx.lineTo(width - padding.right, y);
     ctx.stroke();
 
-    ctx.fillText(
-      (max - (max - min) * i / 4).toFixed(1),
-      3,
-      y + 3
-    );
+    const label = (highValue - (highValue - lowValue) * index / 4).toFixed(1);
+    ctx.fillText(label, 3, y + 3);
   }
 
-  function drawLine(series, color) {
+  function drawSeries(series, color) {
     ctx.beginPath();
 
     series.forEach((value, index) => {
-      const x = pad.left + plotWidth * index / (series.length - 1);
-      const y = pad.top + plotHeight * (max - value) / (max - min);
+      const x = padding.left + plotWidth * index / (series.length - 1);
+      const y = padding.top +
+        plotHeight * (highValue - value) / (highValue - lowValue);
 
-      if (index === 0) {
-        ctx.moveTo(x, y);
-      } else {
-        ctx.lineTo(x, y);
-      }
+      if (index === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
     });
 
     ctx.strokeStyle = color;
-    ctx.lineWidth = 2.3;
+    ctx.lineWidth = 2.2;
     ctx.lineJoin = "round";
+    ctx.lineCap = "round";
     ctx.stroke();
   }
 
-  drawLine(chartSeries.xyz, "#64a7ff");
-  drawLine(chartSeries.abc, "#43d9d0");
+  drawSeries(chartSeries.xyz, "#64a7ff");
+  drawSeries(chartSeries.abc, "#43d9d0");
 
-  ["09:30","10:00","10:30","11:00","11:30"].forEach((label, index) => {
-    ctx.fillStyle = "#8392aa";
-    ctx.fillText(label, pad.left + plotWidth * index / 4 - 13, height - 5);
+  const labels = ["09:30","10:00","10:30","11:00","11:30"];
+  labels.forEach((label, index) => {
+    const x = padding.left + plotWidth * index / 4;
+    ctx.fillStyle = "#91a0b9";
+    ctx.textAlign = index === 0 ? "left" : index === 4 ? "right" : "center";
+    ctx.fillText(label, x, height - 7);
   });
 
-  byId("lastUpdate").textContent = new Date().toLocaleTimeString();
+  ctx.textAlign = "left";
+  setText("lastUpdate", new Date().toLocaleTimeString());
 }
 
 function renderMarket() {
@@ -976,40 +951,30 @@ function updateDemo() {
 
   ["xyz", "abc"].forEach(key => {
     const series = chartSeries[key];
-    const lastValue = series[series.length - 1];
+    const previous = series[series.length - 1];
+    const next = Number((previous + (Math.random() - 0.49) * 0.15).toFixed(3));
 
-    series.push(
-      Number((lastValue + (Math.random() - 0.48) * 0.15).toFixed(3))
-    );
-
-    if (series.length > 30) {
-      series.shift();
-    }
+    series.push(next);
+    if (series.length > 30) series.shift();
   });
 
   market.forEach(item => {
     const movement = (Math.random() - 0.49) * 0.18;
-
     item.price = Number((item.price + movement).toFixed(2));
     item.change = Number((item.change + movement * 0.08).toFixed(2));
   });
 
   renderMarket();
-  drawChart();
   renderOrders(projectWeeks[selectedWeek]);
+  drawChart();
 }
 
 byId("pauseButton").addEventListener("click", function() {
   demoRunning = !demoRunning;
-
   this.textContent = demoRunning ? "Pause demo" : "Resume demo";
 
-  byId("chartStatus").textContent =
-    demoRunning ? "Demo running" : "Demo paused";
-
-  showToast(
-    demoRunning ? "Demo updates resumed" : "Demo updates paused"
-  );
+  setText("chartStatus", demoRunning ? "Demo running" : "Demo paused");
+  showToast(demoRunning ? "Demo updates resumed" : "Demo updates paused");
 });
 
 byId("exportButton").addEventListener("click", function() {
@@ -1018,48 +983,46 @@ byId("exportButton").addEventListener("click", function() {
   const rows = [
     ["Metric", "Value"],
     ["Week", selectedWeek],
+    ["Data status", data.notes],
     ["Consumer Throughput (orders/sec)", data.throughput],
     ["Orders Processed", data.orders],
-    ["Mean Latency (us)", data.meanUs],
-    ["P99 Latency (us)", data.p99Us],
-    ["Minimum Latency (us)", data.minUs],
-    ["Maximum Latency (us)", data.maxUs],
+    ["Mean Latency (microseconds)", data.meanUs],
+    ["P99 Latency (microseconds)", data.p99Us],
+    ["Minimum Latency (microseconds)", data.minUs],
+    ["Maximum Latency (microseconds)", data.maxUs],
     ["Producer Rate (orders/sec)", data.producer],
     ["Elapsed (seconds)", data.elapsed]
   ];
 
-  const csv = rows.map(row =>
-    row.map(value =>
-      '"' + String(value).replace(/"/g, '""') + '"'
-    ).join(",")
-  ).join("\r\n");
+  const csv = rows.map(row => row.map(value =>
+    '"' + String(value).replace(/"/g, '""') + '"'
+  ).join(",")).join("\r\n");
 
-  const blob = new Blob([csv], {
-    type: "text/csv;charset=utf-8;"
-  });
-
-  const url = URL.createObjectURL(blob);
+  const blob = new Blob([csv], {type: "text/csv;charset=utf-8;"});
+  const objectUrl = URL.createObjectURL(blob);
   const link = document.createElement("a");
 
-  link.href = url;
+  link.href = objectUrl;
   link.download = "chronosmatch-week-" + selectedWeek + "-metrics.csv";
-
   document.body.appendChild(link);
   link.click();
   link.remove();
 
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-
+  setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
   showToast("Week " + selectedWeek + " CSV exported");
 });
 
 window.addEventListener("resize", drawChart);
 
-/* Initialise the dashboard with Week 1. */
+function updateFooterTime() {
+  setText("footerTime", new Date().toLocaleString());
+}
+
 renderMarket();
 selectProjectWeek(1);
-
+updateFooterTime();
 setInterval(updateDemo, 2200);
+setInterval(updateFooterTime, 30000);
 </script>
 </body>
 </html>
