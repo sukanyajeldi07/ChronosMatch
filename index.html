@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -255,7 +254,6 @@ td { font-size: 12px; }
         <button class="week-btn" data-week="2">Week 2</button>
         <button class="week-btn" data-week="3">Week 3</button>
         <button class="week-btn" data-week="4">Week 4</button>
-        <button class="week-btn" data-week="5">Week 5</button>
       </div>
 
       <div class="health-row">
@@ -276,8 +274,9 @@ td { font-size: 12px; }
       </div>
 
       <div class="chart-note" id="weekDescription">
-        Week 1 displays the benchmark metrics recorded for this project. Other weeks are illustrative placeholders until you enter measured results.
+        Week 1 displays the benchmark metrics recorded for this project. Other weeks show the project plan until measured results are entered.
       </div>
+      <div class="chart-note" id="weekTask" style="margin-top:8px"></div>
     </article>
   </section>
 
@@ -351,28 +350,27 @@ td { font-size: 12px; }
 const projectWeeks = {
   1: {
     throughput: 97512, orders: 300000, mean: 1.358, p99: 2.786,
-    description: "Week 1: recorded benchmark metrics. Other weeks use illustrative placeholders until you enter measured results.",
-    measured: true
+    description: "Week 1: recorded benchmark run — 300,000 orders, approximately 97,512 orders/second, mean latency 1.358 ms, and P99 latency 2.786 ms.",
+    measured: true,
+    task: "Memory-mapped ring buffer using mmap and struct; asyncio market firehose for mock orders."
   },
   2: {
-    throughput: 98500, orders: 300000, mean: 1.31, p99: 2.70,
-    description: "Week 2 values are illustrative placeholders, not verified benchmark results.",
-    measured: false
+    throughput: null, orders: null, mean: null, p99: null,
+    description: "Week 2 benchmark results have not been entered. Do not treat the plan as measured results.",
+    measured: false,
+    task: "Planned work: Cython Limit Order Book with Price-Time Priority and a latency dashboard."
   },
   3: {
-    throughput: 100000, orders: 350000, mean: 1.25, p99: 2.60,
-    description: "Week 3 values are illustrative placeholders, not verified benchmark results.",
-    measured: false
+    throughput: null, orders: null, mean: null, p99: null,
+    description: "Week 3 benchmark results have not been entered. Add values only after running and recording a benchmark.",
+    measured: false,
+    task: "Planned work: optimize Cython and record entry/exit timing with time.perf_counter_ns()."
   },
   4: {
-    throughput: 102000, orders: 400000, mean: 1.20, p99: 2.45,
-    description: "Week 4 values are illustrative placeholders, not verified benchmark results.",
-    measured: false
-  },
-  5: {
-    throughput: 105000, orders: 450000, mean: 1.15, p99: 2.30,
-    description: "Week 5 values are illustrative placeholders, not verified benchmark results.",
-    measured: false
+    throughput: null, orders: null, mean: null, p99: null,
+    description: "Week 4 benchmark results have not been entered. Add values only after running and recording a benchmark.",
+    measured: false,
+    task: "Planned work: persist matched trades to SQLite/ClickHouse and improve resiliency."
   }
 };
 
@@ -440,8 +438,6 @@ function drawChart() {
 
   if (plotW <= 0 || plotH <= 0) return;
 
-  // Convert each instrument's prices to percentage change
-  // relative to its own first visible price.
   const series = instruments.map(item => {
     const values = item.history;
     const base = values.length ? values[0] : item.price;
@@ -459,7 +455,6 @@ function drawChart() {
   let minY = Math.min(...allValues);
   let maxY = Math.max(...allValues);
 
-  // Keep the chart visible even when prices barely change.
   if (maxY - minY < 0.1) {
     minY -= 0.5;
     maxY += 0.5;
@@ -470,14 +465,12 @@ function drawChart() {
   maxY += padding;
 
   const rangeY = maxY - minY;
-  const xFor = i => left + (i / 39) * plotW;
   const yFor = value => top + ((maxY - value) / rangeY) * plotH;
 
   ctx.font = "12px Segoe UI, Arial, sans-serif";
   ctx.textAlign = "right";
   ctx.textBaseline = "middle";
 
-  // Grid and percentage labels.
   for (let i = 0; i <= 4; i++) {
     const y = top + (plotH * i / 4);
     const value = maxY - (rangeY * i / 4);
@@ -493,22 +486,21 @@ function drawChart() {
     ctx.fillText(value.toFixed(2) + "%", left - 8, y);
   }
 
-  // Time labels.
   const labels = ["09:30", "10:00", "10:30", "11:00", "11:30"];
   ctx.textAlign = "center";
   ctx.textBaseline = "top";
+
   labels.forEach((label, i) => {
     ctx.fillStyle = "#91a4c2";
-    ctx.fillText(label, left + plotW * i / 4, height - bottom + 12);
+    ctx.fillText(label, left + (width - left - right) * i / 4, height - bottom + 12);
   });
 
-  // Draw each percentage-change line.
   series.forEach(item => {
     const values = item.values;
-
     ctx.beginPath();
+
     values.forEach((value, i) => {
-      const x = left + (i / (values.length - 1)) * plotW;
+      const x = left + (i / (values.length - 1)) * (width - left - right);
       const y = yFor(value);
 
       if (i === 0) ctx.moveTo(x, y);
@@ -521,9 +513,8 @@ function drawChart() {
     ctx.lineCap = "round";
     ctx.stroke();
 
-    // Mark the latest value.
     const lastIndex = values.length - 1;
-    const lastX = left + plotW;
+    const lastX = width - right;
     const lastY = yFor(values[lastIndex]);
 
     ctx.beginPath();
@@ -533,106 +524,16 @@ function drawChart() {
   });
 }
 
-
-
-
-  /*
-    KEY FIX:
-    Calculate the vertical axis from the actual history.
-    Add a margin around the data so price movement is visible.
-    This avoids a huge fixed axis that makes both lines look flat.
-  */
-  const padding = Math.max(dataRange * 0.22, 0.12);
-  const minY = actualMin - padding;
-  const maxY = actualMax + padding;
-  const rangeY = maxY - minY;
-
-  const yFor = value => top + ((maxY - value) / rangeY) * plotH;
-  const xFor = index => left + (index / 39) * plotW;
-
-  ctx.font = "12px Segoe UI, Arial, sans-serif";
-  ctx.textAlign = "right";
-  ctx.textBaseline = "middle";
-
-  // Horizontal grid and readable labels
-  for (let i = 0; i <= 4; i++) {
-    const y = top + (plotH * i / 4);
-    const label = maxY - (rangeY * i / 4);
-
-    ctx.beginPath();
-    ctx.strokeStyle = "#24344d";
-    ctx.lineWidth = 1;
-    ctx.moveTo(left, Math.round(y) + 0.5);
-    ctx.lineTo(width - right, Math.round(y) + 0.5);
-    ctx.stroke();
-
-    ctx.fillStyle = "#91a4c2";
-    ctx.fillText(label.toFixed(2), left - 9, y);
-  }
-
-  // Time labels
-  ctx.textAlign = "center";
-  ctx.textBaseline = "top";
-  const timeLabels = ["09:30", "10:00", "10:30", "11:00", "11:30"];
-  timeLabels.forEach((label, index) => {
-    const x = left + plotW * index / 4;
-    ctx.fillStyle = "#91a4c2";
-    ctx.fillText(label, x, height - bottom + 12);
-  });
-
-  // Draw both price histories, using the same time axis and auto-scaled values
-  instruments.forEach(instrument => {
-    const points = instrument.history;
-    if (points.length < 2) return;
-
-    // Soft area under each series
-    ctx.beginPath();
-    points.forEach((value, index) => {
-      const x = xFor(index);
-      const y = yFor(value);
-      if (index === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    });
-    ctx.lineTo(xFor(points.length - 1), top + plotH);
-    ctx.lineTo(xFor(0), top + plotH);
-    ctx.closePath();
-    ctx.globalAlpha = 0.08;
-    ctx.fillStyle = instrument.color;
-    ctx.fill();
-    ctx.globalAlpha = 1;
-
-    // Smooth, visible price line
-    ctx.beginPath();
-    points.forEach((value, index) => {
-      const x = xFor(index);
-      const y = yFor(value);
-      if (index === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    });
-    ctx.strokeStyle = instrument.color;
-    ctx.lineWidth = 2.6;
-    ctx.lineJoin = "round";
-    ctx.lineCap = "round";
-    ctx.stroke();
-
-    // Highlight latest value
-    const lastX = xFor(points.length - 1);
-    const lastY = yFor(points[points.length - 1]);
-    ctx.beginPath();
-    ctx.arc(lastX, lastY, 4, 0, Math.PI * 2);
-    ctx.fillStyle = instrument.color;
-    ctx.fill();
-  });
-}
-
 /* ---------- Market watch ---------- */
 function renderMarket() {
   const container = document.getElementById("marketList");
+
   container.innerHTML = instruments.map(instrument => {
     const first = instrument.history[0] || instrument.price;
     const change = instrument.price - first;
     const percent = first ? (change / first) * 100 : 0;
     const positive = change >= 0;
+
     return `
       <div class="market-item">
         <div>
@@ -655,6 +556,7 @@ function renderMarket() {
 function createOrder() {
   const instrument = instruments[Math.floor(Math.random() * instruments.length)];
   const buy = Math.random() >= 0.45;
+
   return {
     id: "ORD-" + orderSequence++,
     symbol: instrument.symbol,
@@ -670,6 +572,7 @@ let demoOrders = Array.from({ length: 7 }, createOrder);
 function renderOrders() {
   const query = document.getElementById("orderSearch").value.trim().toLowerCase();
   const body = document.getElementById("ordersBody");
+
   const filtered = demoOrders.filter(order =>
     [order.id, order.symbol, order.side, order.status].join(" ").toLowerCase().includes(query)
   );
@@ -695,39 +598,49 @@ function selectProjectWeek(week) {
   selectedWeek = Number(week);
   const data = projectWeeks[selectedWeek];
 
+  if (!data) return;
+
   document.querySelectorAll(".week-btn").forEach(button => {
     const active = Number(button.dataset.week) === selectedWeek;
     button.classList.toggle("active", active);
     button.setAttribute("aria-pressed", String(active));
   });
 
-  document.getElementById("weekLabel").textContent = "WEEK " + selectedWeek;
-  document.getElementById("weekThroughput").textContent = formatNumber(data.throughput) + "/s";
-  document.getElementById("weekMean").textContent = data.mean.toFixed(3) + " ms";
-  document.getElementById("weekP99").textContent = data.p99.toFixed(3) + " ms";
-  document.getElementById("weekOrders").textContent = formatNumber(data.orders);
-  document.getElementById("weekDescription").textContent = data.description;
+  const valueOrPending = (value, suffix = "") =>
+    value === null ? "Not measured" : formatNumber(value) + suffix;
 
-  document.getElementById("throughput").textContent = formatNumber(data.throughput);
-  document.getElementById("orders").textContent = formatNumber(data.orders);
-  document.getElementById("meanLatency").textContent = data.mean.toFixed(3);
-  document.getElementById("p99Latency").textContent = data.p99.toFixed(3);
+  document.getElementById("weekLabel").textContent = "WEEK " + selectedWeek;
+  document.getElementById("weekThroughput").textContent = valueOrPending(data.throughput, "/s");
+  document.getElementById("weekMean").textContent =
+    data.mean === null ? "Not measured" : data.mean.toFixed(3) + " ms";
+  document.getElementById("weekP99").textContent =
+    data.p99 === null ? "Not measured" : data.p99.toFixed(3) + " ms";
+  document.getElementById("weekOrders").textContent = valueOrPending(data.orders);
+  document.getElementById("weekDescription").textContent = data.description;
+  document.getElementById("weekTask").textContent = data.task;
+
+  document.getElementById("throughput").textContent = valueOrPending(data.throughput);
+  document.getElementById("orders").textContent = valueOrPending(data.orders);
+  document.getElementById("meanLatency").textContent =
+    data.mean === null ? "—" : data.mean.toFixed(3);
+  document.getElementById("p99Latency").textContent =
+    data.p99 === null ? "—" : data.p99.toFixed(3);
 
   document.getElementById("throughputBar").style.width =
-    Math.min(100, data.throughput / 1200) + "%";
+    data.throughput === null ? "0%" : Math.min(100, data.throughput / 1200) + "%";
   document.getElementById("meanBar").style.width =
-    Math.min(100, data.mean / 2 * 100) + "%";
+    data.mean === null ? "0%" : Math.min(100, data.mean / 2 * 100) + "%";
   document.getElementById("p99Bar").style.width =
-    Math.min(100, data.p99 / 4 * 100) + "%";
+    data.p99 === null ? "0%" : Math.min(100, data.p99 / 4 * 100) + "%";
   document.getElementById("ordersBar").style.width =
-    Math.min(100, data.orders / 4500) + "%";
+    data.orders === null ? "0%" : Math.min(100, data.orders / 4500) + "%";
 
   document.getElementById("chartState").textContent =
-    data.measured ? "WEEK 1 BENCHMARK" : "ILLUSTRATIVE VALUES";
+    data.measured ? "WEEK 1 BENCHMARK" : "PLAN · NOT MEASURED";
 
   showToast(data.measured
-    ? "Showing Week 1 benchmark metrics."
-    : "Showing illustrative Week " + selectedWeek + " values.");
+    ? "Showing recorded Week 1 benchmark."
+    : "Showing Week " + selectedWeek + " plan; benchmark not measured.");
 }
 
 /* ---------- Live-looking demo animation ---------- */
@@ -738,10 +651,12 @@ function updateDemo() {
 
   instruments.forEach(instrument => {
     const amplitude = instrument.symbol === "XYZ/USD" ? 0.26 : 0.16;
+
     instrument.price = Math.max(
       0.01,
       instrument.price + randomBetween(-amplitude, amplitude)
     );
+
     instrument.history.push(instrument.price);
     if (instrument.history.length > 40) instrument.history.shift();
   });
@@ -754,11 +669,10 @@ function updateDemo() {
 
   document.getElementById("historyCount").textContent =
     instruments[0].history.length + " points";
+
   document.getElementById("historyBar").style.width =
     (instruments[0].history.length / 40 * 100) + "%";
 
-  // Update the sample order table only periodically, not on every tick.
-  // This prevents the search box from being reset while you type.
   if (tick % 4 === 0) {
     demoOrders.unshift(createOrder());
     if (demoOrders.length > 15) demoOrders.pop();
@@ -773,17 +687,25 @@ document.querySelectorAll(".week-btn").forEach(button => {
 
 document.getElementById("pauseBtn").addEventListener("click", () => {
   running = !running;
+
   document.getElementById("pauseBtn").textContent =
     running ? "Pause demo" : "Resume demo";
+
   document.getElementById("runStatus").textContent =
     running ? "● Demo running" : "Ⅱ Demo paused";
+
   document.getElementById("runStatus").style.color =
     running ? "var(--green)" : "var(--orange)";
+
   document.getElementById("loopStatus").textContent =
     running ? "Running" : "Paused";
-  document.getElementById("loopBar").style.width = running ? "100%" : "35%";
+
+  document.getElementById("loopBar").style.width =
+    running ? "100%" : "35%";
+
   document.getElementById("engineStatus").textContent =
     running ? "HEALTHY" : "PAUSED";
+
   document.getElementById("engineStatus").className =
     running ? "pill good" : "pill warning";
 
@@ -794,10 +716,16 @@ document.getElementById("orderSearch").addEventListener("input", renderOrders);
 
 document.getElementById("exportBtn").addEventListener("click", () => {
   const header = ["Order ID", "Instrument", "Side", "Quantity", "Price", "Status"];
+
   const rows = demoOrders.map(order => [
-    order.id, order.symbol, order.side, order.quantity,
-    order.price.toFixed(2), "Demo only"
+    order.id,
+    order.symbol,
+    order.side,
+    order.quantity,
+    order.price.toFixed(2),
+    "Demo only"
   ]);
+
   const csv = [header, ...rows]
     .map(row => row.map(value => '"' + String(value).replace(/"/g, '""') + '"').join(","))
     .join("\r\n");
@@ -805,12 +733,14 @@ document.getElementById("exportBtn").addEventListener("click", () => {
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
+
   link.href = url;
   link.download = "chronosmatch-demo-orders.csv";
   document.body.appendChild(link);
   link.click();
   link.remove();
   URL.revokeObjectURL(url);
+
   showToast("Demo order CSV exported.");
 });
 
@@ -818,7 +748,9 @@ function showToast(message) {
   const toast = document.getElementById("toast");
   toast.textContent = message;
   toast.style.display = "block";
+
   clearTimeout(toastTimer);
+
   toastTimer = setTimeout(() => {
     toast.style.display = "none";
   }, 2600);
