@@ -220,7 +220,7 @@ td { font-size: 12px; }
       <div class="panel-head">
         <div>
           <h2>Market movement</h2>
-          <div class="muted">Illustrative simulated prices — not live market data</div>
+          <div class="muted">Percentage movement from starting price · Simulated demo data</div>
         </div>
         <span class="pill" id="chartState">DEMO DATA</span>
       </div>
@@ -417,6 +417,7 @@ makeInitialHistory(instruments[0], 103.25, 0.30);
 makeInitialHistory(instruments[1], 58.10, 0.19);
 
 /* ---------- Corrected responsive, auto-scaled chart ---------- */
+
 function drawChart() {
   const rect = canvas.getBoundingClientRect();
   if (!rect.width || !rect.height) return;
@@ -430,19 +431,110 @@ function drawChart() {
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, width, height);
 
-  const left = width < 420 ? 43 : 52;
-  const right = 12;
-  const top = 16;
-  const bottom = 36;
-  const plotW = Math.max(10, width - left - right);
-  const plotH = Math.max(10, height - top - bottom);
+  const left = 62;
+  const right = 15;
+  const top = 20;
+  const bottom = 38;
+  const plotW = width - left - right;
+  const plotH = height - top - bottom;
 
-  const allValues = instruments.flatMap(item => item.history);
+  if (plotW <= 0 || plotH <= 0) return;
+
+  // Convert each instrument's prices to percentage change
+  // relative to its own first visible price.
+  const series = instruments.map(item => {
+    const values = item.history;
+    const base = values.length ? values[0] : item.price;
+
+    return {
+      symbol: item.symbol,
+      color: item.color,
+      values: values.map(value => ((value / base) - 1) * 100)
+    };
+  }).filter(item => item.values.length > 1);
+
+  const allValues = series.flatMap(item => item.values);
   if (!allValues.length) return;
 
-  const actualMin = Math.min(...allValues);
-  const actualMax = Math.max(...allValues);
-  const dataRange = Math.max(actualMax - actualMin, 0.01);
+  let minY = Math.min(...allValues);
+  let maxY = Math.max(...allValues);
+
+  // Keep the chart visible even when prices barely change.
+  if (maxY - minY < 0.1) {
+    minY -= 0.5;
+    maxY += 0.5;
+  }
+
+  const padding = Math.max((maxY - minY) * 0.18, 0.08);
+  minY -= padding;
+  maxY += padding;
+
+  const rangeY = maxY - minY;
+  const xFor = i => left + (i / 39) * plotW;
+  const yFor = value => top + ((maxY - value) / rangeY) * plotH;
+
+  ctx.font = "12px Segoe UI, Arial, sans-serif";
+  ctx.textAlign = "right";
+  ctx.textBaseline = "middle";
+
+  // Grid and percentage labels.
+  for (let i = 0; i <= 4; i++) {
+    const y = top + (plotH * i / 4);
+    const value = maxY - (rangeY * i / 4);
+
+    ctx.beginPath();
+    ctx.strokeStyle = "#24344d";
+    ctx.lineWidth = 1;
+    ctx.moveTo(left, y);
+    ctx.lineTo(width - right, y);
+    ctx.stroke();
+
+    ctx.fillStyle = "#91a4c2";
+    ctx.fillText(value.toFixed(2) + "%", left - 8, y);
+  }
+
+  // Time labels.
+  const labels = ["09:30", "10:00", "10:30", "11:00", "11:30"];
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  labels.forEach((label, i) => {
+    ctx.fillStyle = "#91a4c2";
+    ctx.fillText(label, left + plotW * i / 4, height - bottom + 12);
+  });
+
+  // Draw each percentage-change line.
+  series.forEach(item => {
+    const values = item.values;
+
+    ctx.beginPath();
+    values.forEach((value, i) => {
+      const x = left + (i / (values.length - 1)) * plotW;
+      const y = yFor(value);
+
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+
+    ctx.strokeStyle = item.color;
+    ctx.lineWidth = 2.8;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    ctx.stroke();
+
+    // Mark the latest value.
+    const lastIndex = values.length - 1;
+    const lastX = left + plotW;
+    const lastY = yFor(values[lastIndex]);
+
+    ctx.beginPath();
+    ctx.arc(lastX, lastY, 4, 0, Math.PI * 2);
+    ctx.fillStyle = item.color;
+    ctx.fill();
+  });
+}
+
+
+
 
   /*
     KEY FIX:
