@@ -1,344 +1,353 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0b1220">
-<title>ChronosMatch | Trading Engine Dashboard</title>
+<meta name="theme-color" content="#080d17">
+<title>ChronosMatch | Performance Dashboard</title>
 
 <style>
 :root {
-  --bg: #080d17;
-  --panel: #101a2b;
-  --panel2: #0c1524;
-  --border: #22324b;
-  --text: #eef4ff;
-  --muted: #91a4c2;
-  --blue: #62a5ff;
-  --cyan: #39d8cf;
-  --green: #42d392;
-  --orange: #ffb454;
-  --red: #ff7185;
+  --bg:#080d17;
+  --panel:#101a2b;
+  --panel2:#0c1524;
+  --border:#22324b;
+  --text:#eef4ff;
+  --muted:#91a4c2;
+  --blue:#62a5ff;
+  --cyan:#39d8cf;
+  --green:#42d392;
+  --orange:#ffb454;
+  --red:#ff7185;
 }
-* { box-sizing: border-box; }
+* { box-sizing:border-box; }
 body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: Inter, "Segoe UI", Arial, sans-serif;
-  font-size: 14px;
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,"Segoe UI",Arial,sans-serif;
+  font-size:14px;
 }
-button, input { font: inherit; }
-button { cursor: pointer; }
-button:focus-visible, input:focus-visible {
-  outline: 2px solid var(--blue);
-  outline-offset: 3px;
+button,input { font:inherit; }
+button { cursor:pointer; }
+button:focus-visible,input:focus-visible {
+  outline:2px solid var(--blue);
+  outline-offset:3px;
 }
-.app { max-width: 1600px; margin: auto; padding: 24px; }
+.app { max-width:1600px; margin:auto; padding:24px; }
 .topbar {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 18px; flex-wrap: wrap; margin-bottom: 26px;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:18px; flex-wrap:wrap; margin-bottom:26px;
 }
-.brand { display: flex; gap: 13px; align-items: center; }
+.brand { display:flex; gap:13px; align-items:center; }
 .logo {
-  width: 45px; height: 45px; border-radius: 13px;
-  display: grid; place-items: center;
-  color: white; font-size: 21px; font-weight: 800;
-  background: linear-gradient(135deg,#347cf6,#35d4cf);
+  width:45px; height:45px; border-radius:13px;
+  display:grid; place-items:center; color:white;
+  font-size:21px; font-weight:800;
+  background:linear-gradient(135deg,#347cf6,#35d4cf);
 }
-h1 { font-size: 23px; margin: 0 0 5px; letter-spacing: -.5px; }
-.subtitle { color: var(--muted); font-size: 12px; }
-.top-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+h1 { font-size:23px; margin:0 0 5px; letter-spacing:-.5px; }
+.subtitle { color:var(--muted); font-size:12px; }
+.top-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
 .status {
-  border: 1px solid #24543f; color: var(--green);
-  background: #10281f; border-radius: 30px; padding: 10px 13px;
+  border:1px solid #24543f; color:var(--green);
+  background:#10281f; border-radius:30px; padding:10px 13px;
 }
 .btn {
-  color: var(--text); background: #142239; border: 1px solid var(--border);
-  border-radius: 9px; padding: 10px 14px;
+  color:var(--text); background:#142239; border:1px solid var(--border);
+  border-radius:9px; padding:10px 14px;
 }
-.btn:hover { border-color: var(--blue); }
-.btn.primary { background: #2866cf; border-color: #2866cf; }
-.section-title {
-  font-size: 15px; font-weight: 700; margin: 0 0 15px;
-}
-.muted { color: var(--muted); }
-.grid { display: grid; gap: 16px; }
-.kpis { grid-template-columns: repeat(4,minmax(0,1fr)); margin-bottom: 18px; }
+.btn:hover { border-color:var(--blue); }
+.btn.primary { background:#2866cf; border-color:#2866cf; }
+.section-title { font-size:15px; font-weight:700; margin:0 0 15px; }
+.muted { color:var(--muted); }
+.grid { display:grid; gap:16px; }
+.kpis { grid-template-columns:repeat(4,minmax(0,1fr)); margin-bottom:18px; }
 .panel {
-  min-width: 0; background: var(--panel); border: 1px solid var(--border);
-  border-radius: 15px; padding: 19px;
+  min-width:0; background:var(--panel); border:1px solid var(--border);
+  border-radius:15px; padding:19px;
 }
-.kpi-label { color: var(--muted); font-size: 12px; margin-bottom: 14px; }
-.kpi-value { font-size: clamp(22px,2.2vw,31px); font-weight: 750; letter-spacing: -.7px; }
-.kpi-unit { color: var(--muted); font-size: 12px; margin-top: 6px; }
-.kpi-foot { font-size: 12px; margin-top: 13px; color: var(--green); }
+.kpi-label { color:var(--muted); font-size:12px; margin-bottom:14px; }
+.kpi-value { font-size:clamp(22px,2.2vw,31px); font-weight:750; letter-spacing:-.7px; }
+.kpi-unit { color:var(--muted); font-size:12px; margin-top:6px; }
+.kpi-foot { font-size:12px; margin-top:13px; color:var(--green); }
 .kpi-icon {
-  float: right; width: 35px; height: 35px; display: grid;
-  place-items: center; border-radius: 10px; background: #1b2c46;
-  color: var(--blue); font-size: 17px;
+  float:right; width:35px; height:35px; display:grid;
+  place-items:center; border-radius:10px;
+  background:#1b2c46; color:var(--blue); font-size:17px;
 }
-.main-grid { grid-template-columns: minmax(0,1.8fr) minmax(280px,1fr); margin-bottom: 18px; }
+.main-grid {
+  grid-template-columns:minmax(0,1.8fr) minmax(280px,1fr);
+  margin-bottom:18px;
+}
 .panel-head {
-  display: flex; align-items: flex-start; justify-content: space-between;
-  gap: 12px; flex-wrap: wrap; margin-bottom: 17px;
+  display:flex; align-items:flex-start; justify-content:space-between;
+  gap:12px; flex-wrap:wrap; margin-bottom:17px;
 }
-.panel-head h2 { font-size: 16px; margin: 0 0 6px; }
+.panel-head h2 { font-size:16px; margin:0 0 6px; }
 .pill {
-  color: var(--muted); border: 1px solid var(--border);
-  border-radius: 30px; padding: 7px 10px; font-size: 12px;
+  color:var(--muted); border:1px solid var(--border);
+  border-radius:30px; padding:7px 10px; font-size:12px;
 }
-.chart-wrap { height: 340px; min-height: 260px; position: relative; width: 100%; }
-#marketChart { display: block; width: 100%; height: 100%; }
-.chart-legend { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 14px; color: var(--muted); }
-.legend-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 7px; }
-.chart-note { color: var(--muted); font-size: 12px; margin-top: 12px; line-height: 1.5; }
-.week-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 17px; }
+.chart-wrap { height:340px; min-height:260px; position:relative; width:100%; }
+#marketChart { display:block; width:100%; height:100%; }
+.chart-legend { display:flex; gap:18px; flex-wrap:wrap; margin-top:14px; color:var(--muted); }
+.legend-dot {
+  display:inline-block; width:9px; height:9px;
+  border-radius:50%; margin-right:7px;
+}
+.chart-note { color:var(--muted); font-size:12px; margin-top:12px; line-height:1.6; }
+.week-row { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:17px; }
 .week-btn {
-  padding: 8px 12px; color: var(--muted); border: 1px solid var(--border);
-  background: var(--panel2); border-radius: 8px;
+  padding:9px 12px; color:var(--muted);
+  border:1px solid var(--border); background:var(--panel2); border-radius:8px;
 }
-.week-btn.active { background: #173a69; border-color: var(--blue); color: #fff; }
-.progress {
-  background: #1c2a40; height: 7px; border-radius: 8px; overflow: hidden;
-}
+.week-btn:hover { border-color:var(--blue); }
+.week-btn.active { background:#173a69; border-color:var(--blue); color:#fff; }
+.progress { background:#1c2a40; height:7px; border-radius:8px; overflow:hidden; }
 .progress > span {
-  display: block; height: 100%; width: 0;
-  background: linear-gradient(90deg,var(--blue),var(--cyan));
-  border-radius: inherit; transition: width .3s;
+  display:block; height:100%; width:0;
+  background:linear-gradient(90deg,var(--blue),var(--cyan));
+  border-radius:inherit; transition:width .3s;
 }
-.health-row { margin: 18px 0; }
-.health-head { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 9px; }
-.health-name { color: var(--muted); }
-.good { color: var(--green); }
-.warning { color: var(--orange); }
-.bottom-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
-.market-list { display: flex; flex-direction: column; gap: 0; }
+.health-row { margin:18px 0; }
+.health-head {
+  display:flex; justify-content:space-between; gap:10px;
+  margin-bottom:9px; align-items:flex-start;
+}
+.health-name { color:var(--muted); }
+.good { color:var(--green); }
+.warning { color:var(--orange); }
+.bottom-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.market-list { display:flex; flex-direction:column; }
 .market-item {
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  padding: 14px 0; border-bottom: 1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; padding:14px 0; border-bottom:1px solid var(--border);
 }
-.market-item:last-child { border-bottom: 0; }
-.market-symbol { font-weight: 700; margin-bottom: 5px; }
-.market-name { color: var(--muted); font-size: 12px; }
-.market-price { font-weight: 700; text-align: right; }
-.market-change { font-size: 12px; color: var(--green); margin-top: 5px; text-align: right; }
-.table-wrap { overflow-x: auto; }
-table { border-collapse: collapse; width: 100%; min-width: 460px; }
-th, td {
-  text-align: left; padding: 13px 10px;
-  border-bottom: 1px solid var(--border); white-space: nowrap;
+.market-item:last-child { border-bottom:0; }
+.market-symbol { font-weight:700; margin-bottom:5px; }
+.market-name { color:var(--muted); font-size:12px; }
+.market-price { font-weight:700; text-align:right; }
+.market-change { font-size:12px; margin-top:5px; text-align:right; }
+.table-wrap { overflow-x:auto; }
+table { border-collapse:collapse; width:100%; min-width:460px; }
+th,td {
+  text-align:left; padding:13px 10px;
+  border-bottom:1px solid var(--border); white-space:nowrap;
 }
-th { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .6px; }
-td { font-size: 12px; }
+th { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.6px; }
+td { font-size:12px; }
 .badge {
-  padding: 5px 8px; border-radius: 20px; color: var(--green);
-  background: #123126; font-size: 11px;
+  padding:5px 8px; border-radius:20px; color:var(--green);
+  background:#123126; font-size:11px;
 }
 .footer {
-  display: flex; justify-content: space-between; flex-wrap: wrap;
-  gap: 10px; color: var(--muted); font-size: 12px; margin-top: 20px;
+  display:flex; justify-content:space-between; flex-wrap:wrap;
+  gap:10px; color:var(--muted); font-size:12px; margin-top:20px;
 }
-.empty { padding: 24px 0; text-align: center; color: var(--muted); }
+.empty { padding:24px 0; text-align:center; color:var(--muted); }
 .search {
-  max-width: 190px; width: 100%; padding: 9px 11px;
-  border: 1px solid var(--border); background: var(--panel2);
-  border-radius: 8px; color: var(--text);
+  max-width:190px; width:100%; padding:9px 11px;
+  border:1px solid var(--border); background:var(--panel2);
+  border-radius:8px; color:var(--text);
 }
 .toast {
-  position: fixed; right: 20px; bottom: 20px; z-index: 5;
-  padding: 13px 18px; background: #1c3453; border: 1px solid #3b5f88;
-  border-radius: 10px; color: white; display: none; max-width: calc(100% - 40px);
+  position:fixed; right:20px; bottom:20px; z-index:5;
+  padding:13px 18px; background:#1c3453; border:1px solid #3b5f88;
+  border-radius:10px; color:white; display:none;
+  max-width:calc(100% - 40px);
 }
-@media(max-width: 1000px) {
-  .kpis { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .main-grid { grid-template-columns: 1fr; }
+@media(max-width:1000px) {
+  .kpis { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .main-grid { grid-template-columns:1fr; }
 }
-@media(max-width: 600px) {
-  .app { padding: 14px; }
-  .kpis, .bottom-grid { grid-template-columns: 1fr; }
-  .chart-wrap { height: 280px; }
-  h1 { font-size: 20px; }
-  .panel { padding: 15px; }
-  .kpi-value { font-size: 26px; }
+@media(max-width:600px) {
+  .app { padding:14px; }
+  .kpis,.bottom-grid { grid-template-columns:1fr; }
+  .chart-wrap { height:280px; }
+  h1 { font-size:20px; }
+  .panel { padding:15px; }
+  .kpi-value { font-size:26px; }
 }
 </style>
 </head>
 
 <body>
 <div class="app">
-  <header class="topbar">
-    <div class="brand">
-      <div class="logo">C</div>
-      <div>
-        <h1>ChronosMatch</h1>
-        <div class="subtitle">LOW-LATENCY ORDER FLOW · PERFORMANCE CONSOLE</div>
-      </div>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">C</div>
+    <div>
+      <h1>ChronosMatch</h1>
+      <div class="subtitle">LOW-LATENCY ORDER FLOW · PERFORMANCE CONSOLE</div>
     </div>
-    <div class="top-actions">
-      <span class="status" id="runStatus">● Demo running</span>
-      <button class="btn" id="pauseBtn" type="button">Pause demo</button>
-      <button class="btn primary" id="exportBtn" type="button">Export CSV</button>
-    </div>
-  </header>
+  </div>
+  <div class="top-actions">
+    <span class="status" id="runStatus">● Demo running</span>
+    <button class="btn" id="pauseBtn" type="button">Pause demo</button>
+    <button class="btn primary" id="exportBtn" type="button">Export CSV</button>
+  </div>
+</header>
 
-  <div class="section-title">Engine performance</div>
-  <section class="grid kpis">
-    <article class="panel">
-      <span class="kpi-icon">↗</span>
-      <div class="kpi-label">Consumer throughput</div>
-      <div class="kpi-value" id="throughput">97,512</div>
-      <div class="kpi-unit">orders per second</div>
-      <div class="kpi-foot">Benchmark metric</div>
-    </article>
-    <article class="panel">
-      <span class="kpi-icon">▤</span>
-      <div class="kpi-label">Orders processed</div>
-      <div class="kpi-value" id="orders">300,000</div>
-      <div class="kpi-unit">total benchmark orders</div>
-      <div class="kpi-foot">Benchmark metric</div>
-    </article>
-    <article class="panel">
-      <span class="kpi-icon">◷</span>
-      <div class="kpi-label">Mean latency</div>
-      <div class="kpi-value" id="meanLatency">1.358</div>
-      <div class="kpi-unit">milliseconds</div>
-      <div class="kpi-foot">Lower is better</div>
-    </article>
-    <article class="panel">
-      <span class="kpi-icon">⌁</span>
-      <div class="kpi-label">P99 latency</div>
-      <div class="kpi-value" id="p99Latency">2.786</div>
-      <div class="kpi-unit">milliseconds</div>
-      <div class="kpi-foot">99th percentile</div>
-    </article>
-  </section>
+<div class="section-title">Recorded engine benchmark</div>
 
-  <section class="grid main-grid">
-    <article class="panel">
-      <div class="panel-head">
-        <div>
-          <h2>Market movement</h2>
-          <div class="muted">Percentage movement from starting price · Simulated demo data</div>
-        </div>
-        <span class="pill" id="chartState">DEMO DATA</span>
-      </div>
+<section class="grid kpis">
+  <article class="panel">
+    <span class="kpi-icon">↗</span>
+    <div class="kpi-label">Consumer throughput</div>
+    <div class="kpi-value" id="throughput">97,512</div>
+    <div class="kpi-unit">orders per second</div>
+    <div class="kpi-foot">Recorded Week 1 benchmark</div>
+  </article>
+  <article class="panel">
+    <span class="kpi-icon">▤</span>
+    <div class="kpi-label">Orders processed</div>
+    <div class="kpi-value" id="orders">300,000</div>
+    <div class="kpi-unit">total benchmark orders</div>
+    <div class="kpi-foot">Recorded Week 1 benchmark</div>
+  </article>
+  <article class="panel">
+    <span class="kpi-icon">◷</span>
+    <div class="kpi-label">Mean latency</div>
+    <div class="kpi-value" id="meanLatency">1.358</div>
+    <div class="kpi-unit">milliseconds</div>
+    <div class="kpi-foot">Lower is better</div>
+  </article>
+  <article class="panel">
+    <span class="kpi-icon">⌁</span>
+    <div class="kpi-label">P99 latency</div>
+    <div class="kpi-value" id="p99Latency">2.786</div>
+    <div class="kpi-unit">milliseconds</div>
+    <div class="kpi-foot">99th percentile</div>
+  </article>
+</section>
 
-      <div class="chart-wrap">
-        <canvas id="marketChart" role="img"
-          aria-label="Simulated XYZ/USD and ABC/USD price movement chart"></canvas>
-      </div>
-
-      <div class="chart-legend">
-        <span><i class="legend-dot" style="background:#62a5ff"></i>XYZ/USD</span>
-        <span><i class="legend-dot" style="background:#39d8cf"></i>ABC/USD</span>
-        <span id="lastUpdate">Waiting for first update</span>
-      </div>
-      <div class="chart-note">
-        The vertical axis automatically adjusts to the displayed prices so small movements remain visible.
-        Values are randomly simulated for dashboard demonstration.
-      </div>
-    </article>
-
-    <article class="panel">
-      <div class="panel-head">
-        <div>
-          <h2>Project progress</h2>
-          <div class="muted">Selected project week</div>
-        </div>
-        <span class="pill" id="weekLabel">WEEK 1</span>
-      </div>
-
-      <div class="week-row" id="weekButtons">
-        <button class="week-btn active" data-week="1">Week 1</button>
-        <button class="week-btn" data-week="2">Week 2</button>
-        <button class="week-btn" data-week="3">Week 3</button>
-        <button class="week-btn" data-week="4">Week 4</button>
-      </div>
-
-      <div class="health-row">
-        <div class="health-head"><span class="health-name">Consumer throughput</span><strong id="weekThroughput">97,512/s</strong></div>
-        <div class="progress"><span id="throughputBar" style="width:78%"></span></div>
-      </div>
-      <div class="health-row">
-        <div class="health-head"><span class="health-name">Mean latency</span><strong id="weekMean">1.358 ms</strong></div>
-        <div class="progress"><span id="meanBar" style="width:68%"></span></div>
-      </div>
-      <div class="health-row">
-        <div class="health-head"><span class="health-name">P99 latency</span><strong id="weekP99">2.786 ms</strong></div>
-        <div class="progress"><span id="p99Bar" style="width:70%"></span></div>
-      </div>
-      <div class="health-row">
-        <div class="health-head"><span class="health-name">Benchmark orders</span><strong id="weekOrders">300,000</strong></div>
-        <div class="progress"><span id="ordersBar" style="width:100%"></span></div>
-      </div>
-
-      <div class="chart-note" id="weekDescription">
-        Week 1 displays the benchmark metrics recorded for this project. Other weeks show the project plan until measured results are entered.
-      </div>
-      <div class="chart-note" id="weekTask" style="margin-top:8px"></div>
-    </article>
-  </section>
-
-  <section class="grid bottom-grid">
-    <article class="panel">
-      <div class="panel-head">
-        <div>
-          <h2>Market watch</h2>
-          <div class="muted">Simulated instrument quotes</div>
-        </div>
-        <span class="pill">DEMO</span>
-      </div>
-      <div class="market-list" id="marketList"></div>
-    </article>
-
-    <article class="panel">
-      <div class="panel-head">
-        <div>
-          <h2>Engine health</h2>
-          <div class="muted">Local demo status, not production monitoring</div>
-        </div>
-        <span class="pill good" id="engineStatus">HEALTHY</span>
-      </div>
-      <div class="health-row">
-        <div class="health-head"><span class="health-name">Demo update loop</span><strong class="good" id="loopStatus">Running</strong></div>
-        <div class="progress"><span id="loopBar" style="width:100%"></span></div>
-      </div>
-      <div class="health-row">
-        <div class="health-head"><span class="health-name">Price history buffer</span><strong id="historyCount">40 points</strong></div>
-        <div class="progress"><span id="historyBar" style="width:100%"></span></div>
-      </div>
-      <div class="health-row">
-        <div class="health-head"><span class="health-name">Data source</span><strong class="warning">Simulated</strong></div>
-        <div class="chart-note">This page does not connect to an exchange or a live trading engine.</div>
-      </div>
-    </article>
-  </section>
-
-  <section class="panel" style="margin-top:18px">
+<section class="grid main-grid">
+  <article class="panel">
     <div class="panel-head">
       <div>
-        <h2>Recent simulated order activity</h2>
-        <div class="muted">Example activity for the interface only</div>
+        <h2>Market movement</h2>
+        <div class="muted">Percentage movement · Simulated demo data</div>
       </div>
-      <input class="search" id="orderSearch" type="search" placeholder="Search orders..." aria-label="Search orders">
+      <span class="pill" id="chartState">DEMO DATA</span>
     </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>Order ID</th><th>Instrument</th><th>Side</th><th>Quantity</th><th>Price</th><th>Status</th></tr>
-        </thead>
-        <tbody id="ordersBody"></tbody>
-      </table>
-    </div>
-    <div class="chart-note">These rows are generated examples and are not actual submitted or executed orders.</div>
-  </section>
 
-  <footer class="footer">
-    <span>ChronosMatch · Python Development Project</span>
-    <span>All market quotes are demo data</span>
-    <span id="footerTime">Local time</span>
-  </footer>
+    <div class="chart-wrap">
+      <canvas id="marketChart" role="img"
+        aria-label="Simulated XYZ/USD and ABC/USD price movement chart"></canvas>
+    </div>
+
+    <div class="chart-legend">
+      <span><i class="legend-dot" style="background:#62a5ff"></i>XYZ/USD</span>
+      <span><i class="legend-dot" style="background:#39d8cf"></i>ABC/USD</span>
+      <span id="lastUpdate">Waiting for first update</span>
+    </div>
+    <div class="chart-note">
+      Prices are randomly simulated for the dashboard demonstration.
+      This is not a live exchange feed.
+    </div>
+  </article>
+
+  <article class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>Project progress</h2>
+        <div class="muted">Select a project week</div>
+      </div>
+      <span class="pill" id="weekLabel">WEEK 1</span>
+    </div>
+
+    <div class="week-row" id="weekButtons">
+      <button class="week-btn active" type="button" data-week="1" aria-pressed="true">Week 1</button>
+      <button class="week-btn" type="button" data-week="2" aria-pressed="false">Week 2</button>
+      <button class="week-btn" type="button" data-week="3" aria-pressed="false">Week 3</button>
+      <button class="week-btn" type="button" data-week="4" aria-pressed="false">Week 4</button>
+    </div>
+
+    <div class="health-row">
+      <div class="health-head"><span class="health-name">Consumer throughput</span><strong id="weekThroughput">97,512/s</strong></div>
+      <div class="progress"><span id="throughputBar" style="width:78%"></span></div>
+    </div>
+    <div class="health-row">
+      <div class="health-head"><span class="health-name">Mean latency</span><strong id="weekMean">1.358 ms</strong></div>
+      <div class="progress"><span id="meanBar" style="width:68%"></span></div>
+    </div>
+    <div class="health-row">
+      <div class="health-head"><span class="health-name">P99 latency</span><strong id="weekP99">2.786 ms</strong></div>
+      <div class="progress"><span id="p99Bar" style="width:70%"></span></div>
+    </div>
+    <div class="health-row">
+      <div class="health-head"><span class="health-name">Benchmark orders</span><strong id="weekOrders">300,000</strong></div>
+      <div class="progress"><span id="ordersBar" style="width:100%"></span></div>
+    </div>
+
+    <div class="chart-note" id="weekDescription" aria-live="polite"></div>
+    <div class="chart-note" id="weekTask"></div>
+  </article>
+</section>
+
+<section class="grid bottom-grid">
+  <article class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>Market watch</h2>
+        <div class="muted">Simulated instrument quotes</div>
+      </div>
+      <span class="pill">DEMO</span>
+    </div>
+    <div class="market-list" id="marketList"></div>
+  </article>
+
+  <article class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>Engine health</h2>
+        <div class="muted">Local demo status, not production monitoring</div>
+      </div>
+      <span class="pill good" id="engineStatus">HEALTHY</span>
+    </div>
+    <div class="health-row">
+      <div class="health-head"><span class="health-name">Demo update loop</span><strong class="good" id="loopStatus">Running</strong></div>
+      <div class="progress"><span id="loopBar" style="width:100%"></span></div>
+    </div>
+    <div class="health-row">
+      <div class="health-head"><span class="health-name">Price history buffer</span><strong id="historyCount">40 points</strong></div>
+      <div class="progress"><span id="historyBar" style="width:100%"></span></div>
+    </div>
+    <div class="health-row">
+      <div class="health-head"><span class="health-name">Data source</span><strong class="warning">Simulated</strong></div>
+      <div class="chart-note">This page does not connect to a live trading engine or exchange.</div>
+    </div>
+  </article>
+</section>
+
+<section class="panel" style="margin-top:18px">
+  <div class="panel-head">
+    <div>
+      <h2>Recent simulated order activity</h2>
+      <div class="muted">Example activity for the interface only</div>
+    </div>
+    <input class="search" id="orderSearch" type="search"
+      placeholder="Search orders..." aria-label="Search orders">
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Order ID</th><th>Instrument</th><th>Side</th><th>Quantity</th><th>Price</th><th>Status</th></tr>
+      </thead>
+      <tbody id="ordersBody"></tbody>
+    </table>
+  </div>
+  <div class="chart-note">These are generated example orders, not real submitted or executed orders.</div>
+</section>
+
+<footer class="footer">
+  <span>ChronosMatch · Python Development Project</span>
+  <span>Market quotes are demo data</span>
+  <span id="footerTime">Local time</span>
+</footer>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -346,31 +355,46 @@ td { font-size: 12px; }
 <script>
 "use strict";
 
-/* ---------- Project benchmark values ---------- */
+/* --------------------------------------------------
+   Project week data.
+   Only Week 1 has recorded benchmark measurements.
+-------------------------------------------------- */
 const projectWeeks = {
   1: {
-    throughput: 97512, orders: 300000, mean: 1.358, p99: 2.786,
-    description: "Week 1: recorded benchmark run — 300,000 orders, approximately 97,512 orders/second, mean latency 1.358 ms, and P99 latency 2.786 ms.",
+    throughput: 97512,
+    orders: 300000,
+    mean: 1.358,
+    p99: 2.786,
     measured: true,
-    task: "Memory-mapped ring buffer using mmap and struct; asyncio market firehose for mock orders."
+    description: "Week 1: recorded benchmark — 300,000 orders, approximately 97,512 orders/second, mean latency 1.358 ms and P99 latency 2.786 ms.",
+    task: "Completed work: memory-mapped ring buffer using mmap and struct, plus an asyncio market firehose for mock orders."
   },
   2: {
-    throughput: null, orders: null, mean: null, p99: null,
-    description: "Week 2 benchmark results have not been entered. Do not treat the plan as measured results.",
+    throughput: null,
+    orders: null,
+    mean: null,
+    p99: null,
     measured: false,
-    task: "Planned work: Cython Limit Order Book with Price-Time Priority and a latency dashboard."
+    description: "Week 2 benchmark: Not measured. Enter results here only after running and recording the benchmark.",
+    task: "Project work: develop the Limit Order Book, implement Buy/Sell matching with Price-Time Priority, and test inter-process communication (IPC)."
   },
   3: {
-    throughput: null, orders: null, mean: null, p99: null,
-    description: "Week 3 benchmark results have not been entered. Add values only after running and recording a benchmark.",
+    throughput: null,
+    orders: null,
+    mean: null,
+    p99: null,
     measured: false,
-    task: "Planned work: optimize Cython and record entry/exit timing with time.perf_counter_ns()."
+    description: "Week 3 benchmark: Not measured. No performance numbers are claimed for this week.",
+    task: "Project work: optimize the Cython matching engine and record operation timings with time.perf_counter_ns()."
   },
   4: {
-    throughput: null, orders: null, mean: null, p99: null,
-    description: "Week 4 benchmark results have not been entered. Add values only after running and recording a benchmark.",
+    throughput: null,
+    orders: null,
+    mean: null,
+    p99: null,
     measured: false,
-    task: "Planned work: persist matched trades to SQLite/ClickHouse and improve resiliency."
+    description: "Week 4 benchmark: Not measured. Add measured values after testing the completed implementation.",
+    task: "Project work: persist matched trades using SQLite/ClickHouse and improve error handling, recovery and resiliency."
   }
 };
 
@@ -382,14 +406,14 @@ let toastTimer = null;
 let orderSequence = 1008;
 
 const instruments = [
-  { symbol: "XYZ/USD", name: "Demo instrument X", price: 103.25, color: "#62a5ff", history: [] },
-  { symbol: "ABC/USD", name: "Demo instrument A", price: 58.10, color: "#39d8cf", history: [] }
+  {symbol:"XYZ/USD",name:"Demo instrument X",price:103.25,color:"#62a5ff",history:[]},
+  {symbol:"ABC/USD",name:"Demo instrument A",price:58.10,color:"#39d8cf",history:[]}
 ];
 
 const canvas = document.getElementById("marketChart");
 const ctx = canvas.getContext("2d");
 
-function randomBetween(min, max) {
+function randomBetween(min,max) {
   return min + Math.random() * (max - min);
 }
 
@@ -401,138 +425,122 @@ function formatPrice(value) {
   return value.toFixed(2);
 }
 
-function makeInitialHistory(instrument, base, amplitude) {
+function makeInitialHistory(instrument,base,amplitude) {
   instrument.history = [];
   let value = base;
-  for (let i = 0; i < 40; i++) {
-    value += randomBetween(-amplitude, amplitude);
+  for (let i=0;i<40;i++) {
+    value += randomBetween(-amplitude,amplitude);
     instrument.history.push(value);
   }
   instrument.price = value;
 }
 
-makeInitialHistory(instruments[0], 103.25, 0.30);
-makeInitialHistory(instruments[1], 58.10, 0.19);
+makeInitialHistory(instruments[0],103.25,0.30);
+makeInitialHistory(instruments[1],58.10,0.19);
 
-/* ---------- Corrected responsive, auto-scaled chart ---------- */
-
+/* ---------------- Chart ---------------- */
 function drawChart() {
   const rect = canvas.getBoundingClientRect();
   if (!rect.width || !rect.height) return;
 
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const dpr = Math.min(window.devicePixelRatio || 1,2);
   const width = rect.width;
   const height = rect.height;
 
-  canvas.width = Math.round(width * dpr);
-  canvas.height = Math.round(height * dpr);
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  ctx.clearRect(0, 0, width, height);
+  canvas.width = Math.round(width*dpr);
+  canvas.height = Math.round(height*dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,width,height);
 
-  const left = 62;
-  const right = 15;
-  const top = 20;
-  const bottom = 38;
-  const plotW = width - left - right;
-  const plotH = height - top - bottom;
-
-  if (plotW <= 0 || plotH <= 0) return;
+  const left=62,right=15,top=20,bottom=38;
+  const plotW=width-left-right;
+  const plotH=height-top-bottom;
+  if (plotW<=0 || plotH<=0) return;
 
   const series = instruments.map(item => {
-    const values = item.history;
-    const base = values.length ? values[0] : item.price;
-
+    const values=item.history;
+    const base=values.length ? values[0] : item.price;
     return {
-      symbol: item.symbol,
-      color: item.color,
-      values: values.map(value => ((value / base) - 1) * 100)
+      color:item.color,
+      values:values.map(value=>((value/base)-1)*100)
     };
-  }).filter(item => item.values.length > 1);
+  }).filter(item=>item.values.length>1);
 
-  const allValues = series.flatMap(item => item.values);
+  const allValues=series.flatMap(item=>item.values);
   if (!allValues.length) return;
 
-  let minY = Math.min(...allValues);
-  let maxY = Math.max(...allValues);
-
-  if (maxY - minY < 0.1) {
-    minY -= 0.5;
-    maxY += 0.5;
+  let minY=Math.min(...allValues);
+  let maxY=Math.max(...allValues);
+  if (maxY-minY<0.1) {
+    minY-=0.5;
+    maxY+=0.5;
   }
 
-  const padding = Math.max((maxY - minY) * 0.18, 0.08);
-  minY -= padding;
-  maxY += padding;
+  const padding=Math.max((maxY-minY)*0.18,0.08);
+  minY-=padding;
+  maxY+=padding;
 
-  const rangeY = maxY - minY;
-  const yFor = value => top + ((maxY - value) / rangeY) * plotH;
+  const rangeY=maxY-minY;
+  const yFor=value=>top+((maxY-value)/rangeY)*plotH;
 
-  ctx.font = "12px Segoe UI, Arial, sans-serif";
-  ctx.textAlign = "right";
-  ctx.textBaseline = "middle";
+  ctx.font="12px Segoe UI, Arial, sans-serif";
+  ctx.textAlign="right";
+  ctx.textBaseline="middle";
 
-  for (let i = 0; i <= 4; i++) {
-    const y = top + (plotH * i / 4);
-    const value = maxY - (rangeY * i / 4);
+  for (let i=0;i<=4;i++) {
+    const y=top+(plotH*i/4);
+    const value=maxY-(rangeY*i/4);
 
     ctx.beginPath();
-    ctx.strokeStyle = "#24344d";
-    ctx.lineWidth = 1;
-    ctx.moveTo(left, y);
-    ctx.lineTo(width - right, y);
+    ctx.strokeStyle="#24344d";
+    ctx.lineWidth=1;
+    ctx.moveTo(left,y);
+    ctx.lineTo(width-right,y);
     ctx.stroke();
 
-    ctx.fillStyle = "#91a4c2";
-    ctx.fillText(value.toFixed(2) + "%", left - 8, y);
+    ctx.fillStyle="#91a4c2";
+    ctx.fillText(value.toFixed(2)+"%",left-8,y);
   }
 
-  const labels = ["09:30", "10:00", "10:30", "11:00", "11:30"];
-  ctx.textAlign = "center";
-  ctx.textBaseline = "top";
-
-  labels.forEach((label, i) => {
-    ctx.fillStyle = "#91a4c2";
-    ctx.fillText(label, left + (width - left - right) * i / 4, height - bottom + 12);
+  const labels=["09:30","10:00","10:30","11:00","11:30"];
+  ctx.textAlign="center";
+  ctx.textBaseline="top";
+  labels.forEach((label,i)=>{
+    ctx.fillStyle="#91a4c2";
+    ctx.fillText(label,left+(width-left-right)*i/4,height-bottom+12);
   });
 
-  series.forEach(item => {
-    const values = item.values;
+  series.forEach(item=>{
+    const values=item.values;
     ctx.beginPath();
-
-    values.forEach((value, i) => {
-      const x = left + (i / (values.length - 1)) * (width - left - right);
-      const y = yFor(value);
-
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
+    values.forEach((value,i)=>{
+      const x=left+(i/(values.length-1))*(width-left-right);
+      const y=yFor(value);
+      if (i===0) ctx.moveTo(x,y);
+      else ctx.lineTo(x,y);
     });
-
-    ctx.strokeStyle = item.color;
-    ctx.lineWidth = 2.8;
-    ctx.lineJoin = "round";
-    ctx.lineCap = "round";
+    ctx.strokeStyle=item.color;
+    ctx.lineWidth=2.8;
+    ctx.lineJoin="round";
+    ctx.lineCap="round";
     ctx.stroke();
 
-    const lastIndex = values.length - 1;
-    const lastX = width - right;
-    const lastY = yFor(values[lastIndex]);
-
+    const lastIndex=values.length-1;
     ctx.beginPath();
-    ctx.arc(lastX, lastY, 4, 0, Math.PI * 2);
-    ctx.fillStyle = item.color;
+    ctx.arc(width-right,yFor(values[lastIndex]),4,0,Math.PI*2);
+    ctx.fillStyle=item.color;
     ctx.fill();
   });
 }
 
-/* ---------- Market watch ---------- */
+/* ---------------- Market watch ---------------- */
 function renderMarket() {
-  const container = document.getElementById("marketList");
-
-  container.innerHTML = instruments.map(instrument => {
-    const first = instrument.history[0] || instrument.price;
-    const change = instrument.price - first;
-    const percent = first ? (change / first) * 100 : 0;
-    const positive = change >= 0;
+  const container=document.getElementById("marketList");
+  container.innerHTML=instruments.map(instrument=>{
+    const first=instrument.history[0] || instrument.price;
+    const change=instrument.price-first;
+    const percent=first ? (change/first)*100 : 0;
+    const positive=change>=0;
 
     return `
       <div class="market-item">
@@ -544,224 +552,183 @@ function renderMarket() {
         </div>
         <div>
           <div class="market-price">${formatPrice(instrument.price)}</div>
-          <div class="market-change" style="color:${positive ? "var(--green)" : "var(--red)"}">
-            ${positive ? "+" : ""}${percent.toFixed(2)}%
+          <div class="market-change" style="color:${positive?"var(--green)":"var(--red)"}">
+            ${positive?"+":""}${percent.toFixed(2)}%
           </div>
         </div>
       </div>`;
   }).join("");
 }
 
-/* ---------- Demo order table ---------- */
+/* ---------------- Demo order table ---------------- */
 function createOrder() {
-  const instrument = instruments[Math.floor(Math.random() * instruments.length)];
-  const buy = Math.random() >= 0.45;
-
+  const instrument=instruments[Math.floor(Math.random()*instruments.length)];
+  const buy=Math.random()>=0.45;
   return {
-    id: "ORD-" + orderSequence++,
-    symbol: instrument.symbol,
-    side: buy ? "BUY" : "SELL",
-    quantity: Math.floor(randomBetween(10, 1000)),
-    price: instrument.price,
-    status: "Demo"
+    id:"ORD-"+orderSequence++,
+    symbol:instrument.symbol,
+    side:buy?"BUY":"SELL",
+    quantity:Math.floor(randomBetween(10,1000)),
+    price:instrument.price,
+    status:"Demo"
   };
 }
 
-let demoOrders = Array.from({ length: 7 }, createOrder);
+let demoOrders=Array.from({length:7},createOrder);
 
 function renderOrders() {
-  const query = document.getElementById("orderSearch").value.trim().toLowerCase();
-  const body = document.getElementById("ordersBody");
+  const query=document.getElementById("orderSearch").value.trim().toLowerCase();
+  const body=document.getElementById("ordersBody");
 
-  const filtered = demoOrders.filter(order =>
-    [order.id, order.symbol, order.side, order.status].join(" ").toLowerCase().includes(query)
+  const filtered=demoOrders.filter(order=>
+    [order.id,order.symbol,order.side,order.status].join(" ").toLowerCase().includes(query)
   );
 
   if (!filtered.length) {
-    body.innerHTML = '<tr><td colspan="6" class="empty">No matching demo orders</td></tr>';
+    body.innerHTML='<tr><td colspan="6" class="empty">No matching demo orders</td></tr>';
     return;
   }
 
-  body.innerHTML = filtered.map(order => `
+  body.innerHTML=filtered.map(order=>`
     <tr>
       <td>${order.id}</td>
       <td>${order.symbol}</td>
-      <td style="color:${order.side === "BUY" ? "var(--green)" : "var(--orange)"}">${order.side}</td>
+      <td style="color:${order.side==="BUY"?"var(--green)":"var(--orange)"}">${order.side}</td>
       <td>${order.quantity.toLocaleString("en-US")}</td>
       <td>${formatPrice(order.price)}</td>
       <td><span class="badge">Demo only</span></td>
     </tr>`).join("");
 }
 
-/* ---------- Week selector ---------- */
+/* ---------------- Week selector ---------------- */
 function selectProjectWeek(week) {
-  selectedWeek = Number(week);
-  const data = projectWeeks[selectedWeek];
-
+  selectedWeek=Number(week);
+  const data=projectWeeks[selectedWeek];
   if (!data) return;
 
-  document.querySelectorAll(".week-btn").forEach(button => {
-    const active = Number(button.dataset.week) === selectedWeek;
-    button.classList.toggle("active", active);
-    button.setAttribute("aria-pressed", String(active));
+  document.querySelectorAll(".week-btn").forEach(button=>{
+    const active=Number(button.dataset.week)===selectedWeek;
+    button.classList.toggle("active",active);
+    button.setAttribute("aria-pressed",String(active));
   });
 
-  const valueOrPending = (value, suffix = "") =>
-    value === null ? "Not measured" : formatNumber(value) + suffix;
+  const valueOrPending=(value,suffix="")=>
+    value===null ? "Not measured" : formatNumber(value)+suffix;
 
-  document.getElementById("weekLabel").textContent = "WEEK " + selectedWeek;
-  document.getElementById("weekThroughput").textContent = valueOrPending(data.throughput, "/s");
-  document.getElementById("weekMean").textContent =
-    data.mean === null ? "Not measured" : data.mean.toFixed(3) + " ms";
-  document.getElementById("weekP99").textContent =
-    data.p99 === null ? "Not measured" : data.p99.toFixed(3) + " ms";
-  document.getElementById("weekOrders").textContent = valueOrPending(data.orders);
-  document.getElementById("weekDescription").textContent = data.description;
-  document.getElementById("weekTask").textContent = data.task;
+  // Update selected-week progress panel.
+  document.getElementById("weekLabel").textContent="WEEK "+selectedWeek;
+  document.getElementById("weekThroughput").textContent=valueOrPending(data.throughput,"/s");
+  document.getElementById("weekMean").textContent=
+    data.mean===null ? "Not measured" : data.mean.toFixed(3)+" ms";
+  document.getElementById("weekP99").textContent=
+    data.p99===null ? "Not measured" : data.p99.toFixed(3)+" ms";
+  document.getElementById("weekOrders").textContent=valueOrPending(data.orders);
+  document.getElementById("weekDescription").textContent=data.description;
+  document.getElementById("weekTask").textContent=data.task;
 
-  document.getElementById("throughput").textContent = valueOrPending(data.throughput);
-  document.getElementById("orders").textContent = valueOrPending(data.orders);
-  document.getElementById("meanLatency").textContent =
-    data.mean === null ? "—" : data.mean.toFixed(3);
-  document.getElementById("p99Latency").textContent =
-    data.p99 === null ? "—" : data.p99.toFixed(3);
+  document.getElementById("throughputBar").style.width=
+    data.throughput===null ? "0%" : Math.min(100,data.throughput/1200)+"%";
+  document.getElementById("meanBar").style.width=
+    data.mean===null ? "0%" : Math.min(100,data.mean/2*100)+"%";
+  document.getElementById("p99Bar").style.width=
+    data.p99===null ? "0%" : Math.min(100,data.p99/4*100)+"%";
+  document.getElementById("ordersBar").style.width=
+    data.orders===null ? "0%" : Math.min(100,data.orders/3000)+"%";
 
-  document.getElementById("throughputBar").style.width =
-    data.throughput === null ? "0%" : Math.min(100, data.throughput / 1200) + "%";
-  document.getElementById("meanBar").style.width =
-    data.mean === null ? "0%" : Math.min(100, data.mean / 2 * 100) + "%";
-  document.getElementById("p99Bar").style.width =
-    data.p99 === null ? "0%" : Math.min(100, data.p99 / 4 * 100) + "%";
-  document.getElementById("ordersBar").style.width =
-    data.orders === null ? "0%" : Math.min(100, data.orders / 4500) + "%";
+  document.getElementById("chartState").textContent=
+    data.measured ? "WEEK 1 BENCHMARK" : "WEEK "+selectedWeek+" · PLAN";
 
-  document.getElementById("chartState").textContent =
-    data.measured ? "WEEK 1 BENCHMARK" : "PLAN · NOT MEASURED";
-
+  // Do not overwrite the four top cards. They always show the
+  // recorded Week 1 benchmark, regardless of selected project week.
   showToast(data.measured
     ? "Showing recorded Week 1 benchmark."
-    : "Showing Week " + selectedWeek + " plan; benchmark not measured.");
+    : "Showing Week "+selectedWeek+" project plan. Metrics not measured.");
 }
 
-/* ---------- Live-looking demo animation ---------- */
+/* ---------------- Demo animation ---------------- */
 function updateDemo() {
   if (!running) return;
-
   tick++;
 
-  instruments.forEach(instrument => {
-    const amplitude = instrument.symbol === "XYZ/USD" ? 0.26 : 0.16;
-
-    instrument.price = Math.max(
-      0.01,
-      instrument.price + randomBetween(-amplitude, amplitude)
-    );
-
+  instruments.forEach(instrument=>{
+    const amplitude=instrument.symbol==="XYZ/USD" ? 0.26 : 0.16;
+    instrument.price=Math.max(0.01,instrument.price+randomBetween(-amplitude,amplitude));
     instrument.history.push(instrument.price);
-    if (instrument.history.length > 40) instrument.history.shift();
+    if (instrument.history.length>40) instrument.history.shift();
   });
 
   drawChart();
   renderMarket();
 
-  document.getElementById("lastUpdate").textContent =
-    "Last update: " + new Date().toLocaleTimeString();
+  document.getElementById("lastUpdate").textContent=
+    "Last update: "+new Date().toLocaleTimeString();
+  document.getElementById("historyCount").textContent=
+    instruments[0].history.length+" points";
+  document.getElementById("historyBar").style.width=
+    (instruments[0].history.length/40*100)+"%";
 
-  document.getElementById("historyCount").textContent =
-    instruments[0].history.length + " points";
-
-  document.getElementById("historyBar").style.width =
-    (instruments[0].history.length / 40 * 100) + "%";
-
-  if (tick % 4 === 0) {
+  if (tick%4===0) {
     demoOrders.unshift(createOrder());
-    if (demoOrders.length > 15) demoOrders.pop();
+    if (demoOrders.length>15) demoOrders.pop();
     renderOrders();
   }
 }
 
-/* ---------- Controls ---------- */
-document.querySelectorAll(".week-btn").forEach(button => {
-  button.addEventListener("click", () => selectProjectWeek(button.dataset.week));
+/* ---------------- Controls ---------------- */
+document.querySelectorAll(".week-btn").forEach(button=>{
+  button.addEventListener("click",()=>selectProjectWeek(button.dataset.week));
 });
 
-document.getElementById("pauseBtn").addEventListener("click", () => {
-  running = !running;
-
-  document.getElementById("pauseBtn").textContent =
-    running ? "Pause demo" : "Resume demo";
-
-  document.getElementById("runStatus").textContent =
-    running ? "● Demo running" : "Ⅱ Demo paused";
-
-  document.getElementById("runStatus").style.color =
-    running ? "var(--green)" : "var(--orange)";
-
-  document.getElementById("loopStatus").textContent =
-    running ? "Running" : "Paused";
-
-  document.getElementById("loopBar").style.width =
-    running ? "100%" : "35%";
-
-  document.getElementById("engineStatus").textContent =
-    running ? "HEALTHY" : "PAUSED";
-
-  document.getElementById("engineStatus").className =
-    running ? "pill good" : "pill warning";
-
-  showToast(running ? "Demo resumed." : "Demo paused.");
+document.getElementById("pauseBtn").addEventListener("click",()=>{
+  running=!running;
+  document.getElementById("pauseBtn").textContent=running?"Pause demo":"Resume demo";
+  document.getElementById("runStatus").textContent=running?"● Demo running":"Ⅱ Demo paused";
+  document.getElementById("runStatus").style.color=running?"var(--green)":"var(--orange)";
+  document.getElementById("loopStatus").textContent=running?"Running":"Paused";
+  document.getElementById("loopBar").style.width=running?"100%":"35%";
+  document.getElementById("engineStatus").textContent=running?"HEALTHY":"PAUSED";
+  document.getElementById("engineStatus").className=running?"pill good":"pill warning";
+  showToast(running?"Demo resumed.":"Demo paused.");
 });
 
-document.getElementById("orderSearch").addEventListener("input", renderOrders);
+document.getElementById("orderSearch").addEventListener("input",renderOrders);
 
-document.getElementById("exportBtn").addEventListener("click", () => {
-  const header = ["Order ID", "Instrument", "Side", "Quantity", "Price", "Status"];
-
-  const rows = demoOrders.map(order => [
-    order.id,
-    order.symbol,
-    order.side,
-    order.quantity,
-    order.price.toFixed(2),
-    "Demo only"
+document.getElementById("exportBtn").addEventListener("click",()=>{
+  const header=["Order ID","Instrument","Side","Quantity","Price","Status"];
+  const rows=demoOrders.map(order=>[
+    order.id,order.symbol,order.side,order.quantity,order.price.toFixed(2),"Demo only"
   ]);
 
-  const csv = [header, ...rows]
-    .map(row => row.map(value => '"' + String(value).replace(/"/g, '""') + '"').join(","))
+  const csv=[header,...rows]
+    .map(row=>row.map(value=>'"'+String(value).replace(/"/g,'""')+'"').join(","))
     .join("\r\n");
 
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-
-  link.href = url;
-  link.download = "chronosmatch-demo-orders.csv";
+  const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement("a");
+  link.href=url;
+  link.download="chronosmatch-demo-orders.csv";
   document.body.appendChild(link);
   link.click();
   link.remove();
   URL.revokeObjectURL(url);
-
   showToast("Demo order CSV exported.");
 });
 
 function showToast(message) {
-  const toast = document.getElementById("toast");
-  toast.textContent = message;
-  toast.style.display = "block";
-
+  const toast=document.getElementById("toast");
+  toast.textContent=message;
+  toast.style.display="block";
   clearTimeout(toastTimer);
-
-  toastTimer = setTimeout(() => {
-    toast.style.display = "none";
-  }, 2600);
+  toastTimer=setTimeout(()=>{toast.style.display="none";},2600);
 }
 
 function updateFooterTime() {
-  document.getElementById("footerTime").textContent =
-    "Local time: " + new Date().toLocaleTimeString();
+  document.getElementById("footerTime").textContent=
+    "Local time: "+new Date().toLocaleTimeString();
 }
 
-/* ---------- Initialize ---------- */
+/* ---------------- Initialize dashboard ---------------- */
 selectProjectWeek(1);
 renderMarket();
 renderOrders();
@@ -769,14 +736,13 @@ drawChart();
 updateDemo();
 updateFooterTime();
 
-timer = setInterval(() => {
+timer=setInterval(()=>{
   updateDemo();
   updateFooterTime();
-}, 1800);
+},1800);
 
-window.addEventListener("resize", drawChart);
-
-document.addEventListener("visibilitychange", () => {
+window.addEventListener("resize",drawChart);
+document.addEventListener("visibilitychange",()=>{
   if (!document.hidden) drawChart();
 });
 </script>
