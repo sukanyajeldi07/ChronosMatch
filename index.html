@@ -6,25 +6,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b1220">
 <title>ChronosMatch | Trading Engine Dashboard</title>
-
 <style>
 :root {
-  --bg:#080d17;
-  --panel:#101a2b;
-  --panel2:#0c1524;
-  --border:#22324b;
-  --text:#eef4ff;
-  --muted:#91a4c2;
-  --blue:#62a5ff;
-  --cyan:#39d8cf;
-  --green:#42d392;
-  --orange:#ffb454;
-  --red:#ff7185;
+  --bg:#080d17;--panel:#101a2b;--panel2:#0c1524;--border:#22324b;
+  --text:#eef4ff;--muted:#91a4c2;--blue:#62a5ff;--cyan:#39d8cf;
+  --green:#42d392;--orange:#ffb454;--red:#ff7185;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,"Segoe UI",Arial,sans-serif;font-size:14px}
-button,input{font:inherit}
-button{cursor:pointer}
+button,input{font:inherit}button{cursor:pointer}
 .app{max-width:1600px;margin:auto;padding:24px}
 .topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:26px}
 .brand{display:flex;gap:13px;align-items:center}
@@ -62,8 +52,7 @@ h1{font-size:23px;margin:0 0 5px}
 .health-row{margin:18px 0}
 .health-head{display:flex;justify-content:space-between;gap:10px;margin-bottom:9px}
 .health-name{color:var(--muted)}
-.good{color:var(--green)}
-.warning{color:var(--orange)}
+.good{color:var(--green)}.warning{color:var(--orange)}
 .bottom-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 .market-list{display:flex;flex-direction:column}
 .market-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--border)}
@@ -86,7 +75,6 @@ td{font-size:12px}
 @media(max-width:600px){.app{padding:14px}.kpis,.bottom-grid{grid-template-columns:1fr}.chart-wrap{height:280px}h1{font-size:20px}.panel{padding:15px}}
 </style>
 </head>
-
 <body>
 <div class="app">
 
@@ -253,8 +241,8 @@ td{font-size:12px}
   <span>All market quotes are demo data</span>
   <span id="footerTime">Local time</span>
 </footer>
-
 </div>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -267,15 +255,15 @@ const projectWeeks = {
     orders:300000,
     mean:1.358,
     p99:2.786,
-    description:"Week 1: recorded benchmark — 300,000 orders, 97,512 orders/second, mean latency 1.358 ms, and P99 latency 2.786 ms.",
-    status:"RECORDED BENCHMARK"
+    description:"Week 1 · IPC Benchmark: Consumer throughput was 97,512 orders per second across 300,000 orders. Mean latency was 1.358 ms and P99 latency was 2.786 ms. Project work included implementing the high-performance order flow and benchmarking inter-process communication (IPC).",
+    status:"MEASURED BENCHMARK"
   },
   2: {
     throughput:76418,
     orders:1000,
     mean:null,
     p99:null,
-    description:"Week 2 · Order Book Benchmark: Completed across 5 runs. Each run processed 1,000 orders. Average elapsed time was 13.086 ms. Calculated throughput was 76,418 orders per second. The final run recorded 500 trades. Mean and P99 latency were not measured by this script. Work included developing the Limit Order Book, implementing Buy/Sell matching with Price-Time Priority, and testing IPC.",
+    description:"Week 2 · Order Book Benchmark: Completed across 5 runs. Each run processed 1,000 orders. Average elapsed time was 13.086 ms. Calculated throughput was 76,418 orders per second. The final run recorded 500 trades. Mean and P99 latency were not measured by this script. Week 2 work: develop the Limit Order Book, implement Buy/Sell matching with Price-Time Priority, and test inter-process communication (IPC).",
     status:"MEASURED BENCHMARK"
   },
   3: {
@@ -488,7 +476,7 @@ function selectProjectWeek(week){
   if(!data)return;
 
   const display=value=>value==null?"Not measured":formatNumber(value);
-  const latency=value=>value==null?"Not measured":value.toFixed(3)+" ms";
+  const latency=value=>value==null?"N/A":value.toFixed(3)+" ms";
   const barWidth=(value,scale)=>value==null?"0%":Math.max(0,Math.min(100,value/scale*100))+"%";
 
   document.querySelectorAll(".week-btn").forEach(button=>{
@@ -506,8 +494,12 @@ function selectProjectWeek(week){
 
   document.getElementById("throughput").textContent=display(data.throughput);
   document.getElementById("orders").textContent=display(data.orders);
-  document.getElementById("meanLatency").textContent=data.mean==null?"—":data.mean.toFixed(3);
-  document.getElementById("p99Latency").textContent=data.p99==null?"—":data.p99.toFixed(3);
+
+  document.getElementById("meanLatency").textContent=
+    data.mean==null?"N/A":data.mean.toFixed(3);
+
+  document.getElementById("p99Latency").textContent=
+    data.p99==null?"N/A":data.p99.toFixed(3);
 
   document.getElementById("throughputBar").style.width=barWidth(data.throughput,120000);
   document.getElementById("meanBar").style.width=barWidth(data.mean,2);
