@@ -6,20 +6,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b1220">
 <title>ChronosMatch | Trading Engine Dashboard</title>
-
 <style>
 :root {
-  --bg:#080d17;
-  --panel:#101a2b;
-  --panel2:#0c1524;
-  --border:#22324b;
-  --text:#eef4ff;
-  --muted:#91a4c2;
-  --blue:#62a5ff;
-  --cyan:#39d8cf;
-  --green:#42d392;
-  --orange:#ffb454;
-  --red:#ff7185;
+  --bg:#080d17;--panel:#101a2b;--panel2:#0c1524;
+  --border:#22324b;--text:#eef4ff;--muted:#91a4c2;
+  --blue:#62a5ff;--cyan:#39d8cf;--green:#42d392;
+  --orange:#ffb454;--red:#ff7185;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,"Segoe UI",Arial,sans-serif;font-size:14px}
@@ -40,7 +32,7 @@ h1{font-size:23px;margin:0 0 5px}
 .kpis{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:18px}
 .panel{min-width:0;background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:19px}
 .kpi-label{color:var(--muted);font-size:12px;margin-bottom:14px}
-.kpi-value{font-size:clamp(22px,2.2vw,31px);font-weight:750}
+.kpi-value{font-size:clamp(20px,2.2vw,31px);font-weight:750;overflow-wrap:anywhere}
 .kpi-unit{color:var(--muted);font-size:12px;margin-top:6px}
 .kpi-foot{font-size:12px;margin-top:13px;color:var(--green)}
 .kpi-icon{float:right;width:35px;height:35px;display:grid;place-items:center;border-radius:10px;background:#1b2c46;color:var(--blue);font-size:17px}
@@ -82,20 +74,10 @@ td{font-size:12px}
 .empty{padding:24px 0;text-align:center;color:var(--muted)}
 .search{max-width:190px;width:100%;padding:9px 11px;border:1px solid var(--border);background:var(--panel2);border-radius:8px;color:var(--text)}
 .toast{position:fixed;right:20px;bottom:20px;z-index:5;padding:13px 18px;background:#1c3453;border:1px solid #3b5f88;border-radius:10px;color:white;display:none;max-width:calc(100% - 40px)}
-@media(max-width:1000px){
-  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .main-grid{grid-template-columns:1fr}
-}
-@media(max-width:600px){
-  .app{padding:14px}
-  .kpis,.bottom-grid{grid-template-columns:1fr}
-  .chart-wrap{height:280px}
-  h1{font-size:20px}
-  .panel{padding:15px}
-}
+@media(max-width:1000px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.main-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.app{padding:14px}.kpis,.bottom-grid{grid-template-columns:1fr}.chart-wrap{height:280px}h1{font-size:20px}.panel{padding:15px}}
 </style>
 </head>
-
 <body>
 <div class="app">
 
@@ -114,22 +96,22 @@ td{font-size:12px}
   </div>
 </header>
 
-<div class="section-title">Engine performance</div>
+<div class="section-title">Engine performance / Weekly project metrics</div>
 
 <section class="grid kpis">
   <article class="panel">
     <span class="kpi-icon">↗</span>
-    <div class="kpi-label">Consumer throughput</div>
+    <div class="kpi-label" id="throughputLabel">Consumer throughput</div>
     <div class="kpi-value" id="throughput">97,512</div>
-    <div class="kpi-unit">orders per second</div>
-    <div class="kpi-foot">Benchmark metric</div>
+    <div class="kpi-unit" id="throughputUnit">orders per second</div>
+    <div class="kpi-foot">Selected week metric</div>
   </article>
   <article class="panel">
     <span class="kpi-icon">▤</span>
-    <div class="kpi-label">Orders processed</div>
+    <div class="kpi-label" id="ordersLabel">Orders processed</div>
     <div class="kpi-value" id="orders">300,000</div>
-    <div class="kpi-unit">total benchmark orders</div>
-    <div class="kpi-foot">Benchmark metric</div>
+    <div class="kpi-unit" id="ordersUnit">total benchmark orders</div>
+    <div class="kpi-foot">Selected week metric</div>
   </article>
   <article class="panel">
     <span class="kpi-icon">◷</span>
@@ -164,14 +146,14 @@ td{font-size:12px}
       <span><i class="legend-dot" style="background:#39d8cf"></i>ABC/USD</span>
       <span id="lastUpdate">Waiting for first update</span>
     </div>
-    <div class="chart-note">The chart uses simulated demo data. It does not connect to a live exchange.</div>
+    <div class="chart-note">This chart uses simulated demo data. It does not connect to a live exchange.</div>
   </article>
 
   <article class="panel">
     <div class="panel-head">
       <div>
         <h2>Project progress</h2>
-        <div class="muted">Select a week to see available project details</div>
+        <div class="muted">Select a week to see its project details and results</div>
       </div>
       <span class="pill" id="weekLabel">WEEK 1</span>
     </div>
@@ -184,7 +166,7 @@ td{font-size:12px}
     </div>
 
     <div class="health-row">
-      <div class="health-head"><span class="health-name">Consumer throughput</span><strong id="weekThroughput">97,512/s</strong></div>
+      <div class="health-head"><span class="health-name" id="weekThroughputLabel">Consumer throughput</span><strong id="weekThroughput">97,512/s</strong></div>
       <div class="progress"><span id="throughputBar" style="width:78%"></span></div>
     </div>
     <div class="health-row">
@@ -196,7 +178,7 @@ td{font-size:12px}
       <div class="progress"><span id="p99Bar" style="width:70%"></span></div>
     </div>
     <div class="health-row">
-      <div class="health-head"><span class="health-name">Benchmark orders</span><strong id="weekOrders">300,000</strong></div>
+      <div class="health-head"><span class="health-name" id="weekOrdersLabel">Benchmark orders</span><strong id="weekOrders">300,000</strong></div>
       <div class="progress"><span id="ordersBar" style="width:100%"></span></div>
     </div>
     <div class="chart-note" id="weekDescription">Week 1 benchmark results.</div>
@@ -206,10 +188,7 @@ td{font-size:12px}
 <section class="grid bottom-grid">
   <article class="panel">
     <div class="panel-head">
-      <div>
-        <h2>Market watch</h2>
-        <div class="muted">Simulated instrument quotes</div>
-      </div>
+      <div><h2>Market watch</h2><div class="muted">Simulated instrument quotes</div></div>
       <span class="pill">DEMO</span>
     </div>
     <div class="market-list" id="marketList"></div>
@@ -217,10 +196,7 @@ td{font-size:12px}
 
   <article class="panel">
     <div class="panel-head">
-      <div>
-        <h2>Engine health</h2>
-        <div class="muted">Local demo status, not production monitoring</div>
-      </div>
+      <div><h2>Engine health</h2><div class="muted">Local demo status, not production monitoring</div></div>
       <span class="pill good" id="engineStatus">HEALTHY</span>
     </div>
     <div class="health-row">
@@ -240,17 +216,12 @@ td{font-size:12px}
 
 <section class="panel" style="margin-top:18px">
   <div class="panel-head">
-    <div>
-      <h2>Recent simulated order activity</h2>
-      <div class="muted">Example activity for the interface only</div>
-    </div>
+    <div><h2>Recent simulated order activity</h2><div class="muted">Example activity for the interface only</div></div>
     <input class="search" id="orderSearch" type="search" placeholder="Search orders..." aria-label="Search orders">
   </div>
   <div class="table-wrap">
     <table>
-      <thead>
-        <tr><th>Order ID</th><th>Instrument</th><th>Side</th><th>Quantity</th><th>Price</th><th>Status</th></tr>
-      </thead>
+      <thead><tr><th>Order ID</th><th>Instrument</th><th>Side</th><th>Quantity</th><th>Price</th><th>Status</th></tr></thead>
       <tbody id="ordersBody"></tbody>
     </table>
   </div>
@@ -262,20 +233,21 @@ td{font-size:12px}
   <span>All market quotes are demo data</span>
   <span id="footerTime">Local time</span>
 </footer>
-
 </div>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 "use strict";
 
-/* ---------- Project benchmark values ---------- */
+/* ---------- Verified weekly project information ---------- */
 const projectWeeks = {
   1: {
     throughput:97512,
     orders:300000,
     mean:1.358,
     p99:2.786,
+    storageTests:null,
     description:"Week 1 · IPC Benchmark: Consumer throughput was 97,512 orders per second across 300,000 orders. Mean latency was 1.358 ms and P99 latency was 2.786 ms. Project work included implementing the high-performance order flow and benchmarking inter-process communication (IPC).",
     status:"MEASURED BENCHMARK"
   },
@@ -284,6 +256,7 @@ const projectWeeks = {
     orders:1000,
     mean:null,
     p99:null,
+    storageTests:null,
     description:"Week 2 · Order Book Benchmark: Completed across 5 runs. Each run processed 1,000 orders. Average elapsed time was 13.086 ms. Calculated throughput was 76,418 orders per second. The final run recorded 500 trades. Mean and P99 latency were not measured by this script. Work included developing the Limit Order Book, implementing Buy/Sell matching with Price-Time Priority, and testing IPC.",
     status:"MEASURED BENCHMARK"
   },
@@ -292,15 +265,17 @@ const projectWeeks = {
     orders:null,
     mean:null,
     p99:null,
-    description:"Week 3 · Project Progress: No verified Week 3 benchmark results or project work details have been added yet. Performance values are not available. Update this section with your actual Week 3 work and test results when available.",
-    status:"AWAITING WEEK 3 RESULTS"
+    storageTests:null,
+    description:"Week 3 · Project Progress: Verified Week 3 benchmark results and project work details have not yet been provided. Add the actual features completed, tests performed, and benchmark results when available. No performance values are currently recorded.",
+    status:"WEEK 3 RESULTS PENDING"
   },
   4: {
     throughput:null,
     orders:null,
     mean:null,
     p99:null,
-    description:"Week 4 · SQLite Trade Storage: 3 storage tests passed — save and read trade data, persistence after reopening the database, and rejection of invalid trades. Matching-engine integration has not been verified here. No Week 4 performance benchmark is recorded.",
+    storageTests:3,
+    description:"Week 4 · SQLite Trade Storage: 3 storage tests passed — saving and reading trade data, persistence after reopening the database, and rejection of invalid trades. Matching-engine integration has not been verified here. No Week 4 performance benchmark is recorded.",
     status:"3 STORAGE TESTS PASSED"
   }
 };
@@ -344,7 +319,6 @@ function drawChart(){
   const dpr=Math.min(window.devicePixelRatio||1,2);
   const width=rect.width;
   const height=rect.height;
-
   canvas.width=Math.round(width*dpr);
   canvas.height=Math.round(height*dpr);
   ctx.setTransform(dpr,0,0,dpr,0,0);
@@ -357,10 +331,7 @@ function drawChart(){
 
   const series=instruments.map(item=>{
     const base=item.history[0]||item.price;
-    return {
-      color:item.color,
-      values:item.history.map(value=>((value/base)-1)*100)
-    };
+    return {color:item.color,values:item.history.map(value=>((value/base)-1)*100)};
   });
 
   const allValues=series.flatMap(item=>item.values);
@@ -369,11 +340,9 @@ function drawChart(){
   let minY=Math.min(...allValues);
   let maxY=Math.max(...allValues);
   if(maxY-minY<0.1){minY-=0.5;maxY+=0.5}
-
   const padding=Math.max((maxY-minY)*0.18,0.08);
   minY-=padding;
   maxY+=padding;
-
   const rangeY=maxY-minY;
   const yFor=value=>top+((maxY-value)/rangeY)*plotH;
 
@@ -422,26 +391,21 @@ function renderMarket(){
     const first=item.history[0]||item.price;
     const percent=((item.price-first)/first)*100;
     const positive=percent>=0;
-
     return `
       <div class="market-item">
         <div>
-          <div class="market-symbol">
-            <i class="legend-dot" style="background:${item.color}"></i>${item.symbol}
-          </div>
+          <div class="market-symbol"><i class="legend-dot" style="background:${item.color}"></i>${item.symbol}</div>
           <div class="market-name">${item.name}</div>
         </div>
         <div>
           <div class="market-price">${formatPrice(item.price)}</div>
-          <div class="market-change" style="color:${positive?"var(--green)":"var(--red)"}">
-            ${positive?"+":""}${percent.toFixed(2)}%
-          </div>
+          <div class="market-change" style="color:${positive?"var(--green)":"var(--red)"}">${positive?"+":""}${percent.toFixed(2)}%</div>
         </div>
       </div>`;
   }).join("");
 }
 
-/* ---------- Orders ---------- */
+/* ---------- Demo orders ---------- */
 function createOrder(){
   const instrument=instruments[Math.floor(Math.random()*instruments.length)];
   const buy=Math.random()>=0.45;
@@ -459,7 +423,6 @@ let demoOrders=Array.from({length:7},createOrder);
 function renderOrders(){
   const query=document.getElementById("orderSearch").value.trim().toLowerCase();
   const body=document.getElementById("ordersBody");
-
   const filtered=demoOrders.filter(order=>
     [order.id,order.symbol,order.side].join(" ").toLowerCase().includes(query)
   );
@@ -490,15 +453,16 @@ function showToast(message){
   toastTimer=setTimeout(()=>{toast.style.display="none"},2600);
 }
 
-/* ---------- Week selector ---------- */
+/* ---------- Weekly dashboard ---------- */
 function selectProjectWeek(week){
   selectedWeek=Number(week);
   const data=projectWeeks[selectedWeek];
   if(!data)return;
 
-  const display=value=>value==null?"N/A":formatNumber(value);
-  const latency=value=>value==null?"N/A":value.toFixed(3)+" ms";
-  const barWidth=(value,scale)=>value==null?"0%":Math.max(0,Math.min(100,value/scale*100))+"%";
+  const display=value=>value==null?"Not measured":formatNumber(value);
+  const latency=value=>value==null?"Not measured":value.toFixed(3)+" ms";
+  const barWidth=(value,scale)=>
+    value==null?"0%":Math.max(0,Math.min(100,value/scale*100))+"%";
 
   document.querySelectorAll(".week-btn").forEach(button=>{
     const active=Number(button.dataset.week)===selectedWeek;
@@ -507,30 +471,77 @@ function selectProjectWeek(week){
   });
 
   document.getElementById("weekLabel").textContent="WEEK "+selectedWeek;
-  document.getElementById("weekThroughput").textContent=data.throughput==null?"N/A":formatNumber(data.throughput)+"/s";
+  document.getElementById("weekDescription").textContent=data.description;
   document.getElementById("weekMean").textContent=latency(data.mean);
   document.getElementById("weekP99").textContent=latency(data.p99);
-  document.getElementById("weekOrders").textContent=display(data.orders);
-  document.getElementById("weekDescription").textContent=data.description;
 
-  document.getElementById("throughput").textContent=display(data.throughput);
-  document.getElementById("orders").textContent=display(data.orders);
+  const throughputLabel=document.getElementById("throughputLabel");
+  const throughputUnit=document.getElementById("throughputUnit");
+  const ordersLabel=document.getElementById("ordersLabel");
+  const ordersUnit=document.getElementById("ordersUnit");
+
+  if(selectedWeek===4){
+    throughputLabel.textContent="Storage tests passed";
+    document.getElementById("throughput").textContent="3";
+    throughputUnit.textContent="successful SQLite tests";
+
+    ordersLabel.textContent="Integration status";
+    document.getElementById("orders").textContent="Pending";
+    ordersUnit.textContent="matching-engine integration";
+
+    document.getElementById("weekThroughputLabel").textContent="SQLite storage tests";
+    document.getElementById("weekThroughput").textContent="3 passed";
+    document.getElementById("weekOrdersLabel").textContent="Matching-engine integration";
+    document.getElementById("weekOrders").textContent="Pending";
+    document.getElementById("throughputBar").style.width="100%";
+    document.getElementById("ordersBar").style.width="0%";
+  }else if(selectedWeek===3){
+    throughputLabel.textContent="Benchmark results";
+    document.getElementById("throughput").textContent="Pending";
+    throughputUnit.textContent="Week 3 measurements";
+
+    ordersLabel.textContent="Project details";
+    document.getElementById("orders").textContent="Pending";
+    ordersUnit.textContent="verified Week 3 results";
+
+    document.getElementById("weekThroughputLabel").textContent="Consumer throughput";
+    document.getElementById("weekThroughput").textContent="Not measured";
+    document.getElementById("weekOrdersLabel").textContent="Benchmark orders";
+    document.getElementById("weekOrders").textContent="Not measured";
+    document.getElementById("throughputBar").style.width="0%";
+    document.getElementById("ordersBar").style.width="0%";
+  }else{
+    throughputLabel.textContent="Consumer throughput";
+    throughputUnit.textContent="orders per second";
+    ordersLabel.textContent="Orders processed";
+    ordersUnit.textContent="total benchmark orders";
+
+    document.getElementById("throughput").textContent=display(data.throughput);
+    document.getElementById("orders").textContent=display(data.orders);
+
+    document.getElementById("weekThroughputLabel").textContent="Consumer throughput";
+    document.getElementById("weekThroughput").textContent=
+      data.throughput==null?"Not measured":formatNumber(data.throughput)+"/s";
+
+    document.getElementById("weekOrdersLabel").textContent="Benchmark orders";
+    document.getElementById("weekOrders").textContent=display(data.orders);
+
+    document.getElementById("throughputBar").style.width=barWidth(data.throughput,120000);
+    document.getElementById("ordersBar").style.width=barWidth(data.orders,300000);
+  }
 
   document.getElementById("meanLatency").textContent=
-    data.mean==null?"—":data.mean.toFixed(3);
+    data.mean==null?"Not measured":data.mean.toFixed(3);
 
   document.getElementById("p99Latency").textContent=
-    data.p99==null?"—":data.p99.toFixed(3);
+    data.p99==null?"Not measured":data.p99.toFixed(3);
 
-  document.getElementById("throughputBar").style.width=barWidth(data.throughput,120000);
   document.getElementById("meanBar").style.width=barWidth(data.mean,2);
   document.getElementById("p99Bar").style.width=barWidth(data.p99,4);
-  document.getElementById("ordersBar").style.width=barWidth(data.orders,300000);
-
   document.getElementById("chartState").textContent=data.status;
 }
 
-/* ---------- Demo animation ---------- */
+/* ---------- Simulated market animation ---------- */
 function updateDemo(){
   if(!running)return;
   tick++;
@@ -545,9 +556,14 @@ function updateDemo(){
   drawChart();
   renderMarket();
 
-  document.getElementById("lastUpdate").textContent="Last update: "+new Date().toLocaleTimeString();
-  document.getElementById("historyCount").textContent=instruments[0].history.length+" points";
-  document.getElementById("historyBar").style.width=(instruments[0].history.length/40*100)+"%";
+  document.getElementById("lastUpdate").textContent=
+    "Last update: "+new Date().toLocaleTimeString();
+
+  document.getElementById("historyCount").textContent=
+    instruments[0].history.length+" points";
+
+  document.getElementById("historyBar").style.width=
+    (instruments[0].history.length/40*100)+"%";
 
   if(tick%4===0){
     demoOrders.unshift(createOrder());
@@ -556,16 +572,16 @@ function updateDemo(){
   }
 }
 
-/* ---------- Button controls ---------- */
-document.getElementById("weekButtons").addEventListener("click",function(event){
+/* ---------- Week selector ---------- */
+document.getElementById("weekButtons").addEventListener("click",event=>{
   const button=event.target.closest(".week-btn");
   if(!button)return;
   selectProjectWeek(button.dataset.week);
 });
 
+/* ---------- Pause and resume ---------- */
 document.getElementById("pauseBtn").addEventListener("click",()=>{
   running=!running;
-
   document.getElementById("pauseBtn").textContent=running?"Pause demo":"Resume demo";
   document.getElementById("runStatus").textContent=running?"● Demo running":"Ⅱ Demo paused";
   document.getElementById("runStatus").style.color=running?"var(--green)":"var(--orange)";
@@ -573,13 +589,12 @@ document.getElementById("pauseBtn").addEventListener("click",()=>{
   document.getElementById("loopBar").style.width=running?"100%":"35%";
   document.getElementById("engineStatus").textContent=running?"HEALTHY":"PAUSED";
   document.getElementById("engineStatus").className=running?"pill good":"pill warning";
-
   showToast(running?"Demo resumed.":"Demo paused.");
 });
 
 document.getElementById("orderSearch").addEventListener("input",renderOrders);
 
-/* ---------- Export CSV ---------- */
+/* ---------- CSV export ---------- */
 document.getElementById("exportBtn").addEventListener("click",()=>{
   const header=["Order ID","Instrument","Side","Quantity","Price","Status"];
   const rows=demoOrders.map(order=>[
@@ -599,16 +614,16 @@ document.getElementById("exportBtn").addEventListener("click",()=>{
   link.click();
   link.remove();
   URL.revokeObjectURL(url);
-
   showToast("Demo order CSV exported.");
 });
 
 /* ---------- Footer clock ---------- */
 function updateFooterTime(){
-  document.getElementById("footerTime").textContent="Local time: "+new Date().toLocaleTimeString();
+  document.getElementById("footerTime").textContent=
+    "Local time: "+new Date().toLocaleTimeString();
 }
 
-/* ---------- Initialize ---------- */
+/* ---------- Initialize dashboard ---------- */
 selectProjectWeek(1);
 renderMarket();
 renderOrders();
