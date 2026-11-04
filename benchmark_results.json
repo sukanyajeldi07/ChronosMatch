@@ -1,0 +1,41 @@
+{
+    "week_3": {
+        "orders": 300000,
+        "elapsed_seconds": 3.0799783999682404,
+        "throughput": 97403.28049154289,
+        "mean_latency_ms": 1.4176693333339356,
+        "p99_latency_ms": 2.6997,
+        "min_latency_ms": 0.4432,
+        "max_latency_ms": 4.5904,
+        "week": 3,
+        "target_rate": 100000,
+        "batch_size": 500,
+        "measured_at": "2026-11-04 18:00:16"
+    },
+    "week_4": {
+        "orders": 300000,
+        "elapsed_seconds": 3.0606268999981694,
+        "throughput": 98019.1345767037,
+        "mean_latency_ms": 1.4616344999992144,
+        "p99_latency_ms": 3.0841999999999996,
+        "min_latency_ms": 0.3985,
+        "max_latency_ms": 3.4748,
+        "week": 4,
+        "target_rate": 100000,
+        "batch_size": 500,
+        "measured_at": "2026-11-04 18:00:30"
+    },
+    "week_2": {
+        "orders": 300000,
+        "elapsed_seconds": 3.085142600000836,
+        "throughput": 97240.2377769892,
+        "mean_latency_ms": 1.4059319999997284,
+        "p99_latency_ms": 2.2721,
+        "min_latency_ms": 0.4335,
+        "max_latency_ms": 3.2571,
+        "week": 2,
+        "target_rate": 100000,
+        "batch_size": 500,
+        "measured_at": "2026-11-04 18:02:51"
+    }
+}
