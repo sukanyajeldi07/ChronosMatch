@@ -377,9 +377,7 @@ td { font-size:12px; }
   outline:none;
 }
 
-.search:focus {
-  border-color:var(--blue);
-}
+.search:focus { border-color:var(--blue); }
 
 .toast {
   position:fixed;
@@ -474,23 +472,23 @@ td { font-size:12px; }
     <div class="panel-head">
       <div>
         <h2>Market movement</h2>
-        <div class="muted">Percentage movement · Simulated demo data</div>
+        <div class="muted">Indian stock percentage movement · Simulated demo data</div>
       </div>
       <span class="pill" id="chartState">MEASURED BENCHMARK</span>
     </div>
 
     <div class="chart-wrap">
-      <canvas id="marketChart" role="img" aria-label="Simulated price movement chart"></canvas>
+      <canvas id="marketChart" role="img" aria-label="Simulated Reliance and TCS stock movement chart"></canvas>
     </div>
 
     <div class="chart-legend">
-      <span><i class="legend-dot" style="background:#62a5ff"></i>XYZ/USD</span>
-      <span><i class="legend-dot" style="background:#39d8cf"></i>ABC/USD</span>
+      <span><i class="legend-dot" style="background:#62a5ff"></i>RELIANCE</span>
+      <span><i class="legend-dot" style="background:#39d8cf"></i>TCS</span>
       <span id="lastUpdate">Waiting for first update</span>
     </div>
 
     <div class="chart-note">
-      This chart uses simulated demo data. It does not connect to a live exchange.
+      This chart uses simulated demo data. It does not connect to NSE or a live exchange.
     </div>
   </article>
 
@@ -616,9 +614,9 @@ td { font-size:12px; }
   <div class="panel-head">
     <div>
       <h2>Recent simulated order activity</h2>
-      <div class="muted">Example activity for the interface only</div>
+      <div class="muted">Indian company symbols · Example activity for the interface only</div>
     </div>
-    <input class="search" id="orderSearch" type="search" placeholder="Search orders..." aria-label="Search orders">
+    <input class="search" id="orderSearch" type="search" placeholder="Search orders or companies..." aria-label="Search orders">
   </div>
 
   <div class="table-wrap">
@@ -629,7 +627,7 @@ td { font-size:12px; }
           <th>Instrument</th>
           <th>Side</th>
           <th>Quantity</th>
-          <th>Price</th>
+          <th>Price (INR)</th>
           <th>Status</th>
         </tr>
       </thead>
@@ -639,12 +637,13 @@ td { font-size:12px; }
 
   <div class="chart-note">
     These rows are generated examples and are not actual submitted or executed orders.
+    All prices are simulated INR values, not live market prices.
   </div>
 </section>
 
 <footer class="footer">
   <span>ChronosMatch · Python Development Project</span>
-  <span>All market quotes are demo data</span>
+  <span>All market quotes are simulated demo data</span>
   <span id="footerTime">Local time</span>
 </footer>
 
@@ -699,26 +698,7 @@ let selectedWeek=1;
 let running=true;
 let tick=0;
 let toastTimer=null;
-let orderSequence=1008;
-
-/* ---------- Chart instruments ---------- */
-
-const instruments = [
-  {
-    symbol:"XYZ/USD",
-    name:"Demo Instrument XYZ",
-    price:103.25,
-    color:"#62a5ff",
-    history:[]
-  },
-  {
-    symbol:"ABC/USD",
-    name:"Demo Instrument ABC",
-    price:58.10,
-    color:"#39d8cf",
-    history:[]
-  }
-];
+let orderSequence=1016;
 
 /* ---------- Indian company demo stocks ---------- */
 
@@ -745,10 +725,28 @@ const companyStocks = [
   {symbol:"POWERGRID",name:"Power Grid Corporation",price:300}
 ];
 
+/* Keep the starting prices and chart history */
+
 companyStocks.forEach(item => {
   item.initialPrice=item.price;
   item.change=0;
+  item.history=[];
 });
+
+/* Chart uses actual objects from the Indian stock list */
+
+const chartStocks = [
+  {
+    ...companyStocks[0],
+    history:[],
+    color:"#62a5ff"
+  },
+  {
+    ...companyStocks[1],
+    history:[],
+    color:"#39d8cf"
+  }
+];
 
 /* ---------- Common helpers ---------- */
 
@@ -760,7 +758,7 @@ function randomBetween(min,max) {
 }
 
 function formatNumber(value) {
-  return Math.round(value).toLocaleString("en-US");
+  return Math.round(value).toLocaleString("en-IN");
 }
 
 function formatPrice(value) {
@@ -781,8 +779,8 @@ function makeInitialHistory(instrument,base,amplitude) {
   instrument.price=value;
 }
 
-makeInitialHistory(instruments[0],103.25,0.30);
-makeInitialHistory(instruments[1],58.10,0.19);
+makeInitialHistory(chartStocks[0],1450,3);
+makeInitialHistory(chartStocks[1],3200,6);
 
 /* ---------- Market movement chart ---------- */
 
@@ -811,14 +809,13 @@ function drawChart() {
 
   if(plotW<=0||plotH<=0) return;
 
-  const series=instruments.map(item=>{
-    const base=item.history[0]||item.price;
-
-    return {
-      color:item.color,
-      values:item.history.map(value=>((value/base)-1)*100)
-    };
-  });
+  const series=chartStocks.map(item=>({
+    symbol:item.symbol,
+    color:item.color,
+    values:item.history.map(value=>
+      ((value/item.initialPrice)-1)*100
+    )
+  }));
 
   const allValues=series.flatMap(item=>item.values);
 
@@ -858,7 +855,7 @@ function drawChart() {
     ctx.fillText(value.toFixed(2)+"%",left-8,y);
   }
 
-  ["09:30","10:00","10:30","11:00","11:30"].forEach((label,i)=>{
+  ["Point 1","Point 10","Point 20","Point 30","Point 40"].forEach((label,i)=>{
     ctx.textAlign="center";
     ctx.textBaseline="top";
     ctx.fillStyle="#91a4c2";
@@ -922,25 +919,28 @@ function renderMarket() {
     '<div class="empty">No company found</div>';
 }
 
-/* ---------- Demo orders ---------- */
+/* ---------- Demo orders using Indian companies ---------- */
 
 function createOrder() {
-  const instrument=instruments[
-    Math.floor(Math.random()*instruments.length)
+  const stock=companyStocks[
+    Math.floor(Math.random()*companyStocks.length)
   ];
 
   const buy=Math.random()>=0.45;
 
   return {
     id:"ORD-"+orderSequence++,
-    symbol:instrument.symbol,
+    symbol:stock.symbol,
+    company:stock.name,
     side:buy?"BUY":"SELL",
     quantity:Math.floor(randomBetween(10,1000)),
-    price:instrument.price
+    price:stock.price
   };
 }
 
-let demoOrders=Array.from({length:7},createOrder);
+/* Initial Indian company orders */
+
+let demoOrders=Array.from({length:9},createOrder);
 
 function renderOrders() {
   const query=document.getElementById("orderSearch")
@@ -949,10 +949,12 @@ function renderOrders() {
   const body=document.getElementById("ordersBody");
 
   const filtered=demoOrders.filter(order=>
-    [order.id,order.symbol,order.side]
-      .join(" ")
-      .toLowerCase()
-      .includes(query)
+    [
+      order.id,
+      order.symbol,
+      order.company,
+      order.side
+    ].join(" ").toLowerCase().includes(query)
   );
 
   if(!filtered.length) {
@@ -964,12 +966,15 @@ function renderOrders() {
   body.innerHTML=filtered.map(order=>`
     <tr>
       <td>${order.id}</td>
-      <td>${order.symbol}</td>
+      <td>
+        <strong>${order.symbol}</strong>
+        <div class="market-name">${order.company}</div>
+      </td>
       <td style="color:${order.side==="BUY"?"var(--green)":"var(--orange)"}">
         ${order.side}
       </td>
-      <td>${order.quantity.toLocaleString("en-US")}</td>
-      <td>${formatPrice(order.price)}</td>
+      <td>${order.quantity.toLocaleString("en-IN")}</td>
+      <td>₹${formatPrice(order.price)}</td>
       <td><span class="badge">Demo only</span></td>
     </tr>
   `).join("");
@@ -1075,31 +1080,14 @@ function selectProjectWeek(week) {
     data.status;
 }
 
-/* ---------- Simulated market animation ---------- */
+/* ---------- Simulated Indian stock price animation ---------- */
 
 function updateDemo() {
   if(!running) return;
 
   tick++;
 
-  /* Update chart instruments */
-
-  instruments.forEach(item=>{
-    const amplitude=item.symbol==="XYZ/USD"?0.26:0.16;
-
-    item.price=Math.max(
-      0.01,
-      item.price+randomBetween(-amplitude,amplitude)
-    );
-
-    item.history.push(item.price);
-
-    if(item.history.length>40) {
-      item.history.shift();
-    }
-  });
-
-  /* Update 20 Indian company demo prices */
+  /* Update all 20 Indian company demo prices */
 
   companyStocks.forEach(item=>{
     const movement=(Math.random()-0.48)*0.004;
@@ -1113,6 +1101,35 @@ function updateDemo() {
       ((item.price-item.initialPrice)/item.initialPrice)*100;
   });
 
+  /* Update RELIANCE and TCS chart history */
+
+  chartStocks.forEach(item=>{
+    const amplitude=item.symbol==="RELIANCE"?3:6;
+
+    item.price=Math.max(
+      0.01,
+      item.price+randomBetween(-amplitude,amplitude)
+    );
+
+    item.history.push(item.price);
+
+    if(item.history.length>40) {
+      item.history.shift();
+    }
+
+    /* Keep Market Watch and chart synchronized */
+
+    const original=companyStocks.find(
+      stock=>stock.symbol===item.symbol
+    );
+
+    original.price=item.price;
+
+    original.change=
+      ((original.price-original.initialPrice)/
+      original.initialPrice)*100;
+  });
+
   drawChart();
   renderMarket();
 
@@ -1120,10 +1137,12 @@ function updateDemo() {
     "Last update: "+new Date().toLocaleTimeString();
 
   document.getElementById("historyCount").textContent=
-    instruments[0].history.length+" points";
+    chartStocks[0].history.length+" points";
 
   document.getElementById("historyBar").style.width=
-    (instruments[0].history.length/40*100)+"%";
+    (chartStocks[0].history.length/40*100)+"%";
+
+  /* Generate fresh Indian company demo orders */
 
   if(tick%4===0) {
     demoOrders.unshift(createOrder());
@@ -1189,15 +1208,17 @@ document.getElementById("exportBtn").addEventListener("click",()=>{
   const header=[
     "Order ID",
     "Instrument",
+    "Company",
     "Side",
     "Quantity",
-    "Price",
+    "Price INR",
     "Status"
   ];
 
   const rows=demoOrders.map(order=>[
     order.id,
     order.symbol,
+    order.company,
     order.side,
     order.quantity,
     order.price.toFixed(2),
@@ -1216,15 +1237,15 @@ document.getElementById("exportBtn").addEventListener("click",()=>{
   const link=document.createElement("a");
 
   link.href=url;
-  link.download="chronosmatch-demo-orders.csv";
+  link.download="chronosmatch-indian-demo-orders.csv";
 
   document.body.appendChild(link);
   link.click();
   link.remove();
 
-  URL.revokeObjectURL(url);
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
 
-  showToast("Demo order CSV exported.");
+  showToast("Indian stock demo order CSV exported.");
 });
 
 /* ---------- Footer clock ---------- */
