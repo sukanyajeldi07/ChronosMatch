@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -281,6 +282,9 @@ h1 { font-size:23px; margin:0 0 5px; }
 .market-list {
   display:flex;
   flex-direction:column;
+  max-height:530px;
+  overflow-y:auto;
+  padding-right:5px;
 }
 
 .market-item {
@@ -370,6 +374,11 @@ td { font-size:12px; }
   background:var(--panel2);
   border-radius:8px;
   color:var(--text);
+  outline:none;
+}
+
+.search:focus {
+  border-color:var(--blue);
 }
 
 .toast {
@@ -397,6 +406,7 @@ td { font-size:12px; }
   .chart-wrap { height:280px; }
   h1 { font-size:20px; }
   .panel { padding:15px; }
+  .search { max-width:100%; }
 }
 </style>
 </head>
@@ -423,6 +433,7 @@ td { font-size:12px; }
 <div class="section-title">Engine performance / Weekly project metrics</div>
 
 <section class="grid kpis">
+
   <article class="panel">
     <span class="kpi-icon">↗</span>
     <div class="kpi-label" id="throughputLabel">Consumer throughput</div>
@@ -454,6 +465,7 @@ td { font-size:12px; }
     <div class="kpi-unit">milliseconds</div>
     <div class="kpi-foot">99th percentile</div>
   </article>
+
 </section>
 
 <section class="grid main-grid">
@@ -532,6 +544,7 @@ td { font-size:12px; }
 
     <div class="chart-note" id="weekDescription"></div>
   </article>
+
 </section>
 
 <section class="grid bottom-grid">
@@ -539,12 +552,26 @@ td { font-size:12px; }
   <article class="panel">
     <div class="panel-head">
       <div>
-        <h2>Market watch</h2>
-        <div class="muted">Simulated instrument quotes</div>
+        <h2>Market Watch</h2>
+        <div class="muted">20 Indian company demo quotes</div>
       </div>
-      <span class="pill">DEMO</span>
+      <span class="pill">INDIAN STOCKS · DEMO</span>
     </div>
+
+    <input
+      class="search"
+      id="companySearch"
+      type="search"
+      placeholder="Search company or symbol..."
+      aria-label="Search Indian companies"
+      style="max-width:100%;margin-bottom:12px;"
+    >
+
     <div class="market-list" id="marketList"></div>
+
+    <div class="chart-note">
+      All prices are illustrative demo values, not live NSE prices.
+    </div>
   </article>
 
   <article class="panel">
@@ -582,6 +609,7 @@ td { font-size:12px; }
       </div>
     </div>
   </article>
+
 </section>
 
 <section class="panel" style="margin-top:18px">
@@ -627,7 +655,7 @@ td { font-size:12px; }
 <script>
 "use strict";
 
-/* ---------- Verified weekly benchmark results ---------- */
+/* ---------- Weekly benchmark results ---------- */
 
 const projectWeeks = {
   1: {
@@ -673,22 +701,56 @@ let tick=0;
 let toastTimer=null;
 let orderSequence=1008;
 
-const instruments=[
+/* ---------- Chart instruments ---------- */
+
+const instruments = [
   {
     symbol:"XYZ/USD",
-    name:"Demo instrument X",
+    name:"Demo Instrument XYZ",
     price:103.25,
     color:"#62a5ff",
     history:[]
   },
   {
     symbol:"ABC/USD",
-    name:"Demo instrument A",
+    name:"Demo Instrument ABC",
     price:58.10,
     color:"#39d8cf",
     history:[]
   }
 ];
+
+/* ---------- Indian company demo stocks ---------- */
+
+const companyStocks = [
+  {symbol:"RELIANCE",name:"Reliance Industries",price:1450},
+  {symbol:"TCS",name:"Tata Consultancy Services",price:3200},
+  {symbol:"INFY",name:"Infosys",price:1550},
+  {symbol:"HDFCBANK",name:"HDFC Bank",price:1700},
+  {symbol:"ICICIBANK",name:"ICICI Bank",price:1250},
+  {symbol:"SBIN",name:"State Bank of India",price:780},
+  {symbol:"BHARTIARTL",name:"Bharti Airtel",price:1850},
+  {symbol:"ITC",name:"ITC Limited",price:430},
+  {symbol:"LT",name:"Larsen & Toubro",price:3600},
+  {symbol:"HCLTECH",name:"HCL Technologies",price:1650},
+  {symbol:"TATASTEEL",name:"Tata Steel",price:160},
+  {symbol:"WIPRO",name:"Wipro",price:250},
+  {symbol:"HINDUNILVR",name:"Hindustan Unilever",price:2400},
+  {symbol:"BAJFINANCE",name:"Bajaj Finance",price:950},
+  {symbol:"MARUTI",name:"Maruti Suzuki",price:12500},
+  {symbol:"SUNPHARMA",name:"Sun Pharmaceutical",price:1750},
+  {symbol:"AXISBANK",name:"Axis Bank",price:1150},
+  {symbol:"KOTAKBANK",name:"Kotak Mahindra Bank",price:1900},
+  {symbol:"NTPC",name:"NTPC Limited",price:350},
+  {symbol:"POWERGRID",name:"Power Grid Corporation",price:300}
+];
+
+companyStocks.forEach(item => {
+  item.initialPrice=item.price;
+  item.change=0;
+});
+
+/* ---------- Common helpers ---------- */
 
 const canvas=document.getElementById("marketChart");
 const ctx=canvas.getContext("2d");
@@ -722,7 +784,7 @@ function makeInitialHistory(instrument,base,amplitude) {
 makeInitialHistory(instruments[0],103.25,0.30);
 makeInitialHistory(instruments[1],58.10,0.19);
 
-/* ---------- Chart ---------- */
+/* ---------- Market movement chart ---------- */
 
 function drawChart() {
   const rect=canvas.getBoundingClientRect();
@@ -822,38 +884,51 @@ function drawChart() {
   });
 }
 
-/* ---------- Market watch ---------- */
+/* ---------- Indian company market watch ---------- */
 
 function renderMarket() {
-  document.getElementById("marketList").innerHTML=instruments.map(item=>{
-    const first=item.history[0]||item.price;
-    const percent=((item.price-first)/first)*100;
-    const positive=percent>=0;
+  const query=document.getElementById("companySearch")
+    .value.trim().toLowerCase();
 
-    return `
-      <div class="market-item">
-        <div>
-          <div class="market-symbol">
-            <i class="legend-dot" style="background:${item.color}"></i>
-            ${item.symbol}
-          </div>
-          <div class="market-name">${item.name}</div>
-        </div>
+  const filtered=companyStocks.filter(item =>
+    item.symbol.toLowerCase().includes(query) ||
+    item.name.toLowerCase().includes(query)
+  );
 
-        <div>
-          <div class="market-price">${formatPrice(item.price)}</div>
-          <div class="market-change" style="color:${positive?"var(--green)":"var(--red)"}">
-            ${positive?"+":""}${percent.toFixed(2)}%
+  document.getElementById("marketList").innerHTML =
+    filtered.map(item=>{
+      const positive=item.change>=0;
+
+      return `
+        <div class="market-item">
+          <div>
+            <div class="market-symbol">${item.symbol}</div>
+            <div class="market-name">${item.name}</div>
+          </div>
+
+          <div>
+            <div class="market-price">
+              ₹${item.price.toFixed(2)}
+            </div>
+
+            <div class="market-change"
+              style="color:${positive?'var(--green)':'var(--red)'}">
+              ${positive?'+':''}${item.change.toFixed(2)}%
+            </div>
           </div>
         </div>
-      </div>`;
-  }).join("");
+      `;
+    }).join("") ||
+    '<div class="empty">No company found</div>';
 }
 
 /* ---------- Demo orders ---------- */
 
 function createOrder() {
-  const instrument=instruments[Math.floor(Math.random()*instruments.length)];
+  const instrument=instruments[
+    Math.floor(Math.random()*instruments.length)
+  ];
+
   const buy=Math.random()>=0.45;
 
   return {
@@ -868,15 +943,21 @@ function createOrder() {
 let demoOrders=Array.from({length:7},createOrder);
 
 function renderOrders() {
-  const query=document.getElementById("orderSearch").value.trim().toLowerCase();
+  const query=document.getElementById("orderSearch")
+    .value.trim().toLowerCase();
+
   const body=document.getElementById("ordersBody");
 
   const filtered=demoOrders.filter(order=>
-    [order.id,order.symbol,order.side].join(" ").toLowerCase().includes(query)
+    [order.id,order.symbol,order.side]
+      .join(" ")
+      .toLowerCase()
+      .includes(query)
   );
 
   if(!filtered.length) {
-    body.innerHTML='<tr><td colspan="6" class="empty">No matching demo orders</td></tr>';
+    body.innerHTML=
+      '<tr><td colspan="6" class="empty">No matching demo orders</td></tr>';
     return;
   }
 
@@ -930,8 +1011,6 @@ function selectProjectWeek(week) {
     button.setAttribute("aria-pressed",String(active));
   });
 
-  /* Keep the same four KPI headings for every week */
-
   document.getElementById("throughputLabel").textContent=
     "Consumer throughput";
 
@@ -944,8 +1023,6 @@ function selectProjectWeek(week) {
   document.getElementById("ordersUnit").textContent=
     "total benchmark orders";
 
-  /* Main KPI cards */
-
   document.getElementById("throughput").textContent=
     format(data.throughput);
 
@@ -957,8 +1034,6 @@ function selectProjectWeek(week) {
 
   document.getElementById("p99Latency").textContent=
     data.p99.toFixed(3);
-
-  /* Project progress panel */
 
   document.getElementById("weekLabel").textContent=
     "WEEK "+selectedWeek;
@@ -981,8 +1056,6 @@ function selectProjectWeek(week) {
   document.getElementById("weekOrders").textContent=
     format(data.orders);
 
-  /* Progress bars */
-
   document.getElementById("throughputBar").style.width=
     barWidth(data.throughput,120000);
 
@@ -994,8 +1067,6 @@ function selectProjectWeek(week) {
 
   document.getElementById("ordersBar").style.width=
     barWidth(data.orders,300000);
-
-  /* Description and benchmark status */
 
   document.getElementById("weekDescription").textContent=
     data.description;
@@ -1011,6 +1082,8 @@ function updateDemo() {
 
   tick++;
 
+  /* Update chart instruments */
+
   instruments.forEach(item=>{
     const amplitude=item.symbol==="XYZ/USD"?0.26:0.16;
 
@@ -1024,6 +1097,20 @@ function updateDemo() {
     if(item.history.length>40) {
       item.history.shift();
     }
+  });
+
+  /* Update 20 Indian company demo prices */
+
+  companyStocks.forEach(item=>{
+    const movement=(Math.random()-0.48)*0.004;
+
+    item.price=Math.max(
+      0.01,
+      item.price*(1+movement)
+    );
+
+    item.change=
+      ((item.price-item.initialPrice)/item.initialPrice)*100;
   });
 
   drawChart();
@@ -1048,6 +1135,14 @@ function updateDemo() {
     renderOrders();
   }
 }
+
+/* ---------- Search listeners ---------- */
+
+document.getElementById("companySearch")
+  .addEventListener("input",renderMarket);
+
+document.getElementById("orderSearch")
+  .addEventListener("input",renderOrders);
 
 /* ---------- Week selector ---------- */
 
@@ -1087,8 +1182,6 @@ document.getElementById("pauseBtn").addEventListener("click",()=>{
 
   showToast(running?"Demo resumed.":"Demo paused.");
 });
-
-document.getElementById("orderSearch").addEventListener("input",renderOrders);
 
 /* ---------- CSV export ---------- */
 
