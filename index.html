@@ -1299,9 +1299,14 @@ document.getElementById("exportBtn").addEventListener("click",()=>{
 /* ---------- Footer clock ---------- */
 
 function updateFooterTime() {
-  document.getElementById("footerTime").textContent=
-    "Local time: "+new Date().toLocaleTimeString();
+  const footerTime = document.getElementById("footerTime");
+
+  if (!footerTime) return;
+
+  footerTime.textContent =
+    "Local time: " + new Date().toLocaleTimeString();
 }
+
 /* ---------- Python Matching Engine API ---------- */
 
 async function loadPythonEngineData() {
