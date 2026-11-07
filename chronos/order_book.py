@@ -1,4 +1,7 @@
 
+from time import perf_counter_ns
+
+
 class Order:
     def __init__(self, order_id, side, price, quantity):
         if side not in ("BUY", "SELL"):
@@ -22,11 +25,15 @@ class OrderBook:
         self.sell_orders = []
         self.trades = []
 
+        # Execution latency metrics (nanoseconds)
+        self.last_match_latency_ns = 0
+        self.total_match_latency_ns = 0
+        self.match_execution_count = 0
+
     def add_order(self, order):
         if not isinstance(order, Order):
             raise TypeError("Order must be an Order object")
 
-        # Validate the order side even if it changes after creation.
         if order.side not in ("BUY", "SELL"):
             raise ValueError("Order side must be BUY or SELL")
 
@@ -38,21 +45,26 @@ class OrderBook:
 
         if order.side == "BUY":
             self.buy_orders.append(order)
+
             # Highest buy price gets priority.
+            # Stable sorting preserves FIFO for equal prices.
             self.buy_orders.sort(
                 key=lambda order: order.price,
                 reverse=True
             )
 
-        elif order.side == "SELL":
+        else:
             self.sell_orders.append(order)
+
             # Lowest sell price gets priority.
+            # Stable sorting preserves FIFO for equal prices.
             self.sell_orders.sort(
                 key=lambda order: order.price
             )
 
     def cancel_order(self, order_id):
         """Cancel a pending order using its ID."""
+
         for order in self.buy_orders:
             if order.order_id == order_id:
                 self.buy_orders.remove(order)
@@ -65,48 +77,92 @@ class OrderBook:
 
         return False
 
+    def get_best_bid(self):
+        """Return the highest pending buy price."""
+
+        if not self.buy_orders:
+            return None
+
+        return self.buy_orders[0].price
+
+    def get_best_ask(self):
+        """Return the lowest pending sell price."""
+
+        if not self.sell_orders:
+            return None
+
+        return self.sell_orders[0].price
+
+    def get_bid_ask_spread(self):
+        """Calculate the difference between best ask and best bid."""
+
+        best_bid = self.get_best_bid()
+        best_ask = self.get_best_ask()
+
+        if best_bid is None or best_ask is None:
+            return None
+
+        return best_ask - best_bid
+
     def match_orders(self):
-        while self.buy_orders and self.sell_orders:
-            buy_order = self.buy_orders[0]
-            sell_order = self.sell_orders[0]
+        """Match compatible buy and sell orders."""
 
-            # A trade can happen only when the prices cross.
-            if buy_order.price < sell_order.price:
-                break
+        start_time = perf_counter_ns()
 
-            trade_quantity = min(
-                buy_order.quantity,
-                sell_order.quantity
-            )
+        try:
+            while self.buy_orders and self.sell_orders:
+                buy_order = self.buy_orders[0]
+                sell_order = self.sell_orders[0]
 
-            # Execute the trade at the sell order's price.
-            trade_price = sell_order.price
+                # A trade happens only when buy price >= sell price.
+                if buy_order.price < sell_order.price:
+                    break
 
-            trade = {
-                "buy_order_id": buy_order.order_id,
-                "sell_order_id": sell_order.order_id,
-                "price": trade_price,
-                "quantity": trade_quantity
-            }
+                trade_quantity = min(
+                    buy_order.quantity,
+                    sell_order.quantity
+                )
 
-            self.trades.append(trade)
+                # Execute at the sell order's price.
+                trade_price = sell_order.price
 
-            print("\nTrade Executed")
-            print("Buy Order:", buy_order.order_id)
-            print("Sell Order:", sell_order.order_id)
-            print("Price:", trade_price)
-            print("Quantity:", trade_quantity)
+                trade = {
+                    "buy_order_id": buy_order.order_id,
+                    "sell_order_id": sell_order.order_id,
+                    "price": trade_price,
+                    "quantity": trade_quantity
+                }
 
-            buy_order.quantity -= trade_quantity
-            sell_order.quantity -= trade_quantity
+                self.trades.append(trade)
 
-            if buy_order.quantity == 0:
-                self.buy_orders.pop(0)
+                print("\nTrade Executed")
+                print("Buy Order:", buy_order.order_id)
+                print("Sell Order:", sell_order.order_id)
+                print("Price:", trade_price)
+                print("Quantity:", trade_quantity)
 
-            if sell_order.quantity == 0:
-                self.sell_orders.pop(0)
+                # Update remaining quantities.
+                buy_order.quantity -= trade_quantity
+                sell_order.quantity -= trade_quantity
+
+                # Remove completely filled orders.
+                if buy_order.quantity == 0:
+                    self.buy_orders.pop(0)
+
+                if sell_order.quantity == 0:
+                    self.sell_orders.pop(0)
+
+        finally:
+            # Measure total duration of this matching operation.
+            elapsed_ns = perf_counter_ns() - start_time
+
+            self.last_match_latency_ns = elapsed_ns
+            self.total_match_latency_ns += elapsed_ns
+            self.match_execution_count += 1
 
     def display(self):
+        """Display pending buy and sell orders."""
+
         print("\nBUY ORDERS")
 
         if not self.buy_orders:
@@ -132,6 +188,8 @@ class OrderBook:
             )
 
     def display_trades(self):
+        """Display completed trades."""
+
         print("\nCOMPLETED TRADES")
 
         if not self.trades:
@@ -146,8 +204,14 @@ class OrderBook:
                 "QUANTITY:", trade["quantity"]
             )
 
+    def get_trade_history(self):
+        """Return a copy of completed trade records."""
+
+        return [trade.copy() for trade in self.trades]
+
     def get_statistics(self):
         """Return summary statistics for the order book."""
+
         return {
             "pending_buy_orders": len(self.buy_orders),
             "pending_sell_orders": len(self.sell_orders),
@@ -165,6 +229,7 @@ class OrderBook:
 
     def get_trade_summary(self):
         """Return a summary of completed trades."""
+
         if not self.trades:
             return {
                 "total_trades": 0,
@@ -195,6 +260,22 @@ class OrderBook:
             "lowest_trade_price": min(prices),
         }
 
+    def get_execution_metrics(self):
+        """Return matching operation latency metrics."""
+
+        average_latency = (
+            self.total_match_latency_ns / self.match_execution_count
+            if self.match_execution_count > 0
+            else 0
+        )
+
+        return {
+            "last_match_latency_ns": self.last_match_latency_ns,
+            "total_match_latency_ns": self.total_match_latency_ns,
+            "average_match_latency_ns": round(average_latency, 2),
+            "match_execution_count": self.match_execution_count,
+        }
+
 
 if __name__ == "__main__":
     book = OrderBook()
@@ -206,6 +287,10 @@ if __name__ == "__main__":
 
     print("\nORDER BOOK BEFORE MATCHING")
     book.display()
+
+    print("\nBEST BID:", book.get_best_bid())
+    print("BEST ASK:", book.get_best_ask())
+    print("BID-ASK SPREAD:", book.get_bid_ask_spread())
 
     print("\nMATCHING ORDERS")
     book.match_orders()
@@ -222,3 +307,10 @@ if __name__ == "__main__":
     print("\nTRADE SUMMARY")
     for name, value in book.get_trade_summary().items():
         print(f"{name}: {value}")
+
+    print("\nEXECUTION METRICS")
+    for name, value in book.get_execution_metrics().items():
+        print(f"{name}: {value}")
+
+    print("\nTRADE HISTORY")
+    print(book.get_trade_history())

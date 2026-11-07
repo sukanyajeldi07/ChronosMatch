@@ -309,3 +309,48 @@ def test_invalid_order_side_is_rejected():
 
     with pytest.raises(ValueError):
         book.add_order(order)
+def test_get_best_bid():
+    book = OrderBook()
+    book.add_order(Order(201, "BUY", 100, 5))
+    book.add_order(Order(202, "BUY", 110, 5))
+
+    assert book.get_best_bid() == 110
+
+
+def test_get_best_ask():
+    book = OrderBook()
+    book.add_order(Order(203, "SELL", 115, 5))
+    book.add_order(Order(204, "SELL", 105, 5))
+
+    assert book.get_best_ask() == 105
+
+
+def test_get_bid_ask_spread():
+    book = OrderBook()
+    book.add_order(Order(205, "BUY", 100, 5))
+    book.add_order(Order(206, "SELL", 110, 5))
+
+    assert book.get_bid_ask_spread() == 10
+
+
+def test_trade_history():
+    book = OrderBook()
+    book.add_order(Order(207, "BUY", 110, 5))
+    book.add_order(Order(208, "SELL", 105, 5))
+
+    book.match_orders()
+
+    history = book.get_trade_history()
+
+    assert len(history) == 1
+    assert history[0]["quantity"] == 5
+
+
+def test_execution_metrics():
+    book = OrderBook()
+    book.match_orders()
+
+    metrics = book.get_execution_metrics()
+
+    assert metrics["last_match_latency_ns"] >= 0
+    assert metrics["match_execution_count"] == 1

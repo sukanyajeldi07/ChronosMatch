@@ -641,11 +641,59 @@ td { font-size:12px; }
   </div>
 </section>
 
-<footer class="footer">
-  <span>ChronosMatch · Python Development Project</span>
-  <span>All market quotes are simulated demo data</span>
-  <span id="footerTime">Local time</span>
-</footer>
+<section class="panel" style="margin-top:18px">
+  <div class="panel-head">
+    <div>
+      <h2>Python Matching Engine</h2>
+      <div class="muted">Connection to your local Flask API</div>
+    </div>
+    <span class="pill warning" id="apiStatus">Checking connection...</span>
+  </div>
+
+  <div class="grid kpis">
+    <div>
+      <div class="kpi-label">Best Bid</div>
+      <div class="kpi-value" id="apiBestBid">--</div>
+    </div>
+    <div>
+      <div class="kpi-label">Best Ask</div>
+      <div class="kpi-value" id="apiBestAsk">--</div>
+    </div>
+    <div>
+      <div class="kpi-label">Spread</div>
+      <div class="kpi-value" id="apiSpread">--</div>
+    </div>
+    <div>
+      <div class="kpi-label">Match Latency</div>
+      <div class="kpi-value" id="apiLatency">--</div>
+    </div>
+    <div>
+      <div class="kpi-label">Completed Trades</div>
+      <div class="kpi-value" id="apiTrades">--</div>
+    </div>
+    <div>
+      <div class="kpi-label">Traded Quantity</div>
+      <div class="kpi-value" id="apiQuantity">--</div>
+    </div>
+  </div>
+
+  <h3>Python Trade History</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Buy Order</th>
+          <th>Sell Order</th>
+          <th>Price</th>
+          <th>Quantity</th>
+        </tr>
+      </thead>
+      <tbody id="apiTradeHistory">
+        <tr><td colspan="4">Waiting for API data...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
 
 </div>
 
@@ -1254,6 +1302,85 @@ function updateFooterTime() {
   document.getElementById("footerTime").textContent=
     "Local time: "+new Date().toLocaleTimeString();
 }
+/* ---------- Python Matching Engine API ---------- */
+
+async function loadPythonEngineData() {
+  const status = document.getElementById("apiStatus");
+
+  try {
+    const response = await fetch(
+      "http://127.0.0.1:5000/api/metrics"
+    );
+
+    if (!response.ok) {
+      throw new Error("API request failed");
+    }
+
+    const data = await response.json();
+
+    document.getElementById("apiBestBid").textContent =
+      data.best_bid != null ? "₹" + data.best_bid : "--";
+
+    document.getElementById("apiBestAsk").textContent =
+      data.best_ask != null ? "₹" + data.best_ask : "--";
+
+    document.getElementById("apiSpread").textContent =
+      data.spread != null ? "₹" + data.spread : "--";
+
+    const latency =
+      data.execution_metrics.last_match_latency_ns / 1000000;
+
+    document.getElementById("apiLatency").textContent =
+      latency.toFixed(3) + " ms";
+
+    document.getElementById("apiTrades").textContent =
+      data.statistics.total_trades;
+
+    document.getElementById("apiQuantity").textContent =
+      data.statistics.total_traded_quantity;
+
+    const history = document.getElementById("apiTradeHistory");
+    history.replaceChildren();
+
+    if (data.trade_history.length === 0) {
+      const row = document.createElement("tr");
+      const cell = document.createElement("td");
+      cell.colSpan = 4;
+      cell.textContent = "No trades available";
+      row.appendChild(cell);
+      history.appendChild(row);
+    } else {
+      data.trade_history.forEach(trade => {
+        const row = document.createElement("tr");
+
+        [
+          trade.buy_order_id,
+          trade.sell_order_id,
+          "₹" + trade.price,
+          trade.quantity
+        ].forEach(value => {
+          const cell = document.createElement("td");
+          cell.textContent = value;
+          row.appendChild(cell);
+        });
+
+        history.appendChild(row);
+      });
+    }
+
+    status.textContent = "API Connected";
+    status.className = "pill good";
+
+  } catch (error) {
+    status.textContent = "API Disconnected";
+    status.className = "pill warning";
+  }
+}
+
+/* Load Python API data every 3 seconds */
+
+loadPythonEngineData();
+setInterval(loadPythonEngineData, 3000);
 
 /* ---------- Initialize dashboard ---------- */
 

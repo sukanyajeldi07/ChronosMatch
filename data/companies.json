@@ -1,0 +1,123 @@
+
+[
+  {
+    "symbol": "RELIANCE",
+    "name": "Reliance Industries",
+    "exchange": "NSE",
+    "currency": "INR"
+  },
+  {
+    "symbol": "TCS",
+    "name": "Tata Consultancy Services",
+    "exchange": "NSE",
+    "currency": "INR"
+  },
+  {
+    "symbol": "INFY",
+    "name": "Infosys",
+    "exchange": "NSE",
+    "currency": "INR"
+  },
+  {
+    "symbol": "HDFCBANK",
+    "name": "HDFC Bank",
+    "exchange": "NSE",
+    "currency": "INR"
+  },
+  {
+    "symbol": "ICICIBANK",
+    "name": "ICICI Bank",
+    "exchange": "NSE",
+    "currency": "INR"
+  },
+  {
+    "symbol": "SBIN",
+    "name": "State Bank of India",
+    "exchange": "NSE",
+    "currency": "INR"
+  },
+  {
+    "symbol": "BHARTIARTL",
+    "name": "Bharti Airtel",
+    "exchange": "NSE",
+    "currency": "INR"
+  },
+  {
+    "symbol": "ITC",
+    "name": "ITC Limited",
+    "exchange": "NSE",
+    "currency": "INR"
+  },
+  {
+    "symbol": "LT",
+    "name": "Larsen and Toubro",
+    "exchange": "NSE",
+    "currency": "INR"
+  },
+  {
+    "symbol": "HCLTECH",
+    "name": "HCL Technologies",
+    "exchange": "NSE",
+    "currency": "INR"
+  },
+  {
+    "symbol": "TATASTEEL",
+    "name": "Tata Steel",
+    "exchange": "NSE",
+    "currency": "INR"
+  },
+  {
+    "symbol": "WIPRO",
+    "name": "Wipro",
+    "exchange": "NSE",
+    "currency": "INR"
+  },
+  {
+    "symbol": "HINDUNILVR",
+    "name": "Hindustan Unilever",
+    "exchange": "NSE",
+    "currency": "INR"
+  },
+  {
+    "symbol": "BAJFINANCE",
+    "name": "Bajaj Finance",
+    "exchange": "NSE",
+    "currency": "INR"
+  },
+  {
+    "symbol": "MARUTI",
+    "name": "Maruti Suzuki",
+    "exchange": "NSE",
+    "currency": "INR"
+  },
+  {
+    "symbol": "SUNPHARMA",
+    "name": "Sun Pharmaceutical",
+    "exchange": "NSE",
+    "currency": "INR"
+  },
+  {
+    "symbol": "AXISBANK",
+    "name": "Axis Bank",
+    "exchange": "NSE",
+    "currency": "INR"
+  },
+  {
+    "symbol": "KOTAKBANK",
+    "name": "Kotak Mahindra Bank",
+    "exchange": "NSE",
+    "currency": "INR"
+  },
+  {
+    "symbol": "NTPC",
+    "name": "NTPC Limited",
+    "exchange": "NSE",
+    "currency": "INR"
+  },
+  {
+    "symbol": "POWERGRID",
+    "name": "Power Grid Corporation",
+    "exchange": "NSE",
+    "currency": "INR"
+  }
+]

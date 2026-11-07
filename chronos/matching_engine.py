@@ -3,7 +3,6 @@ from chronos.order_book import Order, OrderBook
 
 
 class MatchingEngine:
-
     def __init__(self):
         self.order_book = OrderBook()
 
@@ -13,6 +12,30 @@ class MatchingEngine:
     def execute(self):
         self.order_book.match_orders()
 
+    def cancel_order(self, order_id):
+        return self.order_book.cancel_order(order_id)
+
+    def get_best_bid(self):
+        return self.order_book.get_best_bid()
+
+    def get_best_ask(self):
+        return self.order_book.get_best_ask()
+
+    def get_bid_ask_spread(self):
+        return self.order_book.get_bid_ask_spread()
+
+    def get_statistics(self):
+        return self.order_book.get_statistics()
+
+    def get_trade_summary(self):
+        return self.order_book.get_trade_summary()
+
+    def get_trade_history(self):
+        return self.order_book.get_trade_history()
+
+    def get_execution_metrics(self):
+        return self.order_book.get_execution_metrics()
+
     def display_orders(self):
         self.order_book.display()
 
@@ -21,27 +44,24 @@ class MatchingEngine:
 
 
 if __name__ == "__main__":
-
     engine = MatchingEngine()
 
-    order1 = Order(1, "BUY", 100, 10)
-    order2 = Order(2, "BUY", 110, 5)
-    order3 = Order(3, "SELL", 105, 8)
-    order4 = Order(4, "SELL", 115, 6)
+    engine.submit_order(Order(1, "BUY", 110, 10))
+    engine.submit_order(Order(2, "BUY", 105, 5))
+    engine.submit_order(Order(3, "SELL", 108, 8))
+    engine.submit_order(Order(4, "SELL", 109, 6))
 
-    engine.submit_order(order1)
-    engine.submit_order(order2)
-    engine.submit_order(order3)
-    engine.submit_order(order4)
+    print("BEST BID:", engine.get_best_bid())
+    print("BEST ASK:", engine.get_best_ask())
+    print("SPREAD:", engine.get_bid_ask_spread())
 
-    print("\nORDER BOOK")
-    engine.display_orders()
-
-    print("\nMATCHING ORDERS")
     engine.execute()
 
-    print("\nCOMPLETED TRADES")
-    engine.display_trades()
+    print("\nTRADE HISTORY")
+    print(engine.get_trade_history())
 
-    print("\nREMAINING ORDERS")
-    engine.display_orders()
+    print("\nEXECUTION METRICS")
+    print(engine.get_execution_metrics())
+
+    print("\nSTATISTICS")
+    print(engine.get_statistics())
